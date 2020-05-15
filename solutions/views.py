@@ -81,7 +81,7 @@ class QuestionSingle(LoginRequiredMixin, generic.DetailView):
         if self.request.user.is_staff or self.request.user == obj.user:
             return obj
         else:
-            raise Http404(_("Question does not exist"))
+            raise Http404(_("ticket does not exist"))
             return
 
 bypage = 3
@@ -187,7 +187,7 @@ def questioneResolved(request, pk):
         except IntegrityError:
             messages.warning(request,_("Warning, Something went wrong, please try again"))
         else:
-            messages.success(request,_("Question has been resolved, thanks for using owr platform."))
+            messages.success(request,_("ticket has been resolved, thanks for using owr platform."))
         return redirect('solutions:questiondetail', pk=question.pk)
 
     else:
