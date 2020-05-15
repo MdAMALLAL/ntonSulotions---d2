@@ -1,0 +1,54 @@
+{% extends 'base.html' %}
+{% load bootstrap3 %}
+{% load i18n %}
+
+{% block body_block %}
+<div class="centerstage">
+    <div class="question">
+            <h1>{{ question.titre }}</h1>
+            <div >
+                <p>{% trans "created at" %} {{ question.created_at|date:"D M Y"}} par <a href="{% url 'accounts:profile' username=question.user%}">@{{ question.user }}</a></p>
+                <p class="">{{ question.description|safe|linebreaks }}</p>
+                {% if question.image %}
+                <img class="img-responsive img-fluid" src="{{question.image.url|default_if_none:'#' }}" alt="">
+                {%endif%}
+                <p>{{ question.get_priorite_display }} {{ question.get_categorie_display }} {{ question.get_status_display }}</p>
+
+
+                <a class="btn btn-primary" href="{% url 'solutions:questionedit' pk=question.pk %}">{% trans "Edit" %}</a>
+                <a class="btn btn-primary" href="{% url 'solutions:questioneResolved' pk=question.pk %}">{% trans "Resolved" %}</a></a>
+
+
+                <h4>Reponces</h4>
+                <table class="table  table-sm">
+                  <tbody>
+                      {% for reponce in question.reponces.all %}
+                      <tr>
+                        <td>{{ reponce.created_at }}</td>
+                        <td>{{ reponce.description|safe|linebreaks }}</td>
+                        <td>{% trans "Posted by" %}: <strong> {%if reponce.user.get_full_name %} {{ reponce.user.get_full_name  }} {%else%} @{{ reponce.user  }}{%endif%}</strong></td>
+                    </tr>
+                    {% empty %}
+                        <p>{% trans "Pas de reponce" %}.</p>
+                    {% endfor %}
+                    </tbody>
+                </table>
+                <form method="post" action="{% url 'solutions:questionereponder' pk=question.pk %}">
+                  {% csrf_token %}
+                  <div class="row">
+                    <div class="col-sm-10">
+                      <div class="wmd-panel">
+                          <div id="wmd-button-bar" ></div>
+                              {% bootstrap_form form %}
+                      </div>
+                    </div>
+                    <div class="col-sm-2">
+                      <button type="submit" class="save btn btn-info">{% trans "Save" %}.</button>
+                    </div>
+                  </div>
+                </form>
+                <div id="wmd-preview" class="wmd-panel wmd-preview"></div>
+            </div>
+    </div>
+</div>
+{% endblock %}

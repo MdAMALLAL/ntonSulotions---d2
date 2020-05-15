@@ -1,0 +1,120 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2020-05-07 18:05+0100\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+
+#: .\solutions\models.py:17
+msgid "Network"
+msgstr "Reseau"
+
+#: .\solutions\models.py:18
+msgid "Hardware"
+msgstr "Materiel"
+
+#: .\solutions\models.py:19
+msgid "Software"
+msgstr "Logiciel"
+
+#: .\solutions\models.py:20
+msgid "Other"
+msgstr "Autre"
+
+#: .\solutions\models.py:25
+msgid "Low"
+msgstr "Faible"
+
+#: .\solutions\models.py:26
+msgid "Medium"
+msgstr "Moyenne"
+
+#: .\solutions\models.py:27
+msgid "Height"
+msgstr "Houte"
+
+#: .\solutions\models.py:28
+msgid "Urgent"
+msgstr ""
+
+#: .\solutions\models.py:33
+msgid "Waiting"
+msgstr "En attente"
+
+#: .\solutions\models.py:34
+#: .\solutions\templates\solutions\question_detail.html:19
+msgid "Resolved"
+msgstr "Resolu"
+
+#: .\solutions\models.py:35
+msgid "Open"
+msgstr "Ouvert"
+
+#: .\solutions\models.py:36
+msgid "Closed"
+msgstr "Ferme"
+
+#: .\solutions\models.py:37
+msgid "refused"
+msgstr "Refuse"
+
+#: .\solutions\models.py:38
+msgid "Canceled"
+msgstr "Annule"
+
+#: .\solutions\models.py:39
+msgid "Answered"
+msgstr "Reponde"
+
+#: .\solutions\models.py:40
+msgid "Deactiveted"
+msgstr "Desactive"
+
+#: .\solutions\templates\solutions\question_detail.html:10
+msgid "created at"
+msgstr "Cree le"
+
+#: .\solutions\templates\solutions\question_detail.html:18
+msgid "Edit"
+msgstr "Modifier"
+
+#: .\solutions\templates\solutions\question_detail.html:29
+msgid "Posted by"
+msgstr "Poster par"
+
+#: .\solutions\templates\solutions\question_detail.html:32
+msgid "Pas de reponce"
+msgstr "No ansers"
+
+#: .\solutions\templates\solutions\question_detail.html:46
+msgid "Save"
+msgstr "Enregistrer"
+
+#: .\solutions\views.py:41 .\solutions\views.py:98 .\solutions\views.py:122
+msgid "Warning, Something went wrong, please try again"
+msgstr "Avertissement, quelque chose s'est mal passé, veuillez réessayer"
+
+#: .\solutions\views.py:43
+msgid "Answere has been saved."
+msgstr "Reponce est enregistre."
+
+#: .\solutions\views.py:69
+msgid "Question does not exist"
+msgstr "Question n'exist pas"
+
+#: .\solutions\views.py:124
+msgid "Question has been resolved, thanks for using owr platform."
+msgstr "La question a été résolue, merci d'utiliser notre plateforme."
