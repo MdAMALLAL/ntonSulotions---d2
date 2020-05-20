@@ -3,14 +3,15 @@ from django.urls import reverse_lazy,reverse
 from django.views.generic import CreateView, DetailView, UpdateView
 from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.db import IntegrityError
 from . import forms
-from django.contrib.auth import get_user_model
-User = get_user_model()
+#from django.contrib.auth import get_user_model
+#User = get_user_model()
+from .models import User
 
-
-class SignUp(CreateView):
+class NewUser(CreateView):
     form_class = forms.UserCreateForm
-    success_url = reverse_lazy("login")
+    success_url = reverse_lazy("home")
     template_name = "registration/signup.html"
 
 class ProfileView(DetailView):
@@ -19,7 +20,7 @@ class ProfileView(DetailView):
     slug_url_kwarg='username'
 class ProfileUpdateView(LoginRequiredMixin, UpdateView):
     model=User
-    fields=['username','first_name','last_name','email']
+    fields=['username','first_name','last_name','email','client']
     slug_field='username'
     slug_url_kwarg='username'
     user = "user"

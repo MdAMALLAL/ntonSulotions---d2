@@ -1,4 +1,3 @@
-from django.shortcuts import render
 from django.http import HttpResponseRedirect
 from django.contrib import messages
 from django.contrib.auth.mixins import(LoginRequiredMixin,
@@ -9,23 +8,10 @@ from django.contrib.auth.decorators import login_required
 from django.urls import reverse, reverse_lazy
 from django.db import IntegrityError
 from django.views import generic
-from .models import Question,Reponce
-from .forms import ReponceForm
+from .models import Question,Reponce, Categorie, SousCategorie
+from .forms import ReponceForm, QuestionForm
 from django.http import Http404
 from django.utils.translation import gettext_lazy as _
-
-
-from django import template
-register = template.Library()
-
-@register.filter
-def sub( value):
-    try:
-        value = int( value )
-        arg = int( arg )
-        if arg: return value - 1
-    except: pass
-    return ''
 
 
 # Create your views here.
@@ -41,26 +27,8 @@ class IndexView(generic.TemplateView):
 
 
 class QuestionCreate(LoginRequiredMixin, generic.CreateView):
-    fields = ("titre", "description","priorite","categorie","image")
     model = Question
-
-    def form_valid(self, form):
-        try:
-
-
-            self.object = form.save(commit=False)
-            self.object.user = self.request.user
-            #self.object.image = form.cleaned_data['image']
-            if self.request.FILES:
-                self.object.image = self.request.FILES['image']
-            self.object.save()
-        except IntegrityError:
-            messages.warning(self.request,_("Warning, Something went wrong, please try again"))
-        else:
-            messages.success(self.request,_("Question has been saved."))
-            return redirect('solutions:questiondetail', pk=self.object.pk)
-
-        return super().form_valid(form)
+    form_class = QuestionForm
 
 
 class QuestionEdit(LoginRequiredMixin, generic.UpdateView):
@@ -192,3 +160,12 @@ def questioneResolved(request, pk):
 
     else:
         return redirect('solutions:questiondetail', pk=question.pk)
+
+
+def load_categories(request):
+    categorieId = request.GET.get('categorie')
+    print(categorieId)
+    souscategorie = SousCategorie.objects.filter(categorie=categorieId).order_by('name')
+    #souscategorie = SousCategorie.objects.all()
+    print(souscategorie)
+    return render(request, 'solutions/categorie_dropdown_list_options.html', {'souscategorie': souscategorie})

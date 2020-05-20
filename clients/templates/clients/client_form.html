@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+{% load bootstrap3 %}
+{% block body_block %}
+
+    {% if form.instance.pk%}
+      <h1>Modifier Client</h1>
+    {% else %}
+      <h1>Nouvelle Client</h1>
+    {% endif %}
+
+    <form method="POST" enctype="multipart/form-data" class="post-form">
+    {% csrf_token %}
+    {% bootstrap_form form layout='horizontal'%}
+
+
+
+    <button type="submit" class="save btn btn-info text_right">Save</button>
+
+    </form>
+
+{% endblock %}

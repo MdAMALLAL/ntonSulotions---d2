@@ -1,0 +1,42 @@
+{% extends 'base.html' %}
+{% load bootstrap3 %}
+{% load i18n %}
+
+{% block body_block %}
+<div class="centerstage">
+    <div class="client">
+            <h1>{{ client.name }}</h1>
+            <div >
+              <div class="client">
+                  <div class="card ">
+                      <div class="card-body">
+
+                          <p>{{ client.email}}</p>
+                          <p> {{ client.url}} par </p>
+                          <p>{{client.address}}</p>
+                          <!-- <a href="#" class="btn btn-primary">Go somewhere</a> -->
+                      </div>
+                  </div>
+                </div>
+                <a class="btn my-2 btn-primary"href="{% url 'clients:edit' slug=client.slug %}">{% trans "Edit" %}</a>
+                <a class="btn btn-danger"href="{% url 'clients:delete' slug=client.slug %}">{% trans "Delete" %}</a>
+            </div>
+            <h4>Users</h4>
+            <table class="table  table-sm">
+              <tbody>
+                  {% for user in client.users.all %}
+                  <tr>
+                    <td><a href="{% url 'accounts:profile' username=user.username %}">{{ user.username }}</a></td>
+                    <td>{{ user.email }}</td>
+
+                  </tr>
+                {% empty %}
+                    <p>{% trans "No Users" %}.</p>
+                {% endfor %}
+                </tbody>
+            </table>
+
+
+    </div>
+</div>
+{% endblock %}

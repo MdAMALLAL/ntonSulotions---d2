@@ -2,24 +2,34 @@ from django.db import models
 from django.utils import timezone
 from django.urls import reverse
 from django.utils.translation import gettext_lazy as _
-
-
-from django.contrib.auth import get_user_model
-User = get_user_model()
+from django.conf import settings
+User = settings.AUTH_USER_MODEL
 
 
 
 # Create your models here.
+class Categorie(models.Model):
+    """Django data model Categorie"""
+    name = models.CharField(blank=True, max_length=100)
+    class Meta:
+        verbose_name = 'Categorie'
+        verbose_name_plural = 'Categories'
+    def __str__(self):
+        return str(self.name)
+
+class SousCategorie(models.Model):
+    """Django data model SousCategorie"""
+    name = models.CharField(blank=True, max_length=100)
+    categorie = models.ForeignKey('Categorie', on_delete=models.CASCADE, related_name='SousCategories',)
+    class Meta:
+        verbose_name = 'SousCategorie'
+        verbose_name_plural = 'SousCategories'
+    def __str__(self):
+        return str(self.name)
+
+
 class Question(models.Model):
-####################################
-###          Categorie           ###
-####################################
-    Categorie=(
-        ('RES', _('Network')),
-        ('MAT', _('Hardware')),
-        ('lOG', _('Software')),
-        ('AUT', _('Other')),
-        )
+
 ####################################
 ###           Priorite           ###
 ####################################
@@ -46,12 +56,15 @@ class Question(models.Model):
     user = models.ForeignKey(User,null=True, related_name="tickets",on_delete=models.SET_NULL)
     created_at = models.DateTimeField(auto_now=True)
     titre = models.CharField(max_length=200)
-    description = models.TextField()
     image = models.ImageField(blank=True,null=True, upload_to='images/')
 
     priorite=models.CharField(max_length=1,choices=Priorite,default='F',)
     status = models.CharField(max_length=2,choices=Status,default='OV',)
-    categorie = models.CharField(max_length=3,choices=Categorie,default='AUT',)
+    #categorie = models.CharField(max_length=3,choices=Categorie,default='AUT',)
+    categorie = models.ForeignKey(Categorie, on_delete=models.CASCADE, related_name='quesions',)
+    souscategorie = models.ForeignKey(SousCategorie, on_delete=models.CASCADE, related_name='quesions',)
+
+    description = models.TextField()
 
 
     Color = {}

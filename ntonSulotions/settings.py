@@ -22,6 +22,8 @@ TEMPLATE_DIR = os.path.join(BASE_DIR,'templates')
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = '(5qpl&b-b48^jszl@nz02#lgbw%tp(o)_wb!)b&k(j9*kueh@&'
 
+AUTH_USER_MODEL = 'accounts.User'
+
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
@@ -39,6 +41,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'django.contrib.humanize',
     'bootstrap3',
+    'clients',
     'accounts',
     'solutions'
 

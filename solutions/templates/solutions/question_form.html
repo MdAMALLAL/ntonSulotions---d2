@@ -8,13 +8,61 @@
       <h1>Nouvelle ticket</h1>
     {% endif %}
 
-    <form method="POST" enctype="multipart/form-data" class="post-form">
-    {% csrf_token %}
-    {% bootstrap_form form layout='horizontal'%}
-    <button type="submit" class="save btn btn-info text_right">Save</button>
 
+    {% comment %} <form method="POST" enctype="multipart/form-data" id="quesionForm" data-categorie-url="{% url 'solutions:ajax_load_categorie' %}" novalidate>
+      {% csrf_token %}
+      {% bootstrap_form form layout='horizontal'%}
+      <button type="submit" class="save btn btn-info text_right">Save</button>
+      <a href="{% url 'solutions:questionlist' %}">Nevermind</a>
+    </form> {% endcomment %}
+    <form method="POST" enctype="multipart/form-data" id="quesionForm" data-categorie-url="{% url 'solutions:ajax_load_categorie' %}" novalidate>
+      {% csrf_token %}
+
+      {% bootstrap_field form.categorie layout='horizontal'%}
+      {% bootstrap_field form.souscategorie show_label=False layout='horizontal' field_class='col-md-9 collapse  '%}
+      {% bootstrap_field form.titre layout='horizontal'%}
+      {% bootstrap_field form.priorite layout='horizontal'%}
+      {% bootstrap_field form.image show_label=False layout='horizontal' field_class='col-md-9'%}
+      {% bootstrap_field form.description layout='horizontal'%}
+
+
+
+
+
+
+
+      <button type="submit" class="save btn btn-info text_right">Save</button>
+      <a href="{% url 'solutions:questionlist' %}">Nevermind</a>
     </form>
 
-    <script>var editor = new MediumEditor('.editable');</script>
+    <script src="https://code.jquery.com/jquery-3.4.1.min.js"  crossorigin="anonymous"></script>
+
+
+    <script>
+      $("#id_categorie").change(function () {
+        var url = $("#quesionForm").attr("data-categorie-url");
+        var categorieId = $(this).val();
+        if (categorieId) {
+          $.ajax({
+            url: url,
+            data: {
+              'categorie': categorieId
+            },
+            success: function (data) {
+              $("#id_souscategorie").html(data);
+              $(".collapse").collapse('show');
+
+
+            }
+          });
+        }
+        else {
+          $(".collapse").collapse('hide');
+        }
+
+
+
+      });
+    </script>
 
 {% endblock %}

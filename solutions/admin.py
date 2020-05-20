@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Question, Reponce
+from .models import Question, Reponce, SousCategorie, Categorie
 
 # Register your models here.
 
@@ -15,3 +15,5 @@ class QuestionAdmin(admin.ModelAdmin):
 
 admin.site.register(Question, QuestionAdmin)
 admin.site.register(Reponce)
+admin.site.register(SousCategorie)
+admin.site.register(Categorie)
