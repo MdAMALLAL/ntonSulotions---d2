@@ -164,8 +164,5 @@ def questioneResolved(request, pk):
 
 def load_categories(request):
     categorieId = request.GET.get('categorie')
-    print(categorieId)
     souscategorie = SousCategorie.objects.filter(categorie=categorieId).order_by('name')
-    #souscategorie = SousCategorie.objects.all()
-    print(souscategorie)
     return render(request, 'solutions/categorie_dropdown_list_options.html', {'souscategorie': souscategorie})
