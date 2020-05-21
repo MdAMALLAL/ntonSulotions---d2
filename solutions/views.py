@@ -1,8 +1,6 @@
 from django.http import HttpResponseRedirect
 from django.contrib import messages
-from django.contrib.auth.mixins import(LoginRequiredMixin,
-                                        PermissionRequiredMixin
-                                        )
+from django.contrib.auth.mixins import(LoginRequiredMixin, PermissionRequiredMixin  )
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth.decorators import login_required
 from django.urls import reverse, reverse_lazy
@@ -29,6 +27,25 @@ class IndexView(generic.TemplateView):
 class QuestionCreate(LoginRequiredMixin, generic.CreateView):
     model = Question
     form_class = QuestionForm
+    print('in view')
+    def form_valid(self, form):
+        try:
+            self.object = form.save(commit=False)
+            self.object.user = self.request.user
+            #
+            self.object.save()
+        except IntegrityError:
+            messages.warning(self.request,_("Warning, Something went wrong, please try again"))
+        else:
+            messages.success(self.request,_("Question has been saved."))
+            return redirect('solutions:questiondetail', pk=self.object.pk)
+
+
+
+
+
+        return super().form_valid(form)
+
 
 
 class QuestionEdit(LoginRequiredMixin, generic.UpdateView):

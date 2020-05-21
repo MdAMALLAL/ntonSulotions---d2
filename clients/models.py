@@ -6,12 +6,12 @@ from django.urls import reverse
 # Create your models here.
 class Client(models.Model):
     name = models.CharField(max_length=100,verbose_name=_('Name'))
-    address = models.TextField(blank=True,verbose_name=_('Adresse'))
+    address = models.TextField(blank=True,verbose_name=_('Adress'))
     tel = models.CharField(blank=True, max_length=40,verbose_name=_('Telephone'))
     url = models.URLField(blank=True, verbose_name=_('Web site'))
     email = models.EmailField(verbose_name=_('Email'))
     comment = models.TextField(blank=True,verbose_name=_('Comment'))
-    signed = models.DateField(null=True,blank=True,verbose_name=_('Contract signed at'))
+    signed = models.DateField(null=True,blank=True,verbose_name=_('Contract signed on'))
     slug = models.SlugField(allow_unicode=True, unique=True)
 
 

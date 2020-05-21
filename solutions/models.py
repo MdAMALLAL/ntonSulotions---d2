@@ -3,6 +3,8 @@ from django.utils import timezone
 from django.urls import reverse
 from django.utils.translation import gettext_lazy as _
 from django.conf import settings
+import os
+import uuid
 User = settings.AUTH_USER_MODEL
 
 
@@ -53,10 +55,16 @@ class Question(models.Model):
         ('DS', _('Deactiveted')),
         )
 
+
+    def content_file_name(instance, filename):
+        filename = "%s__%s" % (uuid.uuid4(),filename)
+        return os.path.join('images', str(instance.user.id), filename)
+
     user = models.ForeignKey(User,null=True, related_name="tickets",on_delete=models.SET_NULL)
     created_at = models.DateTimeField(auto_now=True)
     titre = models.CharField(max_length=200)
-    image = models.ImageField(blank=True,null=True, upload_to='images/')
+
+    image = models.ImageField(blank=True,null=True, upload_to=content_file_name)
 
     priorite=models.CharField(max_length=1,choices=Priorite,default='F',)
     status = models.CharField(max_length=2,choices=Status,default='OV',)

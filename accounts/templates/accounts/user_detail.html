@@ -1,5 +1,6 @@
 {% extends "base.html" %}
 {% load bootstrap3 %}
+{% load i18n %}
 
 
 {% block body_block %}
@@ -9,7 +10,9 @@
     <p>@{{user.username}}</p>
     <p>{{user.email}}</p>
 
-    <a href="#"></a>
+
+    <a class="btn btn-primary"href="{% url 'accounts:edit' username=user.username %}">{% trans "Edit"  %}</a>
+    <a class="btn btn-primary"href="{% url 'accounts:changepassword' username=user.username %}">{% trans "Change password"  %}</a>
 
 </div>
 {% endblock %}

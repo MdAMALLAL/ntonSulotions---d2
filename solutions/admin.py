@@ -10,10 +10,14 @@ class QuestionAdmin(admin.ModelAdmin):
     search_fields = ['titre','description']
     list_filter = ['created_at','user','priorite','status']
 
-
-
-
 admin.site.register(Question, QuestionAdmin)
 admin.site.register(Reponce)
+
+class SousCategorieInline(admin.TabularInline):
+    model=SousCategorie
+    extra=3
 admin.site.register(SousCategorie)
-admin.site.register(Categorie)
+
+class CategorieAdmin(admin.ModelAdmin):
+    inlines=[SousCategorieInline]
+admin.site.register(Categorie, CategorieAdmin)

@@ -7,7 +7,7 @@
     <div class="question">
             <h1>{{ question.titre }}</h1>
             <div >
-                <p>{% trans "created at" %} {{ question.created_at|date:"D M Y"}} par <a href="{% url 'accounts:profile' username=question.user%}">@{{ question.user }}</a></p>
+                <p>{% trans "created at" %} {{ question.created_at|date:"D M Y"}} par <a href="{% url 'accounts:profile' username=question.user%}">{{ question.user }}</a></p>
                 <p class="">{{ question.description|safe|linebreaks }}</p>
                 {% if question.image %}
                 <img class="img-responsive img-fluid" src="{{question.image.url|default_if_none:'#' }}" alt="">
@@ -26,7 +26,7 @@
                       <tr>
                         <td>{{ reponce.created_at }}</td>
                         <td>{{ reponce.description|safe|linebreaks }}</td>
-                        <td>{% trans "Posted by" %}: <strong> {%if reponce.user.get_full_name %} {{ reponce.user.get_full_name  }} {%else%} @{{ reponce.user  }}{%endif%}</strong></td>
+                        <td>{% trans "Posted by" %}: <strong> {%if reponce.user.get_full_name %} {{ reponce.user.get_full_name  }} {%else%} {{ reponce.user  }}{%endif%}</strong></td>
                     </tr>
                     {% empty %}
                         <p>{% trans "Pas de reponce" %}.</p>

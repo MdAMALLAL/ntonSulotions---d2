@@ -1,6 +1,6 @@
 from django.contrib.auth import login, logout
 from django.urls import reverse_lazy,reverse
-from django.views.generic import CreateView, DetailView, UpdateView
+from django.views.generic import CreateView, DetailView, UpdateView,TemplateView
 from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db import IntegrityError
@@ -10,6 +10,7 @@ from . import forms
 from .models import User
 
 class NewUser(CreateView):
+    model = User
     form_class = forms.UserCreateForm
     success_url = reverse_lazy("home")
     template_name = "registration/signup.html"

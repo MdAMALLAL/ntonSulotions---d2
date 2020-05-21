@@ -1,11 +1,12 @@
 {% extends 'base.html' %}
 {% load bootstrap3 %}
+{% load i18n %}
 {% block body_block %}
 
     {% if form.instance.pk%}
-      <h1>Modifier ticket</h1>
+      <h1>{% trans "Edit ticket" %}</h1>
     {% else %}
-      <h1>Nouvelle ticket</h1>
+      <h1>{% trans "New ticket" %}</h1>
     {% endif %}
 
 
@@ -18,8 +19,8 @@
     <form method="POST" enctype="multipart/form-data" id="quesionForm" data-categorie-url="{% url 'solutions:ajax_load_categorie' %}" novalidate>
       {% csrf_token %}
 
-      {% bootstrap_field form.categorie layout='horizontal'%}
-      {% bootstrap_field form.souscategorie show_label=False layout='horizontal' field_class='col-md-9 collapse  '%}
+      {% bootstrap_field form.categorie layout='horizontal' error_css_class='border-danger'%}
+      {% bootstrap_field form.souscategorie show_label=False layout='horizontal' field_class='col-md-9 collapse'%}
       {% bootstrap_field form.titre layout='horizontal'%}
       {% bootstrap_field form.priorite layout='horizontal'%}
       {% bootstrap_field form.image show_label=False layout='horizontal' field_class='col-md-9'%}
