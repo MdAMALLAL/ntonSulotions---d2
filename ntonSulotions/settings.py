@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django.contrib.humanize',
+    'modeltranslation',
     'bootstrap3',
     'clients',
     'accounts',
@@ -137,5 +138,17 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 LOGIN_REDIRECT_URL = "home"
 LOGOUT_REDIRECT_URL = "login"
 
+#LANGUAGES and translation
 LOCALE_PATHS = [ os.path.join(BASE_DIR, 'locale'), ]
 LANGUAGES = [ ('en', 'English'), ('fr', 'Francais'), ]
+MODELTRANSLATION_DEFAULT_LANGUAGE = 'en'
+
+
+#EMAIL SETTINGS
+DEFAULT_FROM_EMAIL = 'no_replay@ntonadvisory.com'
+#EMAIL_BACKEND ='django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'mail.ntonadvisory.com'
+EMAIL_USE_TLS = True
+EMAIL_PORT = 26
+EMAIL_HOST_USER = 'no_replay@ntonadvisory.com'
+EMAIL_HOST_PASSWORD = ''

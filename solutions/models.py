@@ -1,6 +1,7 @@
 from django.db import models
 from django.utils import timezone
 from django.urls import reverse
+from django.core.mail import BadHeaderError, send_mail
 from django.utils.translation import gettext_lazy as _
 from django.conf import settings
 import os
@@ -27,23 +28,19 @@ class SousCategorie(models.Model):
         verbose_name = 'SousCategorie'
         verbose_name_plural = 'SousCategories'
     def __str__(self):
-        return str(self.name)
+        return str(self.categorie.name + '/'+self.name)
 
 
 class Question(models.Model):
 
-####################################
 ###           Priorite           ###
-####################################
     Priorite=(
         ('F', _('Low')),
         ('M', _('Medium')),
         ('H', _('Height')),
         ('U', _('Urgent')),
         )
-####################################
 ###           Status             ###
-####################################
     Status= (
         ('EA', _('Waiting')),
         ('RS', _('Resolved')),
@@ -84,6 +81,8 @@ class Question(models.Model):
     def get_color(self):
         return self.Color.get(self.priorite)
 
+    def get_categorie(self):
+        return self.categorie.name + '/' + self.souscategorie.name
 
     def get_absolute_url(self):
             return reverse("solutions:questiondetail", kwargs={"pk": self.pk})
@@ -93,6 +92,20 @@ class Question(models.Model):
 
     class Meta:
         ordering = ["-created_at"]
+
+    # def save(self, *args, **kwargs):
+    #     subject = self.titre
+    #     message = self.description + ' ' + get_absolute_url(self)
+    #
+    #     from_email = self.user.email
+    #     send_mail(subject, message, from_email, ['no_replay@ntonadvisory.com'])
+    #
+    #     subject = self.titre
+    #     message = self.description
+    #     from_email = 'admin@example.com'
+    #     send_mail(subject, message, from_email, [self.user.email,])
+    #
+    #     super().save(*args, **kwargs)
 
 
 

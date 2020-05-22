@@ -1,5 +1,7 @@
 from django.contrib import admin
 from .models import Question, Reponce, SousCategorie, Categorie
+from modeltranslation.admin import TranslationAdmin, TranslationTabularInline
+
 
 # Register your models here.
 
@@ -10,14 +12,18 @@ class QuestionAdmin(admin.ModelAdmin):
     search_fields = ['titre','description']
     list_filter = ['created_at','user','priorite','status']
 
-admin.site.register(Question, QuestionAdmin)
-admin.site.register(Reponce)
-
-class SousCategorieInline(admin.TabularInline):
+class SousCategorieInline(TranslationTabularInline):
     model=SousCategorie
     extra=3
-admin.site.register(SousCategorie)
 
 class CategorieAdmin(admin.ModelAdmin):
+    model = Categorie
     inlines=[SousCategorieInline]
+
+class CategorieTranslatedAdmin(CategorieAdmin, TranslationAdmin):
+    model = Categorie
+
+admin.site.register(Question, QuestionAdmin)
+admin.site.register(Reponce)
+admin.site.register(SousCategorie)
 admin.site.register(Categorie, CategorieAdmin)
