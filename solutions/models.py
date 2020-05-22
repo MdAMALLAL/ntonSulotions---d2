@@ -1,7 +1,6 @@
 from django.db import models
 from django.utils import timezone
 from django.urls import reverse
-from django.core.mail import BadHeaderError, send_mail
 from django.utils.translation import gettext_lazy as _
 from django.conf import settings
 import os
@@ -93,19 +92,6 @@ class Question(models.Model):
     class Meta:
         ordering = ["-created_at"]
 
-    # def save(self, *args, **kwargs):
-    #     subject = self.titre
-    #     message = self.description + ' ' + get_absolute_url(self)
-    #
-    #     from_email = self.user.email
-    #     send_mail(subject, message, from_email, ['no_replay@ntonadvisory.com'])
-    #
-    #     subject = self.titre
-    #     message = self.description
-    #     from_email = 'admin@example.com'
-    #     send_mail(subject, message, from_email, [self.user.email,])
-    #
-    #     super().save(*args, **kwargs)
 
 
 

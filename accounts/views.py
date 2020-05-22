@@ -33,7 +33,7 @@ class ProfileUpdateView(LoginRequiredMixin, UpdateView):
         except IntegrityError:
             messages.warning(self.request,"Warning, Profile n'est pas enregistre")
         else:
-            messages.success(self.request," Profile est enregistre.")
+            messages.success(self.request,"Profile est enregistre.")
         return super().form_valid(form)
 
 

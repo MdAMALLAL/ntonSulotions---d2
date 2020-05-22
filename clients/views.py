@@ -22,7 +22,7 @@ class ClientsCreate(LoginRequiredMixin,CreateView):
             messages.warning(self.request,_("Warning, Something went wrong, please try again"))
         else:
             messages.success(self.request,_("Client has been saved."))
-            return reverse_lazy('clients:detail', name=self.object.name)
+            return reverse_lazy('clients:detail', slug=self.object.slug)
         return super().form_valid(form)
 
 class ClientsDetail(LoginRequiredMixin,DetailView):
@@ -39,7 +39,7 @@ class ClientsUpdate(LoginRequiredMixin, UpdateView):
             messages.warning(self.request,_("Warning, Something went wrong, please try again"))
         else:
             messages.success(self.request,_("Client has been saved."))
-            success_url = reverse_lazy('clients:detail', name=self.object.name)
+            success_url = reverse_lazy('clients:detail', slug=self.object.slug)
 
         return super().form_valid(form)
 
@@ -56,7 +56,7 @@ class ClientsDelete(LoginRequiredMixin, UpdateView):
 @login_required
 def add_user(request, slug, username):
     client = get_object_or_404(Client, slug=slug)
-    user = get_object_or_404(User, slug=username)
+    user = get_object_or_404(User, username=username)
     if request.method == "POST":
         try:
             user.client = client
@@ -65,7 +65,7 @@ def add_user(request, slug, username):
             messages.warning(request,_("Warning, Something went wrong, please try again"))
         else:
             messages.success(request,_("ticket has been resolved, thanks for using owr platform."))
-        return redirect('solutions:questiondetail', pk=question.pk)
+        return redirect('clients:detail', slug=self.object.slug)
 
     else:
-        return redirect('solutions:questiondetail', pk=question.pk)
+        return redirect('clients:detail', slug=self.object.slug)
