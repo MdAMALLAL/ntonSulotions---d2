@@ -39,16 +39,16 @@ class QuestionCreate(LoginRequiredMixin, generic.CreateView):
             messages.warning(self.request,_("Warning, Something went wrong, please try again"))
         else:
             messages.success(self.request,_("Question has been saved."))
-            subject = self.titre
-            message = self.description + ' ' + get_absolute_url(self)
+            subject = self.object.titre
+            message = self.object.description
 
-            from_email = self.user.email
+            from_email = self.object.user.email
             send_mail(subject, message, from_email, ['no_replay@ntonadvisory.com'])
 
-            subject = self.titre
-            message = self.description
+            subject = self.object.titre
+            message = self.object.description
             from_email = 'admin@example.com'
-            send_mail(subject, message, from_email, [self.user.email,])
+            send_mail(subject, message, from_email, [self.object.user.email,])
             return redirect('solutions:questiondetail', pk=self.object.pk)
 
 
