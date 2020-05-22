@@ -70,7 +70,6 @@ class Question(models.Model):
 
     description = models.TextField()
 
-
     Color = {}
     Color['F'] = 'secondary'
     Color['M'] = 'primary'
@@ -91,6 +90,8 @@ class Question(models.Model):
 
     class Meta:
         ordering = ["-created_at"]
+        verbose_name = _('Ticket')
+        verbose_name_plural = _('Tickets')
 
 
 

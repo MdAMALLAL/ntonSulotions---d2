@@ -1,7 +1,7 @@
 from django.db import models
 from django.utils.translation import gettext_lazy as _
 from django.utils.text import slugify
-from django.urls import reverse
+from django.urls import reverse_lazy
 
 # Create your models here.
 class Client(models.Model):
@@ -23,7 +23,7 @@ class Client(models.Model):
         super().save(*args, **kwargs)
 
     def get_absolute_url(self):
-        return reverse("clients:detail", kwargs={"slug": self.slug})
+        return reverse_lazy("clients:detail", kwargs={"slug": self.slug})
 
 
     class Meta:

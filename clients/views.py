@@ -13,7 +13,7 @@ from django.utils.translation import gettext_lazy as _
 class ClientsCreate(LoginRequiredMixin,CreateView):
     fields=['name','email','tel','url','address','signed','comment']
     model = Client
-    success_url = reverse_lazy("login")
+
     def form_valid(self, form):
         try:
             self.object = form.save(commit=False)
@@ -22,7 +22,7 @@ class ClientsCreate(LoginRequiredMixin,CreateView):
             messages.warning(self.request,_("Warning, Something went wrong, please try again"))
         else:
             messages.success(self.request,_("Client has been saved."))
-            return reverse_lazy('clients:detail', slug=self.object.slug)
+            #success_url=reverse_lazy('clients:detail', slug=self.object.slug)
         return super().form_valid(form)
 
 class ClientsDetail(LoginRequiredMixin,DetailView):
@@ -49,8 +49,9 @@ class ClientsList(LoginRequiredMixin,ListView):
 
 
 
-class ClientsDelete(LoginRequiredMixin, UpdateView):
+class ClientsDelete(LoginRequiredMixin, DeleteView):
     model= Client
+    success_url=reverse_lazy('clients:list')
 
 
 @login_required

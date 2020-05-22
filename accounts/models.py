@@ -45,7 +45,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     is_active = models.BooleanField(_('active'), default=True)
     is_staff = models.BooleanField(_('staff'), default=False)
     avatar = models.ImageField(upload_to='avatars/', null=True, blank=True)
-    client = models.ForeignKey(client.Client, null=True, related_name="users",on_delete=models.SET_NULL)
+    client = models.ForeignKey(client.Client, null=True, blank=True, related_name="users",on_delete=models.SET_NULL)
 
     objects = UserManager()
 

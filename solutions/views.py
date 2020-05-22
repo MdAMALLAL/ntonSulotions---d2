@@ -43,18 +43,13 @@ class QuestionCreate(LoginRequiredMixin, generic.CreateView):
             message = self.object.description
 
             from_email = self.object.user.email
-            send_mail(subject, message, from_email, ['no_replay@ntonadvisory.com'])
+            #send_mail(subject, message, from_email, ['no_replay@ntonadvisory.com'])
 
             subject = self.object.titre
             message = self.object.description
             from_email = 'admin@example.com'
-            send_mail(subject, message, from_email, [self.object.user.email,])
-            return redirect('solutions:questiondetail', pk=self.object.pk)
-
-
-
-
-
+            #send_mail(subject, message, from_email, [self.object.user.email,])
+            #return redirect('solutions:questiondetail', pk=self.object.pk)
         return super().form_valid(form)
 
 

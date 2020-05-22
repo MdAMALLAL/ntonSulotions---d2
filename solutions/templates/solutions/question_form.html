@@ -19,10 +19,12 @@
     <form method="POST" enctype="multipart/form-data" id="quesionForm" data-categorie-url="{% url 'solutions:ajax_load_categorie' %}" novalidate>
       {% csrf_token %}
 
-      {% bootstrap_field form.categorie layout='horizontal' error_css_class='border-danger'%}
-      {% bootstrap_field form.souscategorie show_label=False layout='horizontal' field_class='col-md-9 collapse'%}
+      {% if not form.instance.pk%}
+        {% bootstrap_field form.categorie layout='horizontal' error_css_class='border-danger'%}
+        {% bootstrap_field form.souscategorie show_label=False layout='horizontal' field_class='col-md-9 collapse'%}
+        {% bootstrap_field form.priorite layout='horizontal'%}
+      {% endif %}
       {% bootstrap_field form.titre layout='horizontal'%}
-      {% bootstrap_field form.priorite layout='horizontal'%}
       {% bootstrap_field form.image show_label=False layout='horizontal' field_class='col-md-9'%}
       {% bootstrap_field form.description layout='horizontal'%}
 

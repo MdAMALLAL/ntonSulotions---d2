@@ -37,6 +37,7 @@
       </div>
 
       {%  if question_list%}
+      {% if pagecounter > 1 %}
       <div class="text-center">
         <a href="?page=0{{priorite}}{{status}}">
           <svg class="bi bi-chevron-double-left" width="2em" height="2em" viewBox="0 0 16 16" fill="bg-dark" xmlns="http://www.w3.org/2000/svg">
@@ -59,11 +60,12 @@
         </a>
 
       </div>
+      {% endif %}
       {% for question in question_list %}
         <div class="question">
             <div class="card  border-{{question.get_color}}">
                 <div class="card-body">
-                    <h5 class="card-title "><a  href="{% url 'solutions:questiondetail' pk=question.pk %}">{{ question.titre }} <span class="badge badge-{{question.get_color}}"> {{ question.reponces.count }}</span></a> {{ question.get_priorite }}</h5>
+                    <h5 class="card-title "><a  href="{% url 'solutions:questiondetail' pk=question.pk %}">{{ question.titre }} <span class="badge badge-{{question.get_color}}"> {{ question.reponces.count }}</span></a> {{ question.get_priorite_display}}</h5>
                     <p>{{ question.description|truncatechars:150 }}</p>
                     <p class="text-right">Publier le: {{ question.created_at|date:"D M Y"}} par <a href="{% url 'accounts:profile' username=question.user%}">{{ question.user }}</a></p>
                     <!-- <a href="#" class="btn btn-primary">Go somewhere</a> -->
@@ -71,6 +73,7 @@
             </div>
           </div>
       {% endfor %}
+      {% if pagecounter > 1 %}
       <div class="text-center">
         <a href="?page=0{{priorite}}{{status}}">
           <svg class="bi bi-chevron-double-left" width="2em" height="2em" viewBox="0 0 16 16" fill="bg-dark" xmlns="http://www.w3.org/2000/svg">
@@ -93,6 +96,7 @@
         </a>
 
       </div>
+      {% endif %}
       {% else %}<h2>Pas de ticket pour le moment!</h2>
       {%endif%}
     </div>
