@@ -13,11 +13,7 @@ from django.http import Http404
 from django.utils.translation import gettext_lazy as _
 
 
-# Create your views here.
-class IndexView(generic.TemplateView):
-    # Just set this Class Object Attribute to the template page.
-    # template_name = 'app_name/site.html'
-    template_name = 'index.html'
+
 
 
 
@@ -75,7 +71,7 @@ class QuestionSingle(LoginRequiredMixin, generic.DetailView):
             raise Http404(_("ticket does not exist"))
             return
 
-bypage = 3
+bypage = 10
 class QuestionList(LoginRequiredMixin, generic.ListView):
     model = Question
     pagecounter = 0
