@@ -81,11 +81,6 @@ class QuestionList(LoginRequiredMixin, generic.ListView):
     pagecounter = 0
     page = 0
 
-    # def get(self, request, *args, **kwargs):
-    #     if request.GET.get('page'):
-    #         self.page = int(request.GET.get('page'))
-    #     return super(QuestionList, self).get(request, *args, **kwargs)
-
     def get_queryset(self):
         questionlist = Question.objects.all()
         if self.request.user.is_staff:

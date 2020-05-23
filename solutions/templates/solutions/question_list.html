@@ -4,33 +4,34 @@
 
 {% block body_block %}
 <div class="row">
-    <div class="col-4 col-sm-4">
-      <div class=" list-group">
-        <div class="d-flex align-items-center p-3 my-2 text-white-50 bg-dark rounded shadow-sm">
-          <div class="lh-100">
-            <h6 class="mb-0 text-white lh-100">{% trans "Filter by priority"%}</h6>
-          </div>
+    <div class="d-flex">
+      <div class="  p-3 m-2 text-white-50 bg-dark rounded shadow-sm dropdown list-group">
+        <a class=" dropdown-toggle text-white" href="#" id="prioriteDropdownMenuLink" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+          {% trans "Filter by priority"%}</a>
+        <div class="dropdown-menu" aria-labelledby="prioriteDropdownMenuLink">
+          <a href="?{{status|cut:'&'}}" class="nav-link {%if not priorite %} active{%endif%}">{% trans "All"%}</a>
+          <a href="?priorite=U{{status}}" class='nav-link {{active.U}}'>{% trans "Urgent"%}</a>
+          <a href="?priorite=H{{status}}" class='nav-link {{active.H}}'>{% trans "Height"%}</a>
+          <a href="?priorite=M{{status}}" class='nav-link {{active.M}}'>{% trans "Medium"%}</a>
+          <a href="?priorite=F{{status}}" class='nav-link {{active.F}}'>{% trans "Low"%}</a>
         </div>
-        <a href="?{{status|cut:'&'}}" class="list-group-item list-group-item-action filter-item {%if not priorite %} active{%endif%}">{% trans "All"%}</a>
-        <a href="?priorite=U{{status}}" class='list-group-item list-group-item-action filter-item {{active.U}}'>{% trans "Urgent"%}</a>
-        <a href="?priorite=H{{status}}" class='list-group-item list-group-item-action filter-item {{active.H}}'>{% trans "Height"%}</a>
-        <a href="?priorite=M{{status}}" class='list-group-item list-group-item-action filter-item {{active.M}}'>{% trans "Medium"%}</a>
-        <a href="?priorite=F{{status}}" class='list-group-item list-group-item-action filter-item {{active.F}}'>{% trans "Low"%}</a>
       </div>
-      <div class="list-group">
-        <div class="d-flex align-items-center p-3 my-2 text-white-50 bg-dark rounded shadow-sm">
-          <div class="lh-100">
-            <h6 class="mb-0 text-white lh-100">{% trans "Filter by status"%}</h6>
-          </div>
+
+      <div class="d-flex  p-3 m-2 text-white-50 bg-dark rounded shadow-sm dropdown list-group">
+        <a class=" dropdown-toggle text-white" href="#" id="statusDropdownMenuLink" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+          {% trans "Filter by status"%}</a>
+        <div class="dropdown-menu" aria-labelledby="statusDropdownMenuLink">
+          <a href="?{{priorite|cut:'&'}}" class="list-group-item list-group-item-action filter-item {%if not status %} active{%endif%}">{% trans "All"%}</a>
+          <a href="?status=OV{{priorite}}" class="list-group-item list-group-item-action filter-item {{active.OV}}">{% trans "Open"%}</a>
+          <a href="?status=RS{{priorite}}" class="list-group-item list-group-item-action filter-item {{active.RS}}">{% trans "Resolved"%}</a>
+          <a href="?status=RF{{priorite}}" class="list-group-item list-group-item-action filter-item {{active.RF}}">{% trans "Refused"%}</a>
         </div>
-        <a href="?{{priorite|cut:'&'}}" class="list-group-item list-group-item-action filter-item {%if not status %} active{%endif%}">{% trans "All"%}</a>
-        <a href="?status=OV{{priorite}}" class="list-group-item list-group-item-action filter-item {{active.OV}}">{% trans "Open"%}</a>
-        <a href="?status=RS{{priorite}}" class="list-group-item list-group-item-action filter-item {{active.RS}}">{% trans "Resolved"%}</a>
-        <a href="?status=RF{{priorite}}" class="list-group-item list-group-item-action filter-item {{active.RF}}">{% trans "Refused"%}</a>
       </div>
+
     </div>
-    <div class="col-8 col-sm-8">
-      <div class="d-flex align-items-center p-3 my-2 text-white-50 bg-dark rounded shadow-sm">
+</div>
+    <div class="">
+      <div class="text-center p-3 my-2 text-white-50 bg-dark rounded shadow-sm">
         <div class="lh-100">
           <h6 class="mb-0 text-white lh-100">List des ticket</h6>
         </div>
@@ -61,18 +62,40 @@
 
       </div>
       {% endif %}
+      <table class="table">
+        <thead>
+            <td class="px-2">Id</td>
+            <td class="px-2">{% trans "Title" %}</td>
+            <td class="px-2">{% trans "Status" %}</td>
+            <td class="px-2">{% trans "Published on" %}</td>
+            <td class="px-2">{% trans "Applicant" %}</td>
+            <td class="px-2">{% trans "priority" %}</td>
+            <td class="px-2">{% trans "Categorie" %}</td>
+            <td class="px-2">{% trans "Resolution time" %}</td>
+
+
+
+
+        </thead>
       {% for question in question_list %}
-        <div class="question">
-            <div class="card  border-{{question.get_color}}">
-                <div class="card-body">
-                    <h5 class="card-title "><a  href="{% url 'solutions:questiondetail' pk=question.pk %}">{{ question.titre }} <span class="badge badge-{{question.get_color}}"> {{ question.reponces.count }}</span></a> {{ question.get_priorite_display}}</h5>
-                    <p>{{ question.description|truncatechars:150 }}</p>
-                    <p class="text-right">Publier le: {{ question.created_at|date:"D M Y"}} par <a href="{% url 'accounts:profile' username=question.user%}">{{ question.user }}</a></p>
-                    <!-- <a href="#" class="btn btn-primary">Go somewhere</a> -->
-                </div>
-            </div>
-          </div>
+
+          <tr>
+            <td>{{question.id}}</td>
+            <td><a  href="{% url 'solutions:questiondetail' pk=question.pk %}">{{ question.titre }} </td>
+            <td>{{ question.get_status_display}}</td>
+            <td>{{ question.created_at|date:"d/M/Y"}}</td>
+            <td><a href="{% url 'accounts:profile' username=question.user.username %}">{{question.user}}</a></td>
+            <td>{{ question.get_priorite_display}}</td>
+            <td>{{ question.categorie.name}}</td>
+            <td>{{question.get_time_to_resolv}}</td>
+
+
+
+
+          </tr>
+
       {% endfor %}
+      </table>
       {% if pagecounter > 1 %}
       <div class="text-center">
         <a href="?page=0{{priorite}}{{status}}">
@@ -100,5 +123,4 @@
       {% else %}<h2>Pas de ticket pour le moment!</h2>
       {%endif%}
     </div>
-</div>
 {% endblock %}

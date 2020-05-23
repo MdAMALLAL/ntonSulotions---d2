@@ -1,6 +1,6 @@
 from django.db import models
 from django.utils import timezone
-from django.urls import reverse
+from django.urls import reverse, reverse_lazy
 from django.utils.translation import gettext_lazy as _
 from django.conf import settings
 import os
@@ -47,7 +47,6 @@ class Question(models.Model):
         ('FR', _('Closed')),
         ('RF', _('Refused')),
         ('AN', _('Canceled')),
-        ('RP', _('Answered')),
         ('DS', _('Deactiveted')),
         )
 
@@ -57,18 +56,45 @@ class Question(models.Model):
         return os.path.join('images', str(instance.user.id), filename)
 
     user = models.ForeignKey(User,null=True, related_name="tickets",on_delete=models.SET_NULL)
-    created_at = models.DateTimeField(auto_now=True)
+    created_at = models.DateTimeField(auto_now_add=True,editable=False)
     titre = models.CharField(max_length=200)
 
     image = models.ImageField(blank=True,null=True, upload_to=content_file_name)
 
     priorite=models.CharField(max_length=1,choices=Priorite,default='F',)
     status = models.CharField(max_length=2,choices=Status,default='OV',)
-    #categorie = models.CharField(max_length=3,choices=Categorie,default='AUT',)
     categorie = models.ForeignKey(Categorie, on_delete=models.CASCADE, related_name='quesions',)
     souscategorie = models.ForeignKey(SousCategorie, on_delete=models.CASCADE, related_name='quesions',)
 
     description = models.TextField()
+    viwed_at = models.DateTimeField(blank=True,null=True)
+    time_to_view = models.DurationField(blank=True,null=True,verbose_name=_('time to view'))
+    first_react_at = models.DateTimeField(blank=True,null=True)
+    time_to_react = models.DurationField(blank=True,null=True,verbose_name=_('time to react'))
+    resolved_at = models.DateTimeField(blank=True,null=True)
+    time_to_resolv = models.DurationField(blank=True,null=True,verbose_name=_('time to resolv'))
+
+    def save(self, *args, **kwargs):
+        if self.viwed_at:
+            self.time_to_view = self.viwed_at - self.created_at
+        if self.first_react_at:
+            self.time_to_react = self.first_react_at - self.created_at
+        if self.resolved_at:
+            self.time_to_resolv = self.resolved_at - self.created_at
+
+
+
+        super().save(*args, **kwargs)
+
+
+
+
+
+    def get_time_to_resolv(self):
+        if self.time_to_resolv:
+            sec = self.time_to_resolv.seconds
+            return '%02d:%02d' % (int((sec/3600)%3600), int((sec/60)%60))
+        return _('Not Resolved Yet')
 
     Color = {}
     Color['F'] = 'secondary'
@@ -83,7 +109,7 @@ class Question(models.Model):
         return self.categorie.name + '/' + self.souscategorie.name
 
     def get_absolute_url(self):
-            return reverse("solutions:questiondetail", kwargs={"pk": self.pk})
+            return reverse_lazy("solutions:questiondetail", kwargs={"pk": self.pk})
 
     def __str__(self):
         return self.titre

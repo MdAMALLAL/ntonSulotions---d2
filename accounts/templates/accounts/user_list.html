@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+{% load bootstrap3 %}
+{% load i18n %}
+
+
+{% block body_block %}
+<div class="container">
+    <h1>user list</h1>
+    {% for user in user_list %}
+      <div class="py-2">
+        <p>{{user.get_full_name}}</p>
+        <p><a href="{% url 'accounts:edit' username=user.username %}">{{user}}</a></p>
+        <p>{{user.email}}</p>
+
+
+
+      </div>
+    {% endfor %}
+
+</div>
+{% endblock %}

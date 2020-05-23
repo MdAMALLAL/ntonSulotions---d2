@@ -10,7 +10,8 @@
   min-height: 30rem;
 }
 .mynav{
-  margin-bottom: .5rem;
+  margin-bottom: 1rem;
+  min-height: 100px;
 }
 
 .success{
