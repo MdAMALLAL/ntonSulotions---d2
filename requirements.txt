@@ -1,5 +1,5 @@
 Django==2.2.12
-django-bootstrap3==12.1.0
+django-bootstrap4==1.1.1
 Pillow==7.1.2
 pytz==2020.1
 sqlparse==0.3.1

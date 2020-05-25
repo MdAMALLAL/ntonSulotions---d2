@@ -20,19 +20,18 @@
 
   </head>
   <body class="bg-light">
-    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <nav class="navbar navbar-expand-lg navbar-light bg-success ">
       <a class="navbar-brand" href="{% url 'home' %}">
         <img src=" {% static "images/logo.png" %}" alt="">
       </a>
       <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
       </button>
-      <div class="collapse navbar-collapse flex-column ml-lg-0 ml-3" >
+      <div id="navbarNavDropdown"class="collapse navbar-collapse flex-column ml-lg-0 ml-3 text-" >
         {% if user.is_authenticated %}
         <ul class="navbar-nav flex-row mb-2 align-self-end">
           <li class="nav-item">
             <a class="nav-link" href={% url 'accounts:profile' username=user.username %}>{{user.username}}</a>
-          <li class="nav-item">
           <li class="nav-item">
             <a class="nav-link" href="{% url 'accounts:logout' %}" >{% trans "Log out" %}</a>
           </li>
@@ -55,9 +54,8 @@
               Administration
             </a>
             <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-              <a class="nav-link" href="{% url 'clients:list'  %}">{% trans "Clients List" %}</a>
-              <a class="nav-link" href="{% url 'clients:new'  %}">{% trans "New Clients" %}</a>
-              <a class="nav-link mx-1" href="{% url 'accounts:new' %}" class="btn btn-simple">{% trans "New User" %}</a>
+              <a class="nav-link" href="{% url 'clients:list'  %}">{% trans "Clients" %}</a>
+              <a class="nav-link mx-1" href="{% url 'accounts:new' %}" class="btn btn-simple">{% trans "Users" %}</a>
             </div>
           </li>
           {% endif %}
@@ -82,6 +80,9 @@
       {% for message in messages%}
       <div class="alert alert-{% if message.tags%}{{message.tags}}{%endif%}" role="alert">
       {{ message }}
+      <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+      </button>
       </div>
       {%endfor%}
     {%endif%}
@@ -90,7 +91,7 @@
 
 
 
-        <main role="main" class="container body_main ">
+        <main role="main" class="container px-1 body_main ">
           {% block body_block %}
 
           {% endblock %}

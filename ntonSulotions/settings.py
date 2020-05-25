@@ -56,7 +56,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'django.contrib.humanize',
     'modeltranslation',
-    'bootstrap3',
+    'bootstrap4',
     'clients',
     'accounts',
     'solutions'

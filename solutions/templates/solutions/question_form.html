@@ -1,5 +1,5 @@
 {% extends 'base.html' %}
-{% load bootstrap3 %}
+{% load bootstrap4 %}
 {% load i18n %}
 {% block body_block %}
 
@@ -20,12 +20,12 @@
       {% csrf_token %}
 
       {% if not form.instance.pk%}
-        {% bootstrap_field form.categorie layout='horizontal' error_css_class='border-danger'%}
-        {% bootstrap_field form.souscategorie show_label=False layout='horizontal' field_class='col-md-9 collapse'%}
+        {% bootstrap_field form.categorie  layout='horizontal' error_css_class='border-danger'%}
+        {% bootstrap_field form.souscategorie  layout='horizontal' show_label=False  field_class='offset-md-3 col-md-9 collapse justify-content-end'%}
         {% bootstrap_field form.priorite layout='horizontal'%}
       {% endif %}
       {% bootstrap_field form.titre layout='horizontal'%}
-      {% bootstrap_field form.image show_label=False layout='horizontal' field_class='col-md-9'%}
+      {% bootstrap_field form.image show_label=False layout='horizontal' field_class='col-md-9 align-self-end'%}
       {% bootstrap_field form.description layout='horizontal'%}
 
 
@@ -34,8 +34,8 @@
 
 
 
-      <button type="submit" class="save btn btn-info text_right">Save</button>
-      <a href="{% url 'solutions:questionlist' %}">Nevermind</a>
+      <button type="submit" class="save btn btn-info text_right">{% trans "Save" %}</button>
+      <a href="{% url 'solutions:questionlist' %}">{% trans "Cancel" %}</a>
     </form>
 
     <script src="https://code.jquery.com/jquery-3.4.1.min.js"  crossorigin="anonymous"></script>

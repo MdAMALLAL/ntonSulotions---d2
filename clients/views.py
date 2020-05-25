@@ -1,12 +1,13 @@
-
+from django.utils.translation import gettext_lazy as _
 from django.urls import reverse_lazy,reverse
+from django.shortcuts import render, get_object_or_404, redirect
 from django.views.generic import CreateView,ListView, DetailView, UpdateView, DeleteView
 from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.decorators import login_required
 from django.db import IntegrityError
 from .models import  Client
-from django.utils.translation import gettext_lazy as _
+from .forms import ClientForm
 
 
 
@@ -27,6 +28,8 @@ class ClientsCreate(LoginRequiredMixin,CreateView):
 
 class ClientsDetail(LoginRequiredMixin,DetailView):
     model = Client
+
+
 class ClientsUpdate(LoginRequiredMixin, UpdateView):
     model= Client
     fields=['name','email','tel','url','address','signed','comment']
@@ -45,6 +48,10 @@ class ClientsUpdate(LoginRequiredMixin, UpdateView):
 
 class ClientsList(LoginRequiredMixin,ListView):
     model = Client
+    def get_context_data(self, **kwargs):
+        context = super(ClientsList, self).get_context_data(**kwargs)
+        context['form'] = ClientForm
+        return context
 
 
 

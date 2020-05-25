@@ -1,22 +1,23 @@
 {%extends "base.html"%}
 
 {% block static_content %}
-
-<div class="row">
-  <div class="col-5">
-    <table class="table">
-      <tbody>
-        <tr class="text-center"><th colspan="2"><a href="">Créer un ticket</a></th></tr>
-        <tr><th class="">Tickets</th><th class="text-center">Nombre</th></tr>
-        <tr class=""><td><a href="{% url 'solutions:questionlist' %}?status=OV">Nouveau</a></td><td class="text-right">{{tickets_open}}</td></tr>
-        <tr class=""><td><a href="{% url 'solutions:questionlist' %}?status=EA">En attente</a></td><td class="text-right">{{tickets_waiting}}</td></tr>
-        <tr class=""><td><a href="{% url 'solutions:questionlist' %}?status=RS">Résolu</a></td><td class="text-right">{{tickets_resolved}}</td></tr>
-        <tr class=""><td><a href="{% url 'solutions:questionlist' %}?status=FR">Clos</a></td><td class="text-right">{{tickets_closed}}</td></tr>
-        <tr class=""><td><a href="{% url 'solutions:questionlist' %}?status=AN">Annule</a></td><td class="text-right">{{tickets_canceled}}</td></tr>
-      </tbody>
-    </table>
-  </div>
-</div>
+  {% if not user.is_staff %}
+    <div class="row">
+      <div class="col-5">
+        <table class="table">
+          <tbody>
+            <tr class="text-center"><th colspan="2"><a href="">Créer un ticket</a></th></tr>
+            <tr><th class="">Tickets</th><th class="text-center">Nombre</th></tr>
+            <tr class=""><td><a href="{% url 'solutions:questionlist' %}?status=OV">Nouveau</a></td><td class="text-right">{{tickets_open}}</td></tr>
+            <tr class=""><td><a href="{% url 'solutions:questionlist' %}?status=EA">En attente</a></td><td class="text-right">{{tickets_waiting}}</td></tr>
+            <tr class=""><td><a href="{% url 'solutions:questionlist' %}?status=RS">Résolu</a></td><td class="text-right">{{tickets_resolved}}</td></tr>
+            <tr class=""><td><a href="{% url 'solutions:questionlist' %}?status=FR">Clos</a></td><td class="text-right">{{tickets_closed}}</td></tr>
+            <tr class=""><td><a href="{% url 'solutions:questionlist' %}?status=AN">Annule</a></td><td class="text-right">{{tickets_canceled}}</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  {% endif %}
 
 
 {% endblock %}

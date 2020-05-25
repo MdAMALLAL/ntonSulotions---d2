@@ -8,7 +8,7 @@ app_name = 'accounts'
 urlpatterns = [
     path("login/", auth_views.LoginView.as_view(),name='login'),
     path("logout/", auth_views.LogoutView.as_view(), name="logout"),
-    path("newuser/", views.NewUser.as_view(), name="new"),
+    path("new_user/", views.NewUser.as_view(), name="new"),
     path("list/", views.UserListView.as_view(), name="list"),
 
     path("profile/<username>",
@@ -17,7 +17,7 @@ urlpatterns = [
     path("profile/<username>/edit",
         views.ProfileUpdateView.as_view(),
         name="edit"),
-    path("profile/<username>/changepassword",
+    path("profile/<username>/change_password",
         auth_views.PasswordChangeView.as_view(template_name='accounts/password_change_form.html'),
         name="changepassword"),
     path("password-reset/",
