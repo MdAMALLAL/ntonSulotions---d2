@@ -20,13 +20,13 @@
       {% csrf_token %}
 
       {% if not form.instance.pk%}
-        {% bootstrap_field form.categorie  layout='horizontal' error_css_class='border-danger'%}
-        {% bootstrap_field form.souscategorie  layout='horizontal' show_label=False  field_class='offset-md-3 col-md-9 collapse justify-content-end'%}
-        {% bootstrap_field form.priorite layout='horizontal'%}
+        {% bootstrap_field form.categorie  layout='horizontal' size='small' error_css_class='border-danger'%}
+        {% bootstrap_field form.souscategorie  layout='horizontal' size='small'  show_label=False  field_class='offset-md-3 col-md-9 collapse justify-content-end'%}
+        {% bootstrap_field form.priorite layout='horizontal' size='small'%}
       {% endif %}
-      {% bootstrap_field form.titre layout='horizontal'%}
-      {% bootstrap_field form.image show_label=False layout='horizontal' field_class='col-md-9 align-self-end'%}
-      {% bootstrap_field form.description layout='horizontal'%}
+      {% bootstrap_field form.titre layout='horizontal' size='small'%}
+      {% bootstrap_field form.image show_label=False layout='horizontal' size='small' field_class='col-md-9 align-self-end'%}
+      {% bootstrap_field form.description layout='horizontal' size='small'%}
 
 
 

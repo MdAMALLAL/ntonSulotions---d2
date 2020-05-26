@@ -89,3 +89,7 @@ hr {
   transform: rotate(-7deg);
   border-bottom-left-radius: 3rem;
 }
+
+.nav-btn{
+  display: block !important;
+}
