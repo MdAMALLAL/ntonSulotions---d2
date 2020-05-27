@@ -5,6 +5,7 @@ from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db import IntegrityError
 from . import forms
+from  clients.models import Client
 from django.http import Http404
 
 #from django.contrib.auth import get_user_model
@@ -21,7 +22,7 @@ class ProfileView(DetailView):
     model = User
     slug_field='username'
     slug_url_kwarg='username'
-bypage = 1
+bypage = 20
 class UserListView(ListView):
     model = User
     pagecounter = 0
@@ -31,6 +32,10 @@ class UserListView(ListView):
             userlist =  User.objects.all()
         else:
             raise Http404
+
+        if self.request.GET.get('client'):
+            userlist =  User.objects.filter(client = self.request.GET.get('client'))
+
 
         if self.request.GET.get('page'):
             self.page = int(self.request.GET.get('page'))
@@ -47,6 +52,8 @@ class UserListView(ListView):
         context['inpage']=self.page
         context['pagecounter']=self.pagecounter
         context['preview']=0
+        context['clients']=Client.objects.all()
+
         if self.page: context['preview']= self.page - 1
         context['next']=self.pagecounter
         if not self.page == self.pagecounter: context['next']=self.page + 1
