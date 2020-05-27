@@ -1,0 +1,98 @@
+@font-face {
+  font-family: 'Oswald';
+  font-style: normal;
+  font-weight: 700;
+  src: url(https://fonts.gstatic.com/s/oswald/v31/TK3_WkUHHAIjg75cFRf3bXL8LICs1xZosUtiZTaR.woff2) format('woff2');
+  unicode-range: U+0460-052F, U+1C80-1C88, U+20B4, U+2DE0-2DFF, U+A640-A69F, U+FE2E-FE2F;
+}
+
+.body_main{
+  min-height: 30rem;
+}
+.form-control {
+  width: 50% !important;
+}
+.mynav{
+  margin-bottom: 1rem;
+  min-height: 100px;
+}
+
+.success{
+    background-color: #28a745;
+}
+.warning{
+      background-color: #ffc107;
+}
+
+textarea{
+  height: 5em !important;
+
+}
+hr {
+    margin: 20px 0;
+    border: 0;
+        border-top-color: currentcolor;
+        border-top-style: none;
+        border-top-width: 0px;
+        border-bottom-color: currentcolor;
+        border-bottom-style: none;
+        border-bottom-width: 0px;
+    border-top: 1px solid #eee;
+    border-bottom: 1px solid #fff;
+}
+.featurette-divider{
+  margin: 30px 0;
+  clear: both;
+}
+.entry-title {
+    font-weight: 700;
+}
+.question{
+  padding: .5rem;
+}
+
+.nouvou_question{
+  border-radius: 2px;
+  height: 20px;
+  width: 20px;
+  fill: rgba(0,0,0,.5);
+}
+
+.profil-h3{
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: .5px;
+  line-height: 12px;
+  text-transform: uppercase;
+  border-bottom: 2px solid #EDEFE1;
+  color: #7c7c7c;
+  margin-bottom: 32px;
+  padding-bottom: 6px;
+}
+
+
+.profil-h2{
+  font-size: 20px;
+  font-weight: 500;
+  line-height: 24px;
+  color: #1c1c1c;
+  padding: 40px 0;
+}
+
+.filter-item {
+  padding: .4rem 1.25rem;
+}
+.descover{
+  top: -40%;
+  left: -1rem;
+  width: 130%;
+  height: 150%;
+  -webkit-transform: rotate(-7deg);
+  -ms-transform: rotate(-7deg);
+  transform: rotate(-7deg);
+  border-bottom-left-radius: 3rem;
+}
+
+.nav-btn{
+  display: block !important;
+}
