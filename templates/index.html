@@ -6,7 +6,7 @@
       <div class="col-5">
         <table class="table">
           <tbody>
-            <tr class="text-center"><th colspan="2"><a href="">Créer un ticket</a></th></tr>
+            <tr class="text-center"><th colspan="2"><a href="{% url 'solutions:questioncreate' %}">Créer un ticket</a></th></tr>
             <tr><th class="">Tickets</th><th class="text-center">Nombre</th></tr>
             <tr class=""><td><a href="{% url 'solutions:questionlist' %}?status=OV">Nouveau</a></td><td class="text-right">{{tickets_open}}</td></tr>
             <tr class=""><td><a href="{% url 'solutions:questionlist' %}?status=EA">En attente</a></td><td class="text-right">{{tickets_waiting}}</td></tr>
