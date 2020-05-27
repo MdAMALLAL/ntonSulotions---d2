@@ -9,6 +9,9 @@
 .body_main{
   min-height: 30rem;
 }
+.form-control {
+  width: 50% !important;
+}
 .mynav{
   margin-bottom: 1rem;
   min-height: 100px;
@@ -88,4 +91,8 @@ hr {
   -ms-transform: rotate(-7deg);
   transform: rotate(-7deg);
   border-bottom-left-radius: 3rem;
+}
+
+.nav-btn{
+  display: block !important;
 }
