@@ -21,38 +21,36 @@ class ProfileView(DetailView):
     model = User
     slug_field='username'
     slug_url_kwarg='username'
-
+bypage = 1
 class UserListView(ListView):
     model = User
+    pagecounter = 0
+    page = 0
     def get_queryset(self):
-        userlist = User.objects.all()
         if self.request.user.is_staff:
             userlist =  User.objects.all()
         else:
             raise Http404
 
-        #### filtre by priorite
-        if self.request.GET.get('is_staff'):
-            userlist = userlist.filter(is_staff=True)
+        if self.request.GET.get('page'):
+            self.page = int(self.request.GET.get('page'))
+        self.pagecounter = int((userlist.count()-1 )/ bypage)
 
-        if self.request.GET.get('client'):
-            userlist = userlist.filter(client = self.request.GET.get('client'))
+        if self.page <= self.pagecounter:
+            return userlist[self.page * bypage :(self.page + 1) * bypage]
+        else:
+            raise Http404
 
-        return userlist
-        #if self.request.GET.get('page'):
-        #    self.page = int(self.request.GET.get('page'))
-
-        #print(self.page)
-        #self.pagecounter = int(userlist.count() / bypage - 0.5)
-        #self.page = self.kwargs.get('page')
-        #print(self.pagecounter)
-
-        #if self.page <= self.pagecounter:
-            #print(self.page)
-        #    return userlist[self.page * bypage :(self.page + 1) * bypage]
-        #else:
-            #self.page = self.pagecounter
-        #    raise Http404
+    def get_context_data(self, **kwargs):
+        context = super(UserListView, self).get_context_data(**kwargs)
+        context['form'] = forms.UserCreateForm
+        context['inpage']=self.page
+        context['pagecounter']=self.pagecounter
+        context['preview']=0
+        if self.page: context['preview']= self.page - 1
+        context['next']=self.pagecounter
+        if not self.page == self.pagecounter: context['next']=self.page + 1
+        return context
 
 
 

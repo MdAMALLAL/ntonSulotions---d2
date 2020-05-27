@@ -47,9 +47,9 @@
                     <a class="nav-link" href="{% url 'accounts:logout' %}" >{% trans "Log out" %}</a>
                   </li>
                   <li class="nav-item d-md-none">
-                    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarsE" aria-controls="navbarsExample08" aria-expanded="false" aria-label="Toggle navigation">
+                    {% comment %} <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarsE" aria-controls="navbarsExample08" aria-expanded="false" aria-label="Toggle navigation">
                       <span class="navbar-toggler-icon"></span>
-                    </button>
+                    </button> {% endcomment %}
                   </li>
                   </div>
               {%endif%}
@@ -73,7 +73,7 @@
                 </a>
                 <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
                   <a class="nav-link" href="{% url 'clients:list'  %}">{% trans "Clients" %}</a>
-                  <a class="nav-link mx-1" href="{% url 'accounts:new' %}" class="btn btn-simple">{% trans "Users" %}</a>
+                  <a class="nav-link mx-1" href="{% url 'accounts:list' %}" class="btn btn-simple">{% trans "Users" %}</a>
                 </div>
               </li>
               {% endif %}

@@ -71,7 +71,7 @@ class QuestionSingle(LoginRequiredMixin, generic.DetailView):
             raise Http404(_("ticket does not exist"))
             return
 
-bypage = 10
+bypage = 3
 class QuestionList(LoginRequiredMixin, generic.ListView):
     model = Question
     pagecounter = 0
@@ -94,10 +94,7 @@ class QuestionList(LoginRequiredMixin, generic.ListView):
 
         if self.request.GET.get('page'):
             self.page = int(self.request.GET.get('page'))
-        #print(self.page)
-        self.pagecounter = int(questionlist.count() / bypage - 0.5)
-        #self.page = self.kwargs.get('page')
-        #print(self.pagecounter)
+        self.pagecounter = int((questionlist.count()-1 )/ bypage)
 
         if self.page <= self.pagecounter:
             #print(self.page)
@@ -124,7 +121,7 @@ class QuestionList(LoginRequiredMixin, generic.ListView):
             active[self.request.GET.get('status')] = "active"
         if self.request.GET.get('priorite'):
             context['priorite']= '&priorite='+(self.request.GET.get('priorite'))
-            active[self.request.GET.get('priorite')] = "active"
+            active[self.request.GET.get('priorite')] = "bg-primary text-white"
         context['active'] = active
         context['preview']=0
         if self.page: context['preview']= self.page - 1

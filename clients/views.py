@@ -46,12 +46,45 @@ class ClientsUpdate(LoginRequiredMixin, UpdateView):
 
         return super().form_valid(form)
 
+bypage = 1
 class ClientsList(LoginRequiredMixin,ListView):
     model = Client
+    pagecounter = 0
+    page = 0
+
+    def get_queryset(self):
+        if self.request.user.is_staff:
+            clientlist =  Client.objects.all()
+        else:
+            raise Http404
+
+        if self.request.GET.get('page'):
+            self.page = int(self.request.GET.get('page'))
+        self.pagecounter = int((clientlist.count()-1 )/ bypage)
+
+        if self.page <= self.pagecounter:
+            #print(self.page)
+            return clientlist[self.page * bypage :(self.page + 1) * bypage]
+        else:
+            #self.page = self.pagecounter
+            raise Http404
+
+
+
+
+
+
     def get_context_data(self, **kwargs):
         context = super(ClientsList, self).get_context_data(**kwargs)
         context['form'] = ClientForm
+        context['inpage']=self.page
+        context['pagecounter']=self.pagecounter
+        context['preview']=0
+        if self.page: context['preview']= self.page - 1
+        context['next']=self.pagecounter
+        if not self.page == self.pagecounter: context['next']=self.page + 1
         return context
+
 
 
 

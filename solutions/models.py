@@ -73,6 +73,7 @@ class Question(models.Model):
     time_to_react = models.DurationField(blank=True,null=True,verbose_name=_('time to react'))
     resolved_at = models.DateTimeField(blank=True,null=True)
     time_to_resolv = models.DurationField(blank=True,null=True,verbose_name=_('time to resolv'))
+    last_action = models.DateTimeField(auto_now=True)
 
     def save(self, *args, **kwargs):
         if self.viwed_at:
@@ -95,6 +96,16 @@ class Question(models.Model):
             sec = self.time_to_resolv.seconds
             return '%02d:%02d' % (int((sec/3600)%3600), int((sec/60)%60))
         return _('Not Resolved Yet')
+    def get_time_to_view(self):
+        if self.time_to_view:
+            sec = self.time_to_view.seconds
+            return '%02d:%02d' % (int((sec/3600)%3600), int((sec/60)%60))
+        return _('Not Viewed Yet')
+    def get_time_to_react(self):
+        if self.time_to_react:
+            sec = self.time_to_react.seconds
+            return '%02d:%02d' % (int((sec/3600)%3600), int((sec/60)%60))
+        return _('Not Reacted Yet')
 
     Color = {}
     Color['F'] = 'secondary'

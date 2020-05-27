@@ -32,15 +32,15 @@
     </div>
 </div>
     <div class="">
-      <div class="text-center p-3 my-2 text-white-50 bg-dark rounded shadow-sm">
+      <div class=" p-3 my-2 text-white-50 bg-dark rounded shadow-sm">
         <div class="lh-100">
           <h6 class="mb-0 text-white lh-100">List des ticket</h6>
         </div>
       </div>
 
       {%  if question_list%}
-      {% if pagecounter > 1 %}
-      <div class="text-center">
+      {% if pagecounter > 0 %}
+      <div class="text-center py-1">
         <a href="?page=0{{priorite}}{{status}}">
           <svg class="bi bi-chevron-double-left" width="2em" height="2em" viewBox="0 0 16 16" fill="bg-dark" xmlns="http://www.w3.org/2000/svg">
             <path fill-rule="evenodd" d="M8.354 1.646a.5.5 0 010 .708L2.707 8l5.647 5.646a.5.5 0 01-.708.708l-6-6a.5.5 0 010-.708l6-6a.5.5 0 01.708 0z" clip-rule="evenodd"/>
@@ -97,8 +97,8 @@
 
       {% endfor %}
       </table>
-      {% if pagecounter > 1 %}
-      <div class="text-center">
+      {% if pagecounter > 0 %}
+      <div class="text-center py-1">
         <a href="?page=0{{priorite}}{{status}}">
           <svg class="bi bi-chevron-double-left" width="2em" height="2em" viewBox="0 0 16 16" fill="bg-dark" xmlns="http://www.w3.org/2000/svg">
             <path fill-rule="evenodd" d="M8.354 1.646a.5.5 0 010 .708L2.707 8l5.647 5.646a.5.5 0 01-.708.708l-6-6a.5.5 0 010-.708l6-6a.5.5 0 01.708 0z" clip-rule="evenodd"/>
