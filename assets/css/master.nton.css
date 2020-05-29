@@ -10,11 +10,15 @@
   min-height: 30rem;
 }
 .form-control {
-  width: 50% !important;
+  width: 50% ;
 }
 .mynav{
   margin-bottom: 1rem;
   min-height: 100px;
+}
+.form-control-full >
+.form-control {
+    width: 100% !important;
 }
 
 .success{

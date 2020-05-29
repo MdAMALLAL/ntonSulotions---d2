@@ -10,6 +10,8 @@ from django.views import generic
 from .models import Question,Reponce, Categorie, SousCategorie
 from .forms import ReponceForm, QuestionForm
 from django.http import Http404
+from django.utils import timezone
+from django.db.models import Q
 from django.utils.translation import gettext_lazy as _
 
 
@@ -66,18 +68,22 @@ class QuestionSingle(LoginRequiredMixin, generic.DetailView):
         obj=super().get_object()
         # Record the last accessed dateobj.last_accessed=timezone.now()obj.save()
         if self.request.user.is_staff or self.request.user == obj.user:
+            if not obj.viwed_at and self.request.user.is_staff :
+                obj.viwed_at = timezone.now()
+                obj.save()
             return obj
         else:
             raise Http404(_("ticket does not exist"))
             return
 
-bypage = 3
+bypage = 20
 class QuestionList(LoginRequiredMixin, generic.ListView):
     model = Question
     pagecounter = 0
     page = 0
 
     def get_queryset(self):
+        query = self.request.GET.get('q')
         questionlist = Question.objects.all()
         if self.request.user.is_staff:
             questionlist =  Question.objects.all()
@@ -90,8 +96,12 @@ class QuestionList(LoginRequiredMixin, generic.ListView):
 
         if self.request.GET.get('status'):
             questionlist = questionlist.filter(status = self.request.GET.get('status'))
+        if query:
+            questionlist = questionlist.filter(
+                            Q(description__icontains=query) | Q(titre__icontains=query)
+                            )
 
-
+            print(questionlist)
         if self.request.GET.get('page'):
             self.page = int(self.request.GET.get('page'))
         self.pagecounter = int((questionlist.count()-1 )/ bypage)
@@ -114,22 +124,22 @@ class QuestionList(LoginRequiredMixin, generic.ListView):
 
         context=super().get_context_data(**kwargs)
         context['inpage']=self.page
+
+        if self.request.GET.get('q') : context['query'] = '&q='+self.request.GET.get('q')
+
         context['pagecounter']=self.pagecounter
 
         if self.request.GET.get('status'):
             context['status']= '&status='+(self.request.GET.get('status'))
-            active[self.request.GET.get('status')] = "active"
+            active[self.request.GET.get('status')] = "selected"
         if self.request.GET.get('priorite'):
             context['priorite']= '&priorite='+(self.request.GET.get('priorite'))
-            active[self.request.GET.get('priorite')] = "bg-primary text-white"
+            active[self.request.GET.get('priorite')] = "selected"
         context['active'] = active
         context['preview']=0
         if self.page: context['preview']= self.page - 1
         context['next']=self.pagecounter
         if not self.page == self.pagecounter: context['next']=self.page + 1
-
-
-
         return context
 
 
@@ -144,7 +154,14 @@ def add_reponce_to_question(request, pk):
                 reponce = form.save(commit=False)
                 reponce.question = question
                 reponce.user= request.user
+                question.last_action = timezone.now()
+                question.status = reponce.status
+                if not question.first_react_at: question.first_react_at = timezone.now()
+                if reponce.status == 'RS':
+                    question.resolved_at = timezone.now()
+
                 reponce.save()
+                question.save()
             except IntegrityError:
                 messages.warning(request,_("Warning, Something went wrong, please try again"))
             else:
@@ -162,6 +179,10 @@ def questioneResolved(request, pk):
     if request.method == "POST":
         try:
             question.status = 'RS'
+            question.resolved_at = timezone.now()
+            if not question.first_react_at: question.first_react_at = timezone.now()
+            question.last_action = timezone.now()
+
             question.save()
         except IntegrityError:
             messages.warning(request,_("Warning, Something went wrong, please try again"))

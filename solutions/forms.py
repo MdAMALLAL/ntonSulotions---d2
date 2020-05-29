@@ -1,21 +1,16 @@
 from django import forms
 from django.db import IntegrityError
-
 from django.contrib import messages
 from django.contrib.auth import get_user_model
 User = get_user_model()
-
 from django.utils.translation import gettext_lazy as _
-
-
 from .models import Reponce, Question, Categorie, SousCategorie
-
 
 class ReponceForm(forms.ModelForm):
 
     class Meta:
         model = Reponce
-        fields = ( 'description',)
+        fields = ( 'description','status')
 
 class QuestionForm(forms.ModelForm):
 

@@ -20,66 +20,73 @@
       <div class="tab-pane fade show active" id="list-home" role="tabpanel" aria-labelledby="list-home-list">
         <table class="table table-borderless  mx-xs-2 ">
           <tbody class="row row-col-1  no-gutters">
-              <tr class="col-12 bg-light text-center align-self-center">
-                <th >id</th>
-                  <td>{{question.pk}}</td>
-                  <td> <a class="btn btn-primary" href="{% url 'solutions:questionedit' pk=question.pk %}">{% trans "Edit" %}</a></td>
-                  <td><a class="btn btn-primary" href="{% url 'solutions:questioneResolved' pk=question.pk %}">{% trans "Resolved" %}</a></td>
+            <tr class="col-12 bg-light text-center align-self-center">
+              <th class="">Id</th>
+              <td>{{question.pk}}</td>
+              <td><a class="btn btn-primary" href="{% url 'solutions:questionedit' pk=question.pk %}">{% trans "Edit" %}</a></td>
+              {% if  question.status == "OV"%}
+              <td>
+                <form class="" action="{% url 'solutions:questioneResolved' pk=question.pk %}" method="post">
+                  {% csrf_token %}
+                  <button class="btn btn-primary" type="submit" name="button">{% trans "Resolved" %}</button>
+                </form>
+              </td>
+              {% endif %}
+            </tr>
+            <div class="col-12 row">
+              <tr class="col-md-6 col-sm-12 row no-gutters">
+                <th class="col-4 bg-light">{% trans "Open date" %}</th>
+                <td class="col bg-white" >{{question.created_at|date:"Y-m-d H:m"}}</td>
               </tr>
-              <div class="col-12 row">
-                <tr class="col-md-6 col-sm-12 row no-gutters">
-                    <th class="col-4 bg-light">{% trans "Open date" %}</th>
-                    <td class="col bg-white" >{{question.created_at|date:"y-m-d H:m"}}</td>
-                </tr>
-                <tr class="col-md-6 col-sm-12 row no-gutters">
-                  <th class="col-4 bg-light">{% trans "By" %}</th>
-                  <td class="col bg-white">{{question.user}}</td>
-                </tr>
-              </div>
+              <tr class="col-md-6 col-sm-12 row no-gutters">
+                <th class="col-4 bg-light">{% trans "By" %}</th>
+                <td class="col bg-white">{{question.user}}</td>
+              </tr>
+            </div>
 
-              <tr class="col-12 col-sm-12 col-sm-12 row no-gutters">
-                <th class="col-2 bg-light">{% trans "Lase edit" %}</th>
-                  <td class="col bg-white">{{question.last_action|date:"y-m-d H:m"}}</td>
-              </tr>
-              <tr class="col-md-6  col-sm-12 row no-gutters">
-                <th class="col-4 bg-light">{% trans "Time to react" %}</th>
-                  <td class="col-8 bg-white">{{question.get_time_to_react}}</td>
-              </tr>
-              <tr class="col-md-6 col-sm-12 row no-gutters">
-                <th class="col-4  bg-light">{% trans "Time to resolv" %}</th>
-                  <td class="col-8 ">{{question.get_time_to_resolv}}</td>
-              </tr>
-              <tr class="col-12 col-sm-12 row no-gutters">
-                <th class="col-2 bg-light">{% trans "Resolved at" %}</th>
-                  <td class="col  bg-white ">{{question.resolved_at|date:"y-m-d H:m"}}</td>
-              </tr>
-              <tr class="col-md-6 col-sm-12 row no-gutters">
-                <th class="col-4 bg-light">{% trans "Status" %}</th>
-                  <td class="col bg-white">{{question.get_status_display}}</td>
-              </tr>
-              <tr class="col-md-6 col-sm-12 row no-gutters">
-                <th class="col-4 bg-light">{% trans "Status" %}</th>
-                  <td class="col bg-white">{{question.get_priorite_display}}</td>
-              </tr>
-              <tr class="col-md-12 col-sm-12 row no-gutters">
-                <th class="col-2 bg-light">{% trans "Categorie" %}</th>
-                  <td class="col bg-white">{{question.categorie.name}}/{{question.souscategorie.name}}</td>
-              </tr>
-              <tr class="col-md-12 col-sm-12 row no-gutters">
-                <th class="col-2 bg-light">{% trans "Title" %}</th>
-                  <td class="col bg-white">{{question.titre}}</td>
-              </tr>
-              <tr class="col-md-12 col-sm-12 row no-gutters">
-                <th class="col-2 bg-light">{% trans "Description" %}</th>
-                  <td class="col bg-white">{{question.description}}</td>
-              </tr>
-              <tr class="col-md-12 col-sm-12 row no-gutters">
-                  <td class="col ">
-                    {% if question.image %}
-                    <img src="{{question.image.url}}" height="50%" width="50%" alt="">
-                    {% endif %}
-                  </td>
-              </tr>
+            <tr class="col-12 col-sm-12 col-sm-12 row no-gutters">
+              <th class="col-2 bg-light">{% trans "Lase edit" %}</th>
+              <td class="col bg-white">{{question.last_action|date:"Y-m-d H:m"}}</td>
+            </tr>
+            <tr class="col-md-6  col-sm-12 row no-gutters">
+              <th class="col-4 bg-light">{% trans "Time to react" %}</th>
+              <td class="col-8 bg-white">{{question.get_time_to_react}}</td>
+            </tr>
+            <tr class="col-md-6 col-sm-12 row no-gutters">
+              <th class="col-4  bg-light">{% trans "Time to resolv" %}</th>
+              <td class="col-8 bg-white">{{question.get_time_to_resolv}}</td>
+            </tr>
+            <tr class="col-12 col-sm-12 row no-gutters">
+              <th class="col-2 bg-light">{% trans "Resolved at" %}</th>
+              <td class="col  bg-white ">{{question.resolved_at|date:"Y-m-d H:m"}}</td>
+            </tr>
+            <tr class="col-md-6 col-sm-12 row no-gutters">
+              <th class="col-4 bg-light">{% trans "Status" %}</th>
+              <td class="col bg-white">{{question.get_status_display}}</td>
+            </tr>
+            <tr class="col-md-6 col-sm-12 row no-gutters">
+              <th class="col-4 bg-light">{% trans "Status" %}</th>
+              <td class="col bg-white">{{question.get_priorite_display}}</td>
+            </tr>
+            <tr class="col-md-12 col-sm-12 row no-gutters">
+              <th class="col-2 bg-light">{% trans "Categorie" %}</th>
+              <td class="col bg-white">{{question.categorie.name}}/{{question.souscategorie.name}}</td>
+            </tr>
+            <tr class="col-md-12 col-sm-12 row no-gutters">
+              <th class="col-2 bg-light">{% trans "Title" %}</th>
+              <td class="col bg-white">{{question.titre}}</td>
+            </tr>
+            <tr class="col-md-12 col-sm-12 row no-gutters">
+              <th class="col-2 bg-light">{% trans "Description" %}</th>
+              <td class="col bg-white">{{question.description}}</td>
+            </tr>
+            <tr class="col-md-12 col-sm-12 row no-gutters">
+              <td class="col ">
+                {% if question.image %}
+                <img src="{{question.image.url}}" height="50%" width="50%" alt="">
+                {% endif %}
+              </td>
+            </tr>
 
 
 
@@ -88,26 +95,15 @@
       </div>
       <div class="tab-pane fade" id="list-profile" role="tabpanel" aria-labelledby="list-profile-list">
         <h4>Action</h4>
-        <table class="table  table-sm">
-          <tbody>
-              {% for reponce in question.reponces.all %}
-              <tr>
-                <td>{{ reponce.created_at|date:"d/M/Y" }}</td>
-                <td>{{ reponce.description|safe|linebreaks }}</td>
-                <td>{% trans "Posted by" %}: <strong> {%if reponce.user.get_full_name %} {{ reponce.user.get_full_name  }} {%else%} {{ reponce.user  }}{%endif%}</strong></td>
-            </tr>
-            {% empty %}
-                <p>{% trans "No action" %}.</p>
-            {% endfor %}
-            </tbody>
-        </table>
         <form method="post" action="{% url 'solutions:questionereponder' pk=question.pk %}">
           {% csrf_token %}
           <div class="row">
             <div class="col-sm-10">
               <div class="wmd-panel">
-                  <div id="wmd-button-bar" ></div>
-                      {% bootstrap_form form show_label=False layout='horizontal' %}
+                <div id="wmd-button-bar" ></div>
+                {% bootstrap_field form.description show_label=False layout='horizontal' field_class='form-control-full col-md-9' %}
+                {% bootstrap_field form.status show_label=False layout='horizontal'  %}
+
               </div>
             </div>
             <div class="col-sm-2">
@@ -115,13 +111,36 @@
             </div>
           </div>
         </form>
+        <table class="table  table-sm">
+          <tbody>
+            {% for reponce in question.reponces.all %}
+            <tr>
+              <td>{{ reponce.created_at|date:"d/M/Y" }}</td>
+              <td>{{ reponce.description|safe|linebreaks }}</td>
+              <td>{% trans "Posted by" %}: <strong> {%if reponce.user.get_full_name %} {{ reponce.user.get_full_name  }} {%else%} {{ reponce.user  }}{%endif%}</strong> ({{reponce.get_status_display}})</td>
+            </tr>
+            {% empty %}
+            <p>{% trans "No action" %}.</p>
+            {% endfor %}
+          </tbody>
+        </table>
+
       </div>
       <div class="tab-pane fade" id="list-statistics" role="tabpanel" aria-labelledby="list-statistics-list">
         <h3>{% trans "Statistics" %}</h3>
         <h4 class="text-center bg-dark py-2 text-white rounded">Dates</h4>
-        <p>{{question.created_at|date:"y-m-d H:m"}}</p>
 
+        <p>{{question.created_at|date:"y-m-d H:m"}} <i class="fa fa-star-of-life"></i> {% trans "Ticket openning" %}</p>
+        <p>{{question.viwed_at|date:"y-m-d H:m"}} <i class="fa fa-star-of-life"></i> {% trans "Taking into account" %}</p>
+        {% for reponce in question.reponces.all %}
+        <p>{{reponce.created_at|date:"y-m-d H:m"}} <span class="fa {{reponce.status}}"></span> {{reponce.description}}</p>
+        {% endfor %}
+        <p>{% now "y-m-d H:m"%} <span class="fa fa-caret-down"></span> {% trans "Now" %}</p>
 
+        <h4 class="text-center bg-dark py-2 text-white rounded">{% trans "Times" %}</h4>
+        <p>{% trans "Taking into account" %} {{question.get_time_to_view}}</p>
+        <p>{% trans "Time to first react" %} {{question.get_time_to_react}}</p>
+        <p>{% trans "Time to resolv" %} {{question.get_time_to_resolv}}</p>
 
 
 

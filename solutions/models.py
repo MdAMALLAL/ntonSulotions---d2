@@ -52,7 +52,7 @@ class Question(models.Model):
 
 
     def content_file_name(instance, filename):
-        filename = "%s__%s" % (uuid.uuid4(),filename)
+        filename = "%s__%s" % (uuid.uuid4().hex[:6].upper(),filename)
         return os.path.join('images', str(instance.user.id), filename)
 
     user = models.ForeignKey(User,null=True, related_name="tickets",on_delete=models.SET_NULL)
@@ -90,22 +90,31 @@ class Question(models.Model):
 
 
 
+    def date_to_string(self,date, string, *args):
+        if date:
+            days = date.days
+            sec = date.seconds
+            if days == 1:
+                return '%02d %s %02d H %02d M' % (days, _('Day'),int((sec/3600)%3600), int((sec/60)%60))
+            if days > 1:
+                return '%02d %s %02d H %02d M' % (days, _('Days'),int((sec/3600)%3600), int((sec/60)%60))
+            return '%02d H %02d M' % (int((sec/3600)%3600), int((sec/60)%60))
+        return string
 
     def get_time_to_resolv(self):
-        if self.time_to_resolv:
-            sec = self.time_to_resolv.seconds
-            return '%02d:%02d' % (int((sec/3600)%3600), int((sec/60)%60))
-        return _('Not Resolved Yet')
+        string = _("Not resolved yet")
+        return self.date_to_string(self.time_to_resolv, string)
+
     def get_time_to_view(self):
-        if self.time_to_view:
-            sec = self.time_to_view.seconds
-            return '%02d:%02d' % (int((sec/3600)%3600), int((sec/60)%60))
-        return _('Not Viewed Yet')
+        string = _("Not viewed yet")
+
+        return self.date_to_string(self.time_to_view, string)
+
     def get_time_to_react(self):
-        if self.time_to_react:
-            sec = self.time_to_react.seconds
-            return '%02d:%02d' % (int((sec/3600)%3600), int((sec/60)%60))
-        return _('Not Reacted Yet')
+        string = _("Not reacted yet")
+
+        return self.date_to_string(self.time_to_react, string)
+
 
     Color = {}
     Color['F'] = 'secondary'
@@ -134,11 +143,19 @@ class Question(models.Model):
 
 
 class Reponce(models.Model):
+    Status= (
+        ('EA', _('Waiting')),
+        ('RS', _('Resolved')),
+        ('FR', _('Closed')),
+        ('RF', _('Refused')),
+        ('AN', _('Canceled')),
+        )
     user = models.ForeignKey(User,null=True, related_name="reponces",on_delete=models.SET_NULL)
     created_at = models.DateTimeField(auto_now=True,)
-    description = models.TextField()
+    description = models.TextField(null=True)
     question = models.ForeignKey(Question,null=True, related_name="reponces",on_delete=models.SET_NULL)
     image = models.ImageField(null=True,blank=True, upload_to='images/')
+    status = models.CharField(max_length=2,choices=Status,default='EA',)
 
     def __str__(self):
         return self.description

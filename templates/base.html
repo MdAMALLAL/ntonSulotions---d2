@@ -16,10 +16,11 @@
     <![endif]-->
     {# Load CSS and JavaScript #}
     {% bootstrap_css %}
+    <link rel="stylesheet" href="{% static 'css/all.css'%}">
     <link rel="icon" href="{% static 'favicon.ico' %}">
     <link rel="stylesheet" href="{% static 'css/offcanvas.css'%}">
     <!-- <link href="{% static 'css/wmd.css'%}" rel="stylesheet" /> -->
-    <link rel="stylesheet" href="{% static 'css/master.nton.css'%}">
+    <link rel="stylesheet" href="{%static 'css/master.nton.css'%}?{% now "j-S-F-Y-H-i"%}">
 
   </head>
   <body class="bg-light">
@@ -82,73 +83,43 @@
         </div>
 </nav>
 
+<div class="container">
+  {% bootstrap_messages %}
+</div>
 
+<main role="main" class="container px-1 body_main ">
+  {% block body_block %}
 
+  {% endblock %}
 
+{% block static_content %}
 
+{% endblock %}
+</main>
 
-
-
-
-
-
-
-
-
-
-
-
-  <div class="container">
-    {% if messages %}
-      {% for message in messages%}
-      <div class="alert alert-{% if message.tags%}{{message.tags}}{%endif%}" role="alert">
-      {{ message }}
-      <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-      </button>
-      </div>
-      {%endfor%}
-    {%endif%}
-      </div>
-
-
-
-
-        <main role="main" class="container px-1 body_main ">
-          {% block body_block %}
-
-          {% endblock %}
-
-        {% block static_content %}
-
-        {% endblock %}
-        </main>
-
-    <footer class="footer mt-auto py-3 bg-dark text-white">
-      <div class="container-fluid">
-        <div class="row">
-        <div class="col-md-10 text-center">
-          <p>Copyright ©
-            <script>document.write(new Date().getFullYear());</script> Tous droits réservés | Fabriqué par <a href="http://ntonadvisory.com/" target="_blank">NTON.COM ADVISORY</a></p>
+<footer class="footer mt-auto py-3 bg-dark text-white">
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-md-10 text-center">
+        <p>Copyright ©
+          <script>document.write(new Date().getFullYear());</script> Tous droits réservés | Fabriqué par <a href="http://ntonadvisory.com/" target="_blank">NTON.COM ADVISORY</a></p>
         </div>
         <div class="col text-center">
-        <form class="form-inline my-2 ml-1 my-lg-0" action="{% url 'set_language' %}" method="post">
-                  {% csrf_token %}
-                  <input class="form-control mr-sm-2"  name="next" type="hidden" value="{{ redirect_to }}">
-                  <select class="dropdown form-control form-control-sm" name="language" onchange="this.form.submit()"> {% get_current_language as LANGUAGE_CODE %} {% get_available_languages as LANGUAGES %} {% get_language_info_list for LANGUAGES as languages %}
-                      {% for language in languages %}
-                          <option class="dropdown-item" value="{{ language.code }}"{% if language.code == LANGUAGE_CODE %}
-                                  selected disabled{% endif %}> {{ language.name_local }} ({{ language.code }})
-                          </option>
-                      {% endfor %}
-                  </select>
+          <form class="form-inline my-2 ml-1 my-lg-0" action="{% url 'set_language' %}" method="post">
+            {% csrf_token %}
+            <input class="form-control mr-sm-2"  name="next" type="hidden" value="{{ redirect_to }}">
+            <select class="dropdown form-control form-control-sm" name="language" onchange="this.form.submit()"> {% get_current_language as LANGUAGE_CODE %} {% get_available_languages as LANGUAGES %} {% get_language_info_list for LANGUAGES as languages %}
+            {% for language in languages %}
+              <option class="dropdown-item" value="{{ language.code }}"{% if language.code == LANGUAGE_CODE %}
+              selected disabled{% endif %}> {{ language.name_local }} ({{ language.code }})
+              </option>
+            {% endfor %}
+          </select>
         </form>
       </div>
-
-      </div>
-      </div>
-
-    </footer>
+    </div>
+  </div>
+</footer>
 
 
     <!--

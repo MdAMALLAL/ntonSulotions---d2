@@ -5,31 +5,42 @@
 
 {% block body_block %}
 <div class="row">
-    <div class="d-flex">
-      <div class="  p-3 m-2 text-white-50 bg-dark rounded shadow-sm dropdown list-group">
-        <a class=" dropdown-toggle text-white" href="#" id="prioriteDropdownMenuLink" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-          {% trans "Filter by priority"%}</a>
-        <div class="dropdown-menu" aria-labelledby="prioriteDropdownMenuLink">
-          <a href="?{{status|cut:'&'}}" class="nav-link {%if not priorite %} active{%endif%}">{% trans "All"%}</a>
-          <a href="?priorite=U{{status}}" class='nav-link {{active.U}}'>{% trans "Urgent"%}</a>
-          <a href="?priorite=H{{status}}" class='nav-link {{active.H}}'>{% trans "Height"%}</a>
-          <a href="?priorite=M{{status}}" class='nav-link {{active.M}}'>{% trans "Medium"%}</a>
-          <a href="?priorite=F{{status}}" class='nav-link {{active.F}}'>{% trans "Low"%}</a>
-        </div>
+  <form action="{% url 'solutions:questionlist' %}" method="get" class="form-row">
+    <div class="input-group mb-1">
+      <div class="input-group-prepend">
+        <label class="input-group-text" for="inputGroupSelect01">{% trans "Priorite"%}</label>
       </div>
-
-      <div class="d-flex  p-3 m-2 text-white-50 bg-dark rounded shadow-sm dropdown list-group">
-        <a class=" dropdown-toggle text-white" href="#" id="statusDropdownMenuLink" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-          {% trans "Filter by status"%}</a>
-        <div class="dropdown-menu" aria-labelledby="statusDropdownMenuLink">
-          <a href="?{{priorite|cut:'&'}}" class="list-group-item list-group-item-action filter-item {%if not status %} active{%endif%}">{% trans "All"%}</a>
-          <a href="?status=OV{{priorite}}" class="list-group-item list-group-item-action filter-item {{active.OV}}">{% trans "Open"%}</a>
-          <a href="?status=RS{{priorite}}" class="list-group-item list-group-item-action filter-item {{active.RS}}">{% trans "Resolved"%}</a>
-          <a href="?status=RF{{priorite}}" class="list-group-item list-group-item-action filter-item {{active.RF}}">{% trans "Refused"%}</a>
-        </div>
+      <select class="custom-select"name="priorite" id="inputGroupSelect01">
+        <option value="" {%if not priorite %} selected{%endif%}>{% trans "All"%}</option>
+        <option value="U" {{active.U}}>{% trans "Urgent"%}</option>
+        <option value="H" {{active.H}}>{% trans "Height"%}</option>
+        <option value="M" {{active.M}}>{% trans "Medium"%}</option>
+        <option value="F" {{active.F}}>{% trans "Low"%}</option>
+      </select>
+      <div class="input-group-prepend">
+        <label class="input-group-text" for="inputGroupSelect01">{% trans "Status"%}</label>
       </div>
-
+      <select class="custom-select" name="status" id="inputGroupSelect02">
+        <option  value="" {%if not status %} selected{%endif%}>{% trans "All"%}</option>
+        <option value="OV" {{active.OV}}>{% trans "Open"%}</option>
+        <option value="RS" {{active.RS}}>{% trans "Resolved"%}</option>
+        <option value="RF" {{active.RF}}>{% trans "Refused"%}</option>
+      </select>
+      <div class="input-group-append">
+        <button class="btn btn-outline-secondary" for="inputGroupSelect02" type="submit">Filter</button>
+      </div>
     </div>
+      <div class="input-group">
+        <div class="input-group-prepend">
+          <label class="input-group-text" for="q"><i class="fa fa-search"></i></label>
+        </div>
+        <input  type="text" class="form-control" id="q" name="q" type="text" aria-label="Recipient's username" aria-describedby="button-addon2" value="{{ query|default_if_none:''|cut:'&q=' }}" placeholder="Search...">
+        <div class="input-group-append">
+          <button class="btn btn-outline-secondary" type="button" id="button-addon2">{% trans "Search" %}</button>
+        </div>
+      </div>
+  </form>
+
 </div>
     <div class="">
       <div class=" p-3 my-2 text-white-50 bg-dark rounded shadow-sm">
@@ -41,21 +52,21 @@
       {%  if question_list%}
       {% if pagecounter > 0 %}
       <div class="text-center py-1">
-        <a href="?page=0{{priorite}}{{status}}">
+        <a href="?page=0{{priorite}}{{status}}{{ query|default_if_none:''}}">
           <svg class="bi bi-chevron-double-left" width="2em" height="2em" viewBox="0 0 16 16" fill="bg-dark" xmlns="http://www.w3.org/2000/svg">
             <path fill-rule="evenodd" d="M8.354 1.646a.5.5 0 010 .708L2.707 8l5.647 5.646a.5.5 0 01-.708.708l-6-6a.5.5 0 010-.708l6-6a.5.5 0 01.708 0z" clip-rule="evenodd"/>
             <path fill-rule="evenodd" d="M12.354 1.646a.5.5 0 010 .708L6.707 8l5.647 5.646a.5.5 0 01-.708.708l-6-6a.5.5 0 010-.708l6-6a.5.5 0 01.708 0z" clip-rule="evenodd"/></svg>
           </a>
-        <a href="?page={{preview}}{{priorite}}{{status}}">
+        <a href="?page={{preview}}{{priorite}}{{status}}{{ query|default_if_none:''}}">
           <svg class="bi bi-chevron-left" width="2em" height="2em" viewBox="0 0 16 16" fill="bg-dark" xmlns="http://www.w3.org/2000/svg">
             <path fill-rule="evenodd" d="M11.354 1.646a.5.5 0 010 .708L5.707 8l5.647 5.646a.5.5 0 01-.708.708l-6-6a.5.5 0 010-.708l6-6a.5.5 0 01.708 0z" clip-rule="evenodd"/></svg>
           </a>
         <kbd>{{inpage|add:1}}/{{pagecounter|add:1}}</kbd>
-        <a href="?page={{next}}{{priorite}}{{status}}">
+        <a href="?page={{next}}{{priorite}}{{status}}{{ query|default_if_none:''}}">
           <svg class="bi bi-chevron-right" width="2em" height="2em" viewBox="0 0 16 16" fill="bg-dark" xmlns="http://www.w3.org/2000/svg">
           <path fill-rule="evenodd" d="M4.646 1.646a.5.5 0 01.708 0l6 6a.5.5 0 010 .708l-6 6a.5.5 0 01-.708-.708L10.293 8 4.646 2.354a.5.5 0 010-.708z" clip-rule="evenodd"/></svg>
         </a>
-        <a href="?page={{pagecounter}}{{priorite}}{{status}}">
+        <a href="?page={{pagecounter}}{{priorite}}{{status}}{{ query|default_if_none:''}}">
           <svg class="bi bi-chevron-double-right" width="2em" height="2em" viewBox="0 0 16 16" fill="bg-dark" xmlns="http://www.w3.org/2000/svg">
             <path fill-rule="evenodd" d="M3.646 1.646a.5.5 0 01.708 0l6 6a.5.5 0 010 .708l-6 6a.5.5 0 01-.708-.708L9.293 8 3.646 2.354a.5.5 0 010-.708z" clip-rule="evenodd"/>
             <path fill-rule="evenodd" d="M7.646 1.646a.5.5 0 01.708 0l6 6a.5.5 0 010 .708l-6 6a.5.5 0 01-.708-.708L13.293 8 7.646 2.354a.5.5 0 010-.708z" clip-rule="evenodd"/></svg>
