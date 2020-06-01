@@ -14,7 +14,8 @@ urlpatterns = [
     path('<int:pk>/resolved/',views.questioneResolved,name='questioneResolved'),
     #path('page/<int:page>/',views.QuestionList.as_view(),name='questionlistpages'),
     path('',views.QuestionList.as_view(),name='questionlist'),
-        path('ajax/load-categories/', views.load_categories, name='ajax_load_categorie'),
+    path('ajax/load-categories/', views.load_categories, name='ajax_load_categorie'),
+    path('ajax/load-chart/', views.load_chart, name='ajax_load_chart'),
 
 
 

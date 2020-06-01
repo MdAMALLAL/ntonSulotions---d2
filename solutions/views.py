@@ -1,4 +1,4 @@
-from django.http import HttpResponseRedirect
+from django.http import HttpResponseRedirect, JsonResponse
 from django.contrib import messages
 from django.core.mail import BadHeaderError, send_mail
 from django.contrib.auth.mixins import(LoginRequiredMixin, PermissionRequiredMixin  )
@@ -11,9 +11,13 @@ from .models import Question,Reponce, Categorie, SousCategorie
 from .forms import ReponceForm, QuestionForm
 from django.http import Http404
 from django.utils import timezone
-from django.db.models import Q
+from django.db.models import Count,Q
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
+import json
 from django.utils.translation import gettext_lazy as _
-
+import datetime
+from datetime import timedelta
+from django.utils import timezone
 
 
 
@@ -50,8 +54,6 @@ class QuestionCreate(LoginRequiredMixin, generic.CreateView):
             #return redirect('solutions:questiondetail', pk=self.object.pk)
         return super().form_valid(form)
 
-
-
 class QuestionEdit(LoginRequiredMixin, generic.UpdateView):
     fields = ("titre", "description","image")
     model = Question
@@ -76,20 +78,22 @@ class QuestionSingle(LoginRequiredMixin, generic.DetailView):
             raise Http404(_("ticket does not exist"))
             return
 
-bypage = 20
+bypage = 2
 class QuestionList(LoginRequiredMixin, generic.ListView):
     model = Question
     pagecounter = 0
     page = 0
+    paginate_by = 2
+
 
     def get_queryset(self):
         query = self.request.GET.get('q')
-        questionlist = Question.objects.all()
+
         if self.request.user.is_staff:
             questionlist =  Question.objects.all()
         else:
             questionlist =  Question.objects.filter(user=self.request.user)
-
+        print(questionlist)
         #### filtre by priorite
         if self.request.GET.get('priorite'):
             questionlist = questionlist.filter(priorite = self.request.GET.get('priorite'))
@@ -101,34 +105,34 @@ class QuestionList(LoginRequiredMixin, generic.ListView):
                             Q(description__icontains=query) | Q(titre__icontains=query)
                             )
 
-            print(questionlist)
+        page = self.request.GET.get('page', 1)
+        return questionlist
+        print(questionlist)
+
         if self.request.GET.get('page'):
-            self.page = int(self.request.GET.get('page'))
+             self.page = int(self.request.GET.get('page'))
         self.pagecounter = int((questionlist.count()-1 )/ bypage)
+        #
+        # if self.page <= self.pagecounter:
+        #     #print(self.page)
+        #     return questionlist[self.page * bypage :(self.page + 1) * bypage]
+        # else:
+        #     #self.page = self.pagecounter
+        #     raise Http404
 
-        if self.page <= self.pagecounter:
-            #print(self.page)
-            return questionlist[self.page * bypage :(self.page + 1) * bypage]
-        else:
-            #self.page = self.pagecounter
-            raise Http404
-
-
-
-
-
-    def get_context_data(self,**kwargs):
-
-
+    def get_context_data(self, **kwargs):
         active = {}
-
-        context=super().get_context_data(**kwargs)
+        context = super(QuestionList, self).get_context_data(**kwargs)
         context['inpage']=self.page
+        page = int(self.request.GET.get('page', 1))
+
+        pages = [f for f in range(page - 5 , page + 5) ]
+        context['pages'] = [val for val in pages if val > 0]
+
 
         if self.request.GET.get('q') : context['query'] = '&q='+self.request.GET.get('q')
 
         context['pagecounter']=self.pagecounter
-
         if self.request.GET.get('status'):
             context['status']= '&status='+(self.request.GET.get('status'))
             active[self.request.GET.get('status')] = "selected"
@@ -198,3 +202,80 @@ def load_categories(request):
     categorieId = request.GET.get('categorie')
     souscategorie = SousCategorie.objects.filter(categorie=categorieId).order_by('name')
     return render(request, 'solutions/categorie_dropdown_list_options.html', {'souscategorie': souscategorie})
+def load_chart(request):
+    chart = {}
+    if int(request.GET.get('id'))==1:
+        dataset = Question.objects \
+            .values('status') \
+            .exclude(status='') \
+            .annotate(total=Count('status')) \
+            .order_by('status')
+
+        port_display_name = dict()
+        for port_tuple in Question.Status:
+            port_display_name[port_tuple[0]] = port_tuple[1]
+
+        chart = {
+            'chart': {'type': 'pie'},
+            'title': {'text': 'Status'},
+            'series': [{
+                'name': 'Status',
+                'data': list(map(lambda row: {'name': port_display_name[row['status']], 'y': row['total']}, dataset))
+            }]
+        }
+
+    if int(request.GET.get('id'))==2:
+        metrics = {
+            'total': Count('created_at__date')
+        }
+
+        dataset = Question.objects.all()\
+            .values('created_at__date')\
+            .annotate(**metrics)\
+            .order_by('created_at__date')
+
+        datasetAction = Reponce.objects.all()\
+            .values('created_at__date')\
+            .annotate(**metrics)\
+            .order_by('created_at__date')
+
+        dates = list()
+        action_series_data = list()
+        survived_series_data = list()
+
+        startdate = timezone.now()
+        dateT = startdate - timedelta(days=20)
+        while dateT <= timezone.now():
+            # print(entry)
+            dates.append('%s' % dateT.date())
+            # print(entry['created_at__date'])
+            try:
+                survived_series_data.append(dataset.get(created_at__date = dateT.date()).get('total'))
+            except Exception as e:
+                survived_series_data.append(0)
+            try:
+                action_series_data.append(datasetAction.get(created_at__date = dateT.date()).get('total'))
+            except Exception as e:
+                action_series_data.append(0)
+
+            #survived_series_data.append(entry['total'])
+            dateT = dateT + timedelta(days=1)
+
+        action_series = {
+            'name': 'Action',
+            'data': action_series_data,
+            'color': 'green'
+        }
+        survived_series = {
+            'name': 'Tickets',
+            'data': survived_series_data,
+            'color': 'blue'
+        }
+        chart = {
+            'chart': {'type': 'line'},
+            'title': {'text': ''},
+            'xAxis': {'categories': dates,},
+            'series': [survived_series, action_series]
+        }
+
+    return JsonResponse(chart)

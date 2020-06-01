@@ -17,6 +17,35 @@
         </table>
       </div>
     </div>
+
+  {% else %}
+  <div class="row">
+    <div class="col-md-6">
+      <div id="container" data-url="{% url 'solutions:ajax_load_chart' %}?id=1"></div>
+    </div>
+    <div class="col-md-6">
+      <div id="container2" data-url="{% url 'solutions:ajax_load_chart' %}?id=2"></div>
+    </div>
+  </div>
+
+  <script src="https://code.highcharts.com/highcharts.src.js"></script>
+  <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+  <script>
+    $.ajax({
+      url: $("#container").attr("data-url"),
+      dataType: 'json',
+      success: function (data) {
+        Highcharts.chart("container", data);
+      }
+    });
+    $.ajax({
+      url: $("#container2").attr("data-url"),
+      dataType: 'json',
+      success: function (data) {
+        Highcharts.chart("container2", data);
+      }
+    });
+  </script>
   {% endif %}
 
 

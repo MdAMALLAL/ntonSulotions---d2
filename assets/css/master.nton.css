@@ -16,8 +16,7 @@
   margin-bottom: 1rem;
   min-height: 100px;
 }
-.form-control-full >
-.form-control {
+.form-control-full, .form-control-full > .form-control {
     width: 100% !important;
 }
 
@@ -100,3 +99,13 @@ hr {
 .nav-btn{
   display: block !important;
 }
+.EA:before {
+  content: "\f058"; }
+.RS:before {
+  content: "\f560"; }
+.RF:before {
+  content: "\f057"; }
+.FR:before {
+  content: "\f410"; }
+.AN:before {
+  content: "\f05e"; }

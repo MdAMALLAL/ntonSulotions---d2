@@ -30,109 +30,124 @@
         <button class="btn btn-outline-secondary" for="inputGroupSelect02" type="submit">Filter</button>
       </div>
     </div>
-      <div class="input-group">
-        <div class="input-group-prepend">
-          <label class="input-group-text" for="q"><i class="fa fa-search"></i></label>
-        </div>
-        <input  type="text" class="form-control" id="q" name="q" type="text" aria-label="Recipient's username" aria-describedby="button-addon2" value="{{ query|default_if_none:''|cut:'&q=' }}" placeholder="Search...">
-        <div class="input-group-append">
-          <button class="btn btn-outline-secondary" type="button" id="button-addon2">{% trans "Search" %}</button>
-        </div>
+    <div class="input-group">
+      <div class="input-group-prepend">
+        <label class="input-group-text" for="q"><i class="fa fa-search"></i></label>
       </div>
+      <input  type="text" class="form-control" id="q" name="q" type="text" aria-label="Recipient's username" aria-describedby="button-addon2" value="{{ query|default_if_none:''|cut:'&q=' }}" placeholder="Search...">
+      <div class="input-group-append">
+        <button class="btn btn-outline-secondary" type="submit" id="button-addon2">{% trans "Search" %}</button>
+      </div>
+    </div>
   </form>
-
 </div>
-    <div class="">
-      <div class=" p-3 my-2 text-white-50 bg-dark rounded shadow-sm">
-        <div class="lh-100">
-          <h6 class="mb-0 text-white lh-100">List des ticket</h6>
-        </div>
-      </div>
-
-      {%  if question_list%}
-      {% if pagecounter > 0 %}
-      <div class="text-center py-1">
-        <a href="?page=0{{priorite}}{{status}}{{ query|default_if_none:''}}">
-          <svg class="bi bi-chevron-double-left" width="2em" height="2em" viewBox="0 0 16 16" fill="bg-dark" xmlns="http://www.w3.org/2000/svg">
-            <path fill-rule="evenodd" d="M8.354 1.646a.5.5 0 010 .708L2.707 8l5.647 5.646a.5.5 0 01-.708.708l-6-6a.5.5 0 010-.708l6-6a.5.5 0 01.708 0z" clip-rule="evenodd"/>
-            <path fill-rule="evenodd" d="M12.354 1.646a.5.5 0 010 .708L6.707 8l5.647 5.646a.5.5 0 01-.708.708l-6-6a.5.5 0 010-.708l6-6a.5.5 0 01.708 0z" clip-rule="evenodd"/></svg>
-          </a>
-        <a href="?page={{preview}}{{priorite}}{{status}}{{ query|default_if_none:''}}">
-          <svg class="bi bi-chevron-left" width="2em" height="2em" viewBox="0 0 16 16" fill="bg-dark" xmlns="http://www.w3.org/2000/svg">
-            <path fill-rule="evenodd" d="M11.354 1.646a.5.5 0 010 .708L5.707 8l5.647 5.646a.5.5 0 01-.708.708l-6-6a.5.5 0 010-.708l6-6a.5.5 0 01.708 0z" clip-rule="evenodd"/></svg>
-          </a>
+<div class="row my-2 text-white-50 bg-dark rounded shadow-sm">
+  <div class="lh-100">
+    <h6 class="mb-0  p-3 text-white lh-100">List des ticket</h6>
+  </div>
+</div>
+<div class="row">
+{%  if question_list%}
+  {% comment %} {% if pagecounter > 0 %}
+  <div class="text-center">
+    <a href="?page=0{{priorite}}{{status}}{{ query|default_if_none:''}}">
+      <svg class="bi bi-chevron-double-left" width="2em" height="2em" viewBox="0 0 16 16" fill="bg-dark" xmlns="http://www.w3.org/2000/svg">
+        <path fill-rule="evenodd" d="M8.354 1.646a.5.5 0 010 .708L2.707 8l5.647 5.646a.5.5 0 01-.708.708l-6-6a.5.5 0 010-.708l6-6a.5.5 0 01.708 0z" clip-rule="evenodd"/>
+        <path fill-rule="evenodd" d="M12.354 1.646a.5.5 0 010 .708L6.707 8l5.647 5.646a.5.5 0 01-.708.708l-6-6a.5.5 0 010-.708l6-6a.5.5 0 01.708 0z" clip-rule="evenodd"/></svg>
+      </a>
+      <a href="?page={{preview}}{{priorite}}{{status}}{{ query|default_if_none:''}}">
+        <svg class="bi bi-chevron-left" width="2em" height="2em" viewBox="0 0 16 16" fill="bg-dark" xmlns="http://www.w3.org/2000/svg">
+          <path fill-rule="evenodd" d="M11.354 1.646a.5.5 0 010 .708L5.707 8l5.647 5.646a.5.5 0 01-.708.708l-6-6a.5.5 0 010-.708l6-6a.5.5 0 01.708 0z" clip-rule="evenodd"/></svg>
+        </a>
         <kbd>{{inpage|add:1}}/{{pagecounter|add:1}}</kbd>
         <a href="?page={{next}}{{priorite}}{{status}}{{ query|default_if_none:''}}">
           <svg class="bi bi-chevron-right" width="2em" height="2em" viewBox="0 0 16 16" fill="bg-dark" xmlns="http://www.w3.org/2000/svg">
-          <path fill-rule="evenodd" d="M4.646 1.646a.5.5 0 01.708 0l6 6a.5.5 0 010 .708l-6 6a.5.5 0 01-.708-.708L10.293 8 4.646 2.354a.5.5 0 010-.708z" clip-rule="evenodd"/></svg>
-        </a>
-        <a href="?page={{pagecounter}}{{priorite}}{{status}}{{ query|default_if_none:''}}">
-          <svg class="bi bi-chevron-double-right" width="2em" height="2em" viewBox="0 0 16 16" fill="bg-dark" xmlns="http://www.w3.org/2000/svg">
-            <path fill-rule="evenodd" d="M3.646 1.646a.5.5 0 01.708 0l6 6a.5.5 0 010 .708l-6 6a.5.5 0 01-.708-.708L9.293 8 3.646 2.354a.5.5 0 010-.708z" clip-rule="evenodd"/>
-            <path fill-rule="evenodd" d="M7.646 1.646a.5.5 0 01.708 0l6 6a.5.5 0 010 .708l-6 6a.5.5 0 01-.708-.708L13.293 8 7.646 2.354a.5.5 0 010-.708z" clip-rule="evenodd"/></svg>
-        </a>
+            <path fill-rule="evenodd" d="M4.646 1.646a.5.5 0 01.708 0l6 6a.5.5 0 010 .708l-6 6a.5.5 0 01-.708-.708L10.293 8 4.646 2.354a.5.5 0 010-.708z" clip-rule="evenodd"/></svg>
+          </a>
+          <a href="?page={{pagecounter}}{{priorite}}{{status}}{{ query|default_if_none:''}}">
+            <svg class="bi bi-chevron-double-right" width="2em" height="2em" viewBox="0 0 16 16" fill="bg-dark" xmlns="http://www.w3.org/2000/svg">
+              <path fill-rule="evenodd" d="M3.646 1.646a.5.5 0 01.708 0l6 6a.5.5 0 010 .708l-6 6a.5.5 0 01-.708-.708L9.293 8 3.646 2.354a.5.5 0 010-.708z" clip-rule="evenodd"/>
+              <path fill-rule="evenodd" d="M7.646 1.646a.5.5 0 01.708 0l6 6a.5.5 0 010 .708l-6 6a.5.5 0 01-.708-.708L13.293 8 7.646 2.354a.5.5 0 010-.708z" clip-rule="evenodd"/></svg>
+            </a>
 
-      </div>
+          </div>
+  {% endif %} {% endcomment %}
+  {% if is_paginated %}
+  <nav aria-label="Page navigation example">
+    <ul class="pagination">
+      {% if page_obj.has_previous %}
+        <li class="page-item"><a class="page-link" href="?page={{ page_obj.previous_page_number }}">&laquo;</a></li>
+      {% else %}
+        <li class="disabled"><span class="page-link">&laquo;</span></li>
       {% endif %}
-      <table class="table">
-        <thead>
-            <td class="px-2">Id</td>
-            <td class="px-2">{% trans "Title" %}</td>
-            <td class="px-2">{% trans "Status" %}</td>
-            <td class="px-2">{% trans "Published on" %}</td>
-            <td class="px-2">{% trans "Applicant" %}</td>
-            <td class="px-2">{% trans "priority" %}</td>
-            <td class="px-2">{% trans "Categorie" %}</td>
-            <td class="px-2">{% trans "Resolution time" %}</td>
-
-
-
-
-        </thead>
-      {% for question in question_list %}
-
-          <tr>
-            <td>{{question.id}}</td>
-            <td><a  href="{% url 'solutions:questiondetail' pk=question.pk %}">{{ question.titre }} </td>
-            <td>{{ question.get_status_display}}</td>
-            <td>{{ question.created_at|date:"d/M/Y"}}</td>
-            <td><a href="{% url 'accounts:profile' username=question.user.username %}">{{question.user}}</a></td>
-            <td>{{ question.get_priorite_display}}</td>
-            <td>{{ question.categorie.name}}</td>
-            <td>{{question.get_time_to_resolv}}</td>
-
-
-
-
-          </tr>
-
+      {% for i in pages %}
+        {% if page_obj.number == i %}
+          <li class="page-item active"><span class="page-link">{{ i }} <span class="sr-only">(current)</span></span></li>
+        {% elif page_obj.paginator.num_pages >= i %}
+          <li class="page-item"><a class="page-link" href="?page={{ i }}">{{ i }}</a></li>
+        {% endif %}
       {% endfor %}
-      </table>
+      {% if page_obj.has_next %}
+        <li class="page-item"><a class="page-link" href="?page={{ page_obj.next_page_number }}">&raquo;</a></li>
+      {% else %}
+        <li class="disabled page-item"><span class="page-link">&raquo;</span></li>
+      {% endif %}
+    </ul>
+  </nav>
+  {% endif %}
+  {# {% bootstrap_pagination lines  url="/ticket/?" size="large" pages_to_show=2 %} #}
+
+  <table class="table">
+    <thead>
+      <td class="px-2">Id</td>
+      <td class="px-2">{% trans "Title" %}</td>
+      <td class="px-2">{% trans "Status" %}</td>
+      <td class="px-2">{% trans "Published on" %}</td>
+      <td class="px-2">{% trans "Applicant" %}</td>
+      <td class="px-2">{% trans "priority" %}</td>
+      <td class="px-2">{% trans "Categorie" %}</td>
+      <td class="px-2">{% trans "Resolution time" %}</td>
+    </thead>
+    {% for question in question_list %}
+    <tr>
+      <td>{{question.id}}</td>
+      <td><a  href="{% url 'solutions:questiondetail' pk=question.pk %}">{{ question.titre }} </td>
+      <td>{{ question.get_status_display}}</td>
+      <td>{{ question.created_at|date:"d/M/Y"}}</td>
+      <td><a href="{% url 'accounts:profile' username=question.user.username %}">{{question.user}}</a></td>
+      <td>{{ question.get_priorite_display}}</td>
+      <td>{{ question.categorie.name}}</td>
+      <td>{{question.get_time_to_resolv}}</td>
+    </tr>
+      {% endfor %}
+  </table>
       {% if pagecounter > 0 %}
-      <div class="text-center py-1">
+      <div class="text-center">
         <a href="?page=0{{priorite}}{{status}}">
           <svg class="bi bi-chevron-double-left" width="2em" height="2em" viewBox="0 0 16 16" fill="bg-dark" xmlns="http://www.w3.org/2000/svg">
             <path fill-rule="evenodd" d="M8.354 1.646a.5.5 0 010 .708L2.707 8l5.647 5.646a.5.5 0 01-.708.708l-6-6a.5.5 0 010-.708l6-6a.5.5 0 01.708 0z" clip-rule="evenodd"/>
             <path fill-rule="evenodd" d="M12.354 1.646a.5.5 0 010 .708L6.707 8l5.647 5.646a.5.5 0 01-.708.708l-6-6a.5.5 0 010-.708l6-6a.5.5 0 01.708 0z" clip-rule="evenodd"/></svg>
           </a>
-        <a href="?page={{preview}}{{priorite}}{{status}}">
-          <svg class="bi bi-chevron-left" width="2em" height="2em" viewBox="0 0 16 16" fill="bg-dark" xmlns="http://www.w3.org/2000/svg">
-            <path fill-rule="evenodd" d="M11.354 1.646a.5.5 0 010 .708L5.707 8l5.647 5.646a.5.5 0 01-.708.708l-6-6a.5.5 0 010-.708l6-6a.5.5 0 01.708 0z" clip-rule="evenodd"/></svg>
-          </a>
-        <kbd>{{inpage|add:1}}/{{pagecounter|add:1}}</kbd>
-        <a href="?page={{next}}{{priorite}}{{status}}">
-          <svg class="bi bi-chevron-right" width="2em" height="2em" viewBox="0 0 16 16" fill="bg-dark" xmlns="http://www.w3.org/2000/svg">
-          <path fill-rule="evenodd" d="M4.646 1.646a.5.5 0 01.708 0l6 6a.5.5 0 010 .708l-6 6a.5.5 0 01-.708-.708L10.293 8 4.646 2.354a.5.5 0 010-.708z" clip-rule="evenodd"/></svg>
-        </a>
-        <a href="?page={{pagecounter}}{{priorite}}{{status}}">
-          <svg class="bi bi-chevron-double-right" width="2em" height="2em" viewBox="0 0 16 16" fill="bg-dark" xmlns="http://www.w3.org/2000/svg">
-            <path fill-rule="evenodd" d="M3.646 1.646a.5.5 0 01.708 0l6 6a.5.5 0 010 .708l-6 6a.5.5 0 01-.708-.708L9.293 8 3.646 2.354a.5.5 0 010-.708z" clip-rule="evenodd"/>
-            <path fill-rule="evenodd" d="M7.646 1.646a.5.5 0 01.708 0l6 6a.5.5 0 010 .708l-6 6a.5.5 0 01-.708-.708L13.293 8 7.646 2.354a.5.5 0 010-.708z" clip-rule="evenodd"/></svg>
-        </a>
+          <a href="?page={{preview}}{{priorite}}{{status}}">
+            <svg class="bi bi-chevron-left" width="2em" height="2em" viewBox="0 0 16 16" fill="bg-dark" xmlns="http://www.w3.org/2000/svg">
+              <path fill-rule="evenodd" d="M11.354 1.646a.5.5 0 010 .708L5.707 8l5.647 5.646a.5.5 0 01-.708.708l-6-6a.5.5 0 010-.708l6-6a.5.5 0 01.708 0z" clip-rule="evenodd"/></svg>
+            </a>
+            <kbd>{{inpage|add:1}}/{{pagecounter|add:1}}</kbd>
+            <a href="?page={{next}}{{priorite}}{{status}}">
+              <svg class="bi bi-chevron-right" width="2em" height="2em" viewBox="0 0 16 16" fill="bg-dark" xmlns="http://www.w3.org/2000/svg">
+                <path fill-rule="evenodd" d="M4.646 1.646a.5.5 0 01.708 0l6 6a.5.5 0 010 .708l-6 6a.5.5 0 01-.708-.708L10.293 8 4.646 2.354a.5.5 0 010-.708z" clip-rule="evenodd"/></svg>
+              </a>
+              <a href="?page={{pagecounter}}{{priorite}}{{status}}">
+                <svg class="bi bi-chevron-double-right" width="2em" height="2em" viewBox="0 0 16 16" fill="bg-dark" xmlns="http://www.w3.org/2000/svg">
+                  <path fill-rule="evenodd" d="M3.646 1.646a.5.5 0 01.708 0l6 6a.5.5 0 010 .708l-6 6a.5.5 0 01-.708-.708L9.293 8 3.646 2.354a.5.5 0 010-.708z" clip-rule="evenodd"/>
+                  <path fill-rule="evenodd" d="M7.646 1.646a.5.5 0 01.708 0l6 6a.5.5 0 010 .708l-6 6a.5.5 0 01-.708-.708L13.293 8 7.646 2.354a.5.5 0 010-.708z" clip-rule="evenodd"/></svg>
+                </a>
 
-      </div>
+              </div>
       {% endif %}
-      {% else %}<h2>Pas de ticket pour le moment!</h2>
-      {%endif%}
-    </div>
+    {% else %}
+      <h2>Pas de ticket pour le moment!</h2>
+    {%endif%}
+</div>
+</div>
 {% endblock %}

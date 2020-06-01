@@ -66,7 +66,7 @@ class Question(models.Model):
     categorie = models.ForeignKey(Categorie, on_delete=models.CASCADE, related_name='quesions',)
     souscategorie = models.ForeignKey(SousCategorie, on_delete=models.CASCADE, related_name='quesions',)
 
-    description = models.TextField()
+    description = models.TextField(blank=True,verbose_name=_('comment'))
     viwed_at = models.DateTimeField(blank=True,null=True)
     time_to_view = models.DurationField(blank=True,null=True,verbose_name=_('time to view'))
     first_react_at = models.DateTimeField(blank=True,null=True)
@@ -151,7 +151,7 @@ class Reponce(models.Model):
         ('AN', _('Canceled')),
         )
     user = models.ForeignKey(User,null=True, related_name="reponces",on_delete=models.SET_NULL)
-    created_at = models.DateTimeField(auto_now=True,)
+    created_at = models.DateTimeField(auto_now_add=True,editable=False,)
     description = models.TextField(null=True)
     question = models.ForeignKey(Question,null=True, related_name="reponces",on_delete=models.SET_NULL)
     image = models.ImageField(null=True,blank=True, upload_to='images/')

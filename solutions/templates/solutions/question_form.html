@@ -9,13 +9,6 @@
       <h1>{% trans "New ticket" %}</h1>
     {% endif %}
 
-
-    {% comment %} <form method="POST" enctype="multipart/form-data" id="quesionForm" data-categorie-url="{% url 'solutions:ajax_load_categorie' %}" novalidate>
-      {% csrf_token %}
-      {% bootstrap_form form layout='horizontal'%}
-      <button type="submit" class="save btn btn-info text_right">Save</button>
-      <a href="{% url 'solutions:questionlist' %}">Nevermind</a>
-    </form> {% endcomment %}
     <form method="POST" enctype="multipart/form-data" id="quesionForm" data-categorie-url="{% url 'solutions:ajax_load_categorie' %}" novalidate>
       {% csrf_token %}
 
@@ -25,10 +18,11 @@
         {% bootstrap_field form.priorite layout='horizontal' size='small'%}
       {% endif %}
       {% bootstrap_field form.titre layout='horizontal' size='small'%}
-      {% bootstrap_field form.image show_label=False layout='horizontal' size='small' field_class='col-md-9 align-self-end'%}
+
+        {% comment %} {% bootstrap_label content='Choose file' label_class='custom-file-label' label_for='id_image' %} {% endcomment %}
+        {% bootstrap_field form.image  layout='horizontal' size='small' field_class=' custom-file' form_group_class='input-group form-group' horizontal_field_class='custom-file-input form-control form-control-sm' show_label=False %}
+
       {% bootstrap_field form.description layout='horizontal' size='small'%}
-
-
 
 
 
@@ -54,17 +48,12 @@
             success: function (data) {
               $("#id_souscategorie").html(data);
               $(".collapse").collapse('show');
-
-
             }
           });
         }
         else {
           $(".collapse").collapse('hide');
         }
-
-
-
       });
     </script>
 
