@@ -11,6 +11,7 @@ from .forms import ClientForm
 
 
 
+
 class ClientsCreate(LoginRequiredMixin,CreateView):
     #fields=['name','email','tel','url','address','signed','comment']
     model = Client

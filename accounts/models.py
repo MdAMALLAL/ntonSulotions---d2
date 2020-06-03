@@ -78,3 +78,6 @@ class User(AbstractBaseUser, PermissionsMixin):
 
     def __str__(self):
         return "@{}".format(self.username)
+
+    def get_absolute_url(self):
+        return reverse_lazy("accounts:edit", kwargs={"username": self.username})

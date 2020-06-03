@@ -7,6 +7,8 @@ from django.db import IntegrityError
 from . import forms
 from  clients.models import Client
 from django.http import Http404
+from django.utils.translation import gettext_lazy as _
+
 
 #from django.contrib.auth import get_user_model
 #User = get_user_model()
@@ -15,8 +17,18 @@ from .models import User
 class NewUser(CreateView):
     model = User
     form_class = forms.UserCreateForm
-    success_url = reverse_lazy("home")
     template_name = "registration/signup.html"
+
+    def form_valid(self, form):
+        try:
+            self.object = form.save(commit=False)
+            self.object.save()
+        except IntegrityError:
+            messages.warning(self.request,_("Warning, Something went wrong, please try again"))
+        else:
+            messages.success(self.request,_("User has been saved."))
+            #success_url=reverse_lazy('clients:detail', slug=self.object.slug)
+        return super().form_valid(form)
 
 class ProfileView(DetailView):
     model = User

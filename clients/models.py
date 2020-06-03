@@ -9,9 +9,11 @@ class Client(models.Model):
     address = models.TextField(blank=True,verbose_name=_('Adress'))
     tel = models.CharField(blank=True, max_length=40,verbose_name=_('Telephone'))
     url = models.URLField(blank=True, verbose_name=_('Web site'))
-    email = models.EmailField(verbose_name=_('Email'))
-    comment = models.TextField(blank=True,verbose_name=_('Comment'))
-    signed = models.DateField(null=True,blank=True,verbose_name=_('Contract signed on'))
+    email = models.EmailField(verbose_name=_('DSI Email'))
+    contact = models.CharField(max_length=100,verbose_name=_('Contact'))
+    contact_tel = models.CharField(max_length=100,verbose_name=_("Contact's tel"))
+
+
     slug = models.SlugField(allow_unicode=True, unique=True)
 
 
