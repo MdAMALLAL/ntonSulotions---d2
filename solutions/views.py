@@ -72,7 +72,7 @@ class QuestionCreate(LoginRequiredMixin, generic.CreateView):
                         )
             from_email = self.object.user.email
             to = self.object.user.client.email
-            send_mail(subject, message, '' , [from_email])
+            send_mail(subject, message, 'no_replay@ntonadvisory.com' , [from_email])
         return super().form_valid(form)
 
 class QuestionEdit(LoginRequiredMixin, generic.UpdateView):
@@ -171,6 +171,17 @@ def add_reponce_to_question(request, pk):
                 messages.warning(request,_("Warning, Something went wrong, please try again"))
             else:
                 messages.success(request,_("Answere has been saved."))
+                try:
+                    message = """des nouveautés sont enregistrés sur votre ticket,
+                    visiter le lien ici,
+                    Suivi le a (http://{0}{1})
+                    """.format(self.request.META['HTTP_HOST'],
+                                reverse("solutions:questiondetail", kwargs={"pk": self.object.pk})
+                                )
+                    to = question.user.email
+                    send_mail(subject, message, 'no_replay@ntonadvisory.com' , [to])
+                except Exception as e:
+                    raise
 
             return redirect('solutions:questiondetail', pk=question.pk)
 
