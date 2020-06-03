@@ -12,8 +12,9 @@ from .forms import ClientForm
 
 
 class ClientsCreate(LoginRequiredMixin,CreateView):
-    fields=['name','email','tel','url','address','signed','comment']
+    #fields=['name','email','tel','url','address','signed','comment']
     model = Client
+    form_class = ClientForm
 
     def form_valid(self, form):
         try:
@@ -32,8 +33,8 @@ class ClientsDetail(LoginRequiredMixin,DetailView):
 
 class ClientsUpdate(LoginRequiredMixin, UpdateView):
     model= Client
-    fields=['name','email','tel','url','address','signed','comment']
-
+    #fields=['name','email','tel','url','address','signed','comment']
+    form_class = ClientForm
     def form_valid(self, form):
         try:
             self.object = form.save(commit=False)
@@ -46,43 +47,25 @@ class ClientsUpdate(LoginRequiredMixin, UpdateView):
 
         return super().form_valid(form)
 
-bypage = 1
+
 class ClientsList(LoginRequiredMixin,ListView):
     model = Client
-    pagecounter = 0
-    page = 0
 
     def get_queryset(self):
+        self.paginate_by =  int(self.request.GET.get('paginate_by', 10))
+
         if self.request.user.is_staff:
             clientlist =  Client.objects.all()
         else:
             raise Http404
 
-        if self.request.GET.get('page'):
-            self.page = int(self.request.GET.get('page'))
-        self.pagecounter = int((clientlist.count()-1 )/ bypage)
-
-        if self.page <= self.pagecounter:
-            #print(self.page)
-            return clientlist[self.page * bypage :(self.page + 1) * bypage]
-        else:
-            #self.page = self.pagecounter
-            raise Http404
-
-
-
-
-
+        return clientlist
 
     def get_context_data(self, **kwargs):
         context = super(ClientsList, self).get_context_data(**kwargs)
         context['form'] = ClientForm
-        context['inpage']=self.page
-        context['pagecounter']=self.pagecounter
-        context['preview']=0
-        if self.page: context['preview']= self.page - 1
-        context['next']=self.pagecounter
-        if not self.page == self.pagecounter: context['next']=self.page + 1
+        page = int(self.request.GET.get('page', 1))
+        context['pages'] = [val for val in range(page - 5 , page + 5) if val > 0]
         return context
 
 

@@ -15,9 +15,10 @@ from django.db.models import Count,Q
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 import json
 from django.utils.translation import gettext_lazy as _
-import datetime
+import datetime, pytz
 from datetime import timedelta
-from django.utils import timezone
+#from django.utils.timezone import make_aware
+
 
 
 
@@ -78,16 +79,15 @@ class QuestionSingle(LoginRequiredMixin, generic.DetailView):
             raise Http404(_("ticket does not exist"))
             return
 
-bypage = 2
 class QuestionList(LoginRequiredMixin, generic.ListView):
     model = Question
-    pagecounter = 0
-    page = 0
-    paginate_by = 2
+    paginate_by = 10
 
 
     def get_queryset(self):
         query = self.request.GET.get('q')
+        self.paginate_by =  int(self.request.GET.get('paginate_by', 10))
+
 
         if self.request.user.is_staff:
             questionlist =  Question.objects.all()
@@ -105,34 +105,18 @@ class QuestionList(LoginRequiredMixin, generic.ListView):
                             Q(description__icontains=query) | Q(titre__icontains=query)
                             )
 
-        page = self.request.GET.get('page', 1)
         return questionlist
-        print(questionlist)
 
-        if self.request.GET.get('page'):
-             self.page = int(self.request.GET.get('page'))
-        self.pagecounter = int((questionlist.count()-1 )/ bypage)
-        #
-        # if self.page <= self.pagecounter:
-        #     #print(self.page)
-        #     return questionlist[self.page * bypage :(self.page + 1) * bypage]
-        # else:
-        #     #self.page = self.pagecounter
-        #     raise Http404
 
     def get_context_data(self, **kwargs):
         active = {}
         context = super(QuestionList, self).get_context_data(**kwargs)
-        context['inpage']=self.page
         page = int(self.request.GET.get('page', 1))
-
-        pages = [f for f in range(page - 5 , page + 5) ]
-        context['pages'] = [val for val in pages if val > 0]
+        context['pages'] = [val for val in range(page - 5 , page + 5) if val > 0]
 
 
         if self.request.GET.get('q') : context['query'] = '&q='+self.request.GET.get('q')
 
-        context['pagecounter']=self.pagecounter
         if self.request.GET.get('status'):
             context['status']= '&status='+(self.request.GET.get('status'))
             active[self.request.GET.get('status')] = "selected"
@@ -140,10 +124,7 @@ class QuestionList(LoginRequiredMixin, generic.ListView):
             context['priorite']= '&priorite='+(self.request.GET.get('priorite'))
             active[self.request.GET.get('priorite')] = "selected"
         context['active'] = active
-        context['preview']=0
-        if self.page: context['preview']= self.page - 1
-        context['next']=self.pagecounter
-        if not self.page == self.pagecounter: context['next']=self.page + 1
+
         return context
 
 
@@ -202,9 +183,26 @@ def load_categories(request):
     categorieId = request.GET.get('categorie')
     souscategorie = SousCategorie.objects.filter(categorie=categorieId).order_by('name')
     return render(request, 'solutions/categorie_dropdown_list_options.html', {'souscategorie': souscategorie})
+
+
 def load_chart(request):
     chart = {}
-    if int(request.GET.get('id'))==1:
+    start_date = datetime.date.today() - timedelta(days=20)
+    if request.GET.get('start_date'):
+        start_date = datetime.datetime.strptime(request.GET.get('start_date', '{}'.format(start_date)), '%Y-%m-%d').date()
+    #timezone.make_aware(start_date)
+
+    end_date = datetime.date.today()
+    if request.GET.get('end_date'):
+        end_date = datetime.datetime.strptime(request.GET.get('end_date', '{}'.format(end_date)), '%Y-%m-%d').date()
+    if end_date > datetime.date.today():
+        end_date = datetime.date.today()
+        #request.GET['end_date'] = end_date
+
+    #timezone.make_aware(end_date)
+
+
+    if request.GET.get('type')=='pie':
         dataset = Question.objects \
             .values('status') \
             .exclude(status='') \
@@ -217,24 +215,24 @@ def load_chart(request):
 
         chart = {
             'chart': {'type': 'pie'},
-            'title': {'text': 'Status'},
+            'title': {'text': _("Ticket's Status - Total ({})".format(Question.objects.count()) )},
             'series': [{
                 'name': 'Status',
                 'data': list(map(lambda row: {'name': port_display_name[row['status']], 'y': row['total']}, dataset))
             }]
         }
 
-    if int(request.GET.get('id'))==2:
+    if request.GET.get('type')=='line':
         metrics = {
             'total': Count('created_at__date')
         }
-
         dataset = Question.objects.all()\
             .values('created_at__date')\
             .annotate(**metrics)\
             .order_by('created_at__date')
 
-        datasetAction = Reponce.objects.all()\
+        datasetAction = Reponce.objects.filter(created_at__gte=start_date,\
+                    created_at__lte=end_date)\
             .values('created_at__date')\
             .annotate(**metrics)\
             .order_by('created_at__date')
@@ -243,18 +241,17 @@ def load_chart(request):
         action_series_data = list()
         survived_series_data = list()
 
-        startdate = timezone.now()
-        dateT = startdate - timedelta(days=20)
-        while dateT <= timezone.now():
+        dateT = start_date
+        while dateT <= end_date:
             # print(entry)
-            dates.append('%s' % dateT.date())
+            dates.append('%s' % dateT)
             # print(entry['created_at__date'])
             try:
-                survived_series_data.append(dataset.get(created_at__date = dateT.date()).get('total'))
+                survived_series_data.append(dataset.get(created_at__date = dateT).get('total'))
             except Exception as e:
                 survived_series_data.append(0)
             try:
-                action_series_data.append(datasetAction.get(created_at__date = dateT.date()).get('total'))
+                action_series_data.append(datasetAction.get(created_at__date = dateT).get('total'))
             except Exception as e:
                 action_series_data.append(0)
 

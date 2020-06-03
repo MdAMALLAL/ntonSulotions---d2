@@ -48,54 +48,12 @@
 </div>
 <div class="row">
 {%  if question_list%}
-  {% comment %} {% if pagecounter > 0 %}
-  <div class="text-center">
-    <a href="?page=0{{priorite}}{{status}}{{ query|default_if_none:''}}">
-      <svg class="bi bi-chevron-double-left" width="2em" height="2em" viewBox="0 0 16 16" fill="bg-dark" xmlns="http://www.w3.org/2000/svg">
-        <path fill-rule="evenodd" d="M8.354 1.646a.5.5 0 010 .708L2.707 8l5.647 5.646a.5.5 0 01-.708.708l-6-6a.5.5 0 010-.708l6-6a.5.5 0 01.708 0z" clip-rule="evenodd"/>
-        <path fill-rule="evenodd" d="M12.354 1.646a.5.5 0 010 .708L6.707 8l5.647 5.646a.5.5 0 01-.708.708l-6-6a.5.5 0 010-.708l6-6a.5.5 0 01.708 0z" clip-rule="evenodd"/></svg>
-      </a>
-      <a href="?page={{preview}}{{priorite}}{{status}}{{ query|default_if_none:''}}">
-        <svg class="bi bi-chevron-left" width="2em" height="2em" viewBox="0 0 16 16" fill="bg-dark" xmlns="http://www.w3.org/2000/svg">
-          <path fill-rule="evenodd" d="M11.354 1.646a.5.5 0 010 .708L5.707 8l5.647 5.646a.5.5 0 01-.708.708l-6-6a.5.5 0 010-.708l6-6a.5.5 0 01.708 0z" clip-rule="evenodd"/></svg>
-        </a>
-        <kbd>{{inpage|add:1}}/{{pagecounter|add:1}}</kbd>
-        <a href="?page={{next}}{{priorite}}{{status}}{{ query|default_if_none:''}}">
-          <svg class="bi bi-chevron-right" width="2em" height="2em" viewBox="0 0 16 16" fill="bg-dark" xmlns="http://www.w3.org/2000/svg">
-            <path fill-rule="evenodd" d="M4.646 1.646a.5.5 0 01.708 0l6 6a.5.5 0 010 .708l-6 6a.5.5 0 01-.708-.708L10.293 8 4.646 2.354a.5.5 0 010-.708z" clip-rule="evenodd"/></svg>
-          </a>
-          <a href="?page={{pagecounter}}{{priorite}}{{status}}{{ query|default_if_none:''}}">
-            <svg class="bi bi-chevron-double-right" width="2em" height="2em" viewBox="0 0 16 16" fill="bg-dark" xmlns="http://www.w3.org/2000/svg">
-              <path fill-rule="evenodd" d="M3.646 1.646a.5.5 0 01.708 0l6 6a.5.5 0 010 .708l-6 6a.5.5 0 01-.708-.708L9.293 8 3.646 2.354a.5.5 0 010-.708z" clip-rule="evenodd"/>
-              <path fill-rule="evenodd" d="M7.646 1.646a.5.5 0 01.708 0l6 6a.5.5 0 010 .708l-6 6a.5.5 0 01-.708-.708L13.293 8 7.646 2.354a.5.5 0 010-.708z" clip-rule="evenodd"/></svg>
-            </a>
 
-          </div>
-  {% endif %} {% endcomment %}
   {% if is_paginated %}
-  <nav aria-label="Page navigation example">
-    <ul class="pagination">
-      {% if page_obj.has_previous %}
-        <li class="page-item"><a class="page-link" href="?page={{ page_obj.previous_page_number }}">&laquo;</a></li>
-      {% else %}
-        <li class="disabled"><span class="page-link">&laquo;</span></li>
-      {% endif %}
-      {% for i in pages %}
-        {% if page_obj.number == i %}
-          <li class="page-item active"><span class="page-link">{{ i }} <span class="sr-only">(current)</span></span></li>
-        {% elif page_obj.paginator.num_pages >= i %}
-          <li class="page-item"><a class="page-link" href="?page={{ i }}">{{ i }}</a></li>
-        {% endif %}
-      {% endfor %}
-      {% if page_obj.has_next %}
-        <li class="page-item"><a class="page-link" href="?page={{ page_obj.next_page_number }}">&raquo;</a></li>
-      {% else %}
-        <li class="disabled page-item"><span class="page-link">&raquo;</span></li>
-      {% endif %}
-    </ul>
-  </nav>
+  <div class="d-flex w-100">
+      {% include "paginator.html" %}
+  </div>
   {% endif %}
-  {# {% bootstrap_pagination lines  url="/ticket/?" size="large" pages_to_show=2 %} #}
 
   <table class="table">
     <thead>
@@ -121,30 +79,12 @@
     </tr>
       {% endfor %}
   </table>
-      {% if pagecounter > 0 %}
-      <div class="text-center">
-        <a href="?page=0{{priorite}}{{status}}">
-          <svg class="bi bi-chevron-double-left" width="2em" height="2em" viewBox="0 0 16 16" fill="bg-dark" xmlns="http://www.w3.org/2000/svg">
-            <path fill-rule="evenodd" d="M8.354 1.646a.5.5 0 010 .708L2.707 8l5.647 5.646a.5.5 0 01-.708.708l-6-6a.5.5 0 010-.708l6-6a.5.5 0 01.708 0z" clip-rule="evenodd"/>
-            <path fill-rule="evenodd" d="M12.354 1.646a.5.5 0 010 .708L6.707 8l5.647 5.646a.5.5 0 01-.708.708l-6-6a.5.5 0 010-.708l6-6a.5.5 0 01.708 0z" clip-rule="evenodd"/></svg>
-          </a>
-          <a href="?page={{preview}}{{priorite}}{{status}}">
-            <svg class="bi bi-chevron-left" width="2em" height="2em" viewBox="0 0 16 16" fill="bg-dark" xmlns="http://www.w3.org/2000/svg">
-              <path fill-rule="evenodd" d="M11.354 1.646a.5.5 0 010 .708L5.707 8l5.647 5.646a.5.5 0 01-.708.708l-6-6a.5.5 0 010-.708l6-6a.5.5 0 01.708 0z" clip-rule="evenodd"/></svg>
-            </a>
-            <kbd>{{inpage|add:1}}/{{pagecounter|add:1}}</kbd>
-            <a href="?page={{next}}{{priorite}}{{status}}">
-              <svg class="bi bi-chevron-right" width="2em" height="2em" viewBox="0 0 16 16" fill="bg-dark" xmlns="http://www.w3.org/2000/svg">
-                <path fill-rule="evenodd" d="M4.646 1.646a.5.5 0 01.708 0l6 6a.5.5 0 010 .708l-6 6a.5.5 0 01-.708-.708L10.293 8 4.646 2.354a.5.5 0 010-.708z" clip-rule="evenodd"/></svg>
-              </a>
-              <a href="?page={{pagecounter}}{{priorite}}{{status}}">
-                <svg class="bi bi-chevron-double-right" width="2em" height="2em" viewBox="0 0 16 16" fill="bg-dark" xmlns="http://www.w3.org/2000/svg">
-                  <path fill-rule="evenodd" d="M3.646 1.646a.5.5 0 01.708 0l6 6a.5.5 0 010 .708l-6 6a.5.5 0 01-.708-.708L9.293 8 3.646 2.354a.5.5 0 010-.708z" clip-rule="evenodd"/>
-                  <path fill-rule="evenodd" d="M7.646 1.646a.5.5 0 01.708 0l6 6a.5.5 0 010 .708l-6 6a.5.5 0 01-.708-.708L13.293 8 7.646 2.354a.5.5 0 010-.708z" clip-rule="evenodd"/></svg>
-                </a>
 
-              </div>
-      {% endif %}
+  {% if is_paginated %}
+  <div class="d-flex w-100">
+      {% include "paginator.html" %}
+  </div>
+  {% endif %}
     {% else %}
       <h2>Pas de ticket pour le moment!</h2>
     {%endif%}

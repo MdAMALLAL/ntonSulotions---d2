@@ -8,35 +8,113 @@
             <h1>{{ client.name }}</h1>
             <div >
               <div class="client">
-                  <div class="card ">
-                      <div class="card-body">
+                <div class="row">
+                  <div class="col-md-4  col-lg-2">
+                    <div class="list-group" id="list-tab" role="tablist">
+                      <a class="list-group-item list-group-item-action active" id="list-home-list" data-toggle="list" href="#list-home" role="tab" aria-controls="home">{% trans "Client" %}</a>
+                      <a class="list-group-item list-group-item-action" id="list-profile-list" data-toggle="list" href="#list-profile" role="tab" aria-controls="profile">{% trans "Users" %}</a>
+                      <a class="list-group-item list-group-item-action" id="list-statistics-list" data-toggle="list" href="#list-statistics" role="tab" aria-controls="profile">{% trans "Tickets" %}</a>
+                      <a class="list-group-item list-group-item-action" id="list-messages-list" data-toggle="list" href="#list-messages" role="tab" aria-controls="messages">{% trans "Historique" %}</a>
+                      {% comment %} <a class="list-group-item list-group-item-action" id="list-settings-list" data-toggle="list" href="#list-settings" role="tab" aria-controls="settings">Tous</a> {% endcomment %}
+                    </div>
+                  </div>
+                  <div class="col ">
+                    <div class="tab-content" id="nav-tabContent">
+                      <div class="tab-pane fade show active" id="list-home" role="tabpanel" aria-labelledby="list-home-list">
+                        <table class="table table-borderless  mx-xs-2 ">
+                          <tbody class="row row-col-1  no-gutters">
+                            <tr class="col-12 bg-light text-center align-self-center">
+                              <th class="">Id</th>
+                              <td>{{client.pk}}</td>
+                              <td><a class="btn  btn-primary"href="{% url 'clients:edit' slug=client.slug %}">{% trans "Edit" %}</a></td>
+                              <td><a class="btn btn-danger"href="{% url 'clients:delete' slug=client.slug %}">{% trans "Delete" %}</a></td>
+                            </tr>
+                            <tr class="col-12 col-sm-12 col-sm-12 row no-gutters">
+                              <td class="col bg-white text-center "><h3>{{client}}</h3></td>
+                            </tr>
+                            <div class="col-12 row">
+                              <tr class="col-md-6 col-sm-12 row no-gutters">
+                                <th class="col-4 bg-light">{% trans "Website" %}</th>
+                                <td class="col bg-white" ><a href="{{ client.url}}">{{ client.url}}</a></td>
+                              </tr>
+                              <tr class="col-md-6 col-sm-12 row no-gutters">
+                                <th class="col-4 bg-light">{% trans "Email" %}</th>
+                                <td class="col bg-white">{{ client.email}}</td>
+                              </tr>
+                            </div>
 
-                          <p>{{ client.email}}</p>
-                          <p> {{ client.url}} par </p>
-                          <p>{{client.address}}</p>
-                          <!-- <a href="#" class="btn btn-primary">Go somewhere</a> -->
+                            <tr class="col-12 col-sm-12 col-sm-12 row no-gutters">
+                              <th class="col-2 bg-light">{% trans "Adress" %}</th>
+                              <td class="col bg-white">{{client.address}}</td>
+                            </tr>
+                            <tr class="col-md-6  col-sm-12 row no-gutters">
+                              <th class="col-4 bg-light">{% trans "Tel" %}</th>
+                              <td class="col-8 bg-white">{{client.tel}}</td>
+                            </tr>
+                            <tr class="col-md-6 col-sm-12 row no-gutters">
+                              <th class="col-4  bg-light">{% trans "Users count" %}</th>
+                              <td class="col-8 bg-white">{{client.users.all.count}}</td>
+                            </tr>
+
+                          </tbody>
+                        </table>
                       </div>
+                      <div class="tab-pane fade" id="list-profile" role="tabpanel" aria-labelledby="list-profile-list">
+                        <h4>{% trans "Users" %}</h4>
+                        <table class="table  table-sm">
+                          <tbody>
+                              {% for user in client.users.all %}
+                              <tr>
+                                <td><a href="{% url 'accounts:profile' username=user.username %}">{{ user.username }}</a></td>
+                                <td>{{ user.email }}</td>
+
+                              </tr>
+                            {% empty %}
+                                <p>{% trans "No Users" %}.</p>
+                            {% endfor %}
+                            </tbody>
+                        </table>
+
+                      </div>
+                      <div class="tab-pane fade" id="list-statistics" role="tabpanel" aria-labelledby="list-statistics-list">
+                        <h4>{% trans "Tickets" %}</h4>
+                        <table class="table">
+                          <thead>
+                            <td class="px-2">Id</td>
+                            <td class="px-2">{% trans "Title" %}</td>
+                            <td class="px-2">{% trans "Status" %}</td>
+                            <td class="px-2">{% trans "Published on" %}</td>
+                            <td class="px-2">{% trans "Applicant" %}</td>
+                            <td class="px-2">{% trans "priority" %}</td>
+                            <td class="px-2">{% trans "Categorie" %}</td>
+                            <td class="px-2">{% trans "Resolution time" %}</td>
+                          </thead>
+                          {% for users in client.users.all %}
+                          {% for question in users.tickets.all %}
+
+                          <tr>
+                            <td>{{question.id}}</td>
+                            <td><a  href="{% url 'solutions:questiondetail' pk=question.pk %}">{{ question.titre }} </td>
+                            <td>{{ question.get_status_display}}</td>
+                            <td>{{ question.created_at|date:"d/M/Y"}}</td>
+                            <td><a href="{% url 'accounts:profile' username=question.user.username %}">{{question.user}}</a></td>
+                            <td>{{ question.get_priorite_display}}</td>
+                            <td>{{ question.categorie.name}}</td>
+                            <td>{{question.get_time_to_resolv}}</td>
+                          </tr>
+                          {% endfor %}
+
+                            {% endfor %}
+                        </table>
+
+
+
+                      </div>
+                    </div>
                   </div>
                 </div>
-                <a class="btn my-2 btn-primary"href="{% url 'clients:edit' slug=client.slug %}">{% trans "Edit" %}</a>
-                <a class="btn btn-danger"href="{% url 'clients:delete' slug=client.slug %}">{% trans "Delete" %}</a>
+              </div>
             </div>
-            <h4>Users</h4>
-            <table class="table  table-sm">
-              <tbody>
-                  {% for user in client.users.all %}
-                  <tr>
-                    <td><a href="{% url 'accounts:profile' username=user.username %}">{{ user.username }}</a></td>
-                    <td>{{ user.email }}</td>
-
-                  </tr>
-                {% empty %}
-                    <p>{% trans "No Users" %}.</p>
-                {% endfor %}
-                </tbody>
-            </table>
-
-
     </div>
 </div>
 {% endblock %}

@@ -1,4 +1,5 @@
 {%extends "base.html"%}
+{% load i18n %}
 
 {% block static_content %}
   {% if not user.is_staff %}
@@ -21,10 +22,23 @@
   {% else %}
   <div class="row">
     <div class="col-md-6">
-      <div id="container" data-url="{% url 'solutions:ajax_load_chart' %}?id=1"></div>
+      <div id="container" class="chart" data-url="{% url 'solutions:ajax_load_chart' %}?type=pie{% for key, value in request.GET.items %}{% if key != 'page' %}&{{ key }}={{ value }}{% endif %}{% endfor %}"></div>
     </div>
     <div class="col-md-6">
-      <div id="container2" data-url="{% url 'solutions:ajax_load_chart' %}?id=2"></div>
+      <form>
+        <div class="row">
+          <div class="col">
+            <input type="text" name="start_date" class="form-control dateField" value='{{request.GET.start_date}}' placeholder='{% trans "Start date" %}'>
+          </div>
+          <div class="col">
+            <input type="text" name="end_date" class="form-control dateField" value='{{request.GET.end_date}}' placeholder='{% trans "End date" %}'>
+          </div>
+          <div class="col">
+            <button type="submit" class="btn btn-primary">{% trans "Filter" %}</button>
+          </div>
+        </div>
+      </form>
+      <div id="container2" class="chart" data-url="{% url 'solutions:ajax_load_chart' %}?type=line{% for key, value in request.GET.items %}{% if key != 'page' %}&{{ key }}={{ value }}{% endif %}{% endfor %}"></div>
     </div>
   </div>
 
@@ -43,6 +57,7 @@
       dataType: 'json',
       success: function (data) {
         Highcharts.chart("container2", data);
+        $(".dateTimeField").val()=
       }
     });
   </script>

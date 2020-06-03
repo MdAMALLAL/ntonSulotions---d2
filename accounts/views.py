@@ -22,12 +22,13 @@ class ProfileView(DetailView):
     model = User
     slug_field='username'
     slug_url_kwarg='username'
-bypage = 20
+
 class UserListView(ListView):
     model = User
-    pagecounter = 0
-    page = 0
+
     def get_queryset(self):
+        self.paginate_by =  int(self.request.GET.get('paginate_by', 4))
+
         if self.request.user.is_staff:
             userlist =  User.objects.all()
         else:
@@ -36,27 +37,14 @@ class UserListView(ListView):
         if self.request.GET.get('client'):
             userlist =  User.objects.filter(client = self.request.GET.get('client'))
 
-
-        if self.request.GET.get('page'):
-            self.page = int(self.request.GET.get('page'))
-        self.pagecounter = int((userlist.count()-1 )/ bypage)
-
-        if self.page <= self.pagecounter:
-            return userlist[self.page * bypage :(self.page + 1) * bypage]
-        else:
-            raise Http404
+        return userlist
 
     def get_context_data(self, **kwargs):
         context = super(UserListView, self).get_context_data(**kwargs)
         context['form'] = forms.UserCreateForm
-        context['inpage']=self.page
-        context['pagecounter']=self.pagecounter
-        context['preview']=0
+        page = int(self.request.GET.get('page', 1))
+        context['pages'] = [val for val in range(page - 5 , page + 5) if val > 0]
         context['clients']=Client.objects.all()
-
-        if self.page: context['preview']= self.page - 1
-        context['next']=self.pagecounter
-        if not self.page == self.pagecounter: context['next']=self.page + 1
         return context
 
 

@@ -12,7 +12,7 @@
       <a class="list-group-item list-group-item-action" id="list-profile-list" data-toggle="list" href="#list-profile" role="tab" aria-controls="profile">{% trans "Ticket's traitment" %}</a>
       <a class="list-group-item list-group-item-action" id="list-statistics-list" data-toggle="list" href="#list-statistics" role="tab" aria-controls="profile">{% trans "statistics" %}</a>
       <a class="list-group-item list-group-item-action" id="list-messages-list" data-toggle="list" href="#list-messages" role="tab" aria-controls="messages">Historique</a>
-      <a class="list-group-item list-group-item-action" id="list-settings-list" data-toggle="list" href="#list-settings" role="tab" aria-controls="settings">Tous</a>
+      {% comment %} <a class="list-group-item list-group-item-action" id="list-settings-list" data-toggle="list" href="#list-settings" role="tab" aria-controls="settings">Tous</a> {% endcomment %}
     </div>
   </div>
   <div class="col ">
@@ -114,11 +114,40 @@
         <table class="table  table-sm">
           <tbody>
             {% for reponce in question.reponces.all %}
-            <tr>
-              <td>{{ reponce.created_at|date:"d/M/Y" }}</td>
-              <td>{{ reponce.description|safe|linebreaks }}</td>
-              <td>{% trans "Posted by" %}: <strong> {%if reponce.user.get_full_name %} {{ reponce.user.get_full_name  }} {%else%} {{ reponce.user  }}{%endif%}</strong> ({{reponce.get_status_display}})</td>
-            </tr>
+              {% if reponce.user.is_staff %}
+              <tr>
+                <div class="col-8">
+                  <td>{{ reponce.created_at|date:"d/M/Y" }}</td>
+                  <td>{{ reponce.description|safe|linebreaks }}</td>
+                </div>
+                <div class="col-4">
+                  <td>{% trans "Posted by" %}: <strong> {%if reponce.user.get_full_name %} {{ reponce.user.get_full_name  }} {%else%} {{ reponce.user  }}{%endif%}</strong> ({{reponce.get_status_display}})</td>
+
+                </div>
+
+              </tr>
+              {% else %}
+              <tr>
+
+                <div class="col-4">
+                  <td>{% trans "Posted by" %}: <strong> {%if reponce.user.get_full_name %} {{ reponce.user.get_full_name  }} {%else%} {{ reponce.user  }}{%endif%}</strong> ({{reponce.get_status_display}})</td>
+                </div>
+                <div class="col-8">
+                  <td>{{ reponce.created_at|date:"d/M/Y" }}</td>
+                  <td>{{ reponce.description|safe|linebreaks }}</td>
+                </div>
+
+              </tr>
+
+              {% endif %}
+
+
+
+
+
+
+
+
             {% empty %}
             <p>{% trans "No action" %}.</p>
             {% endfor %}

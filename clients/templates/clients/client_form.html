@@ -9,14 +9,19 @@
       <h1>{% trans "New Client" %}</h1>
     {% endif %}
 
+
+
     <form method="POST" enctype="multipart/form-data" class="post-form">
     {% csrf_token %}
     {% bootstrap_form form layout='horizontal' size='small'%}
+    {% comment %} {{form.as_p}} {% endcomment %}
 
+    <!-- DateTimePicker -->
 
 
     <button type="submit" class="save btn btn-info text_right">Save</button>
 
     </form>
+
 
 {% endblock %}
