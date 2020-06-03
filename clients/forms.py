@@ -10,7 +10,4 @@ class ClientForm(forms.ModelForm):
 
     class Meta:
         model = Client
-        fields=['name','email','tel','url','address','signed','comment']
-        widgets = {
-            'signed': forms.DateInput(attrs={'class': 'dateField'}),
-        }
+        fields=['name','email','tel','url','address','contact','contact_tel']

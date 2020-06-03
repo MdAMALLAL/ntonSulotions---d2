@@ -29,10 +29,8 @@
       <thead>
         <td class="px-2">Id</td>
         <td class="px-2">{% trans "Name" %}</td>
-        <td class="px-2">{% trans "Email" %}</td>
+        <td class="px-2">{% trans "DSI Email" %}</td>
         <td class="px-2">{% trans "Adress" %}</td>
-        <td class="px-2">{% trans "Tel" %}</td>
-        <td class="px-2">{% trans "url" %}</td>
         <td class="px-2">{% trans "Users" %}</td>
       </thead>
       {% for client in client_list %}
@@ -41,8 +39,6 @@
         <td><a  href="{% url 'clients:detail' slug=client.slug %}">{{ client.name }} </td>
           <td>{{ client.email}}</td>
           <td>{{ client.address}}</td>
-          <td>{{ client.tel}}</td>
-          <td>{{ client.url}}</td>
           <td>{{client.users.all.count}}</td>
         </tr>
         {% endfor %}
