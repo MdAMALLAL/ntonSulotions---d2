@@ -7,6 +7,7 @@ from django.contrib.auth.decorators import login_required
 from django.urls import reverse, reverse_lazy
 from django.db import IntegrityError
 from django.views import generic
+from clients.models import Client
 from .models import Question,Reponce, Categorie, SousCategorie
 from .forms import ReponceForm, QuestionForm
 from django.http import Http404
@@ -18,8 +19,10 @@ from django.utils.translation import gettext_lazy as _
 import datetime, pytz
 from datetime import timedelta
 #from django.utils.timezone import make_aware
-
-
+#### send email
+from django.core.mail import EmailMultiAlternatives
+from django.template.loader import get_template
+from django.template import Context
 
 
 
@@ -43,16 +46,33 @@ class QuestionCreate(LoginRequiredMixin, generic.CreateView):
         else:
             messages.success(self.request,_("Question has been saved."))
             subject = self.object.titre
-            message = self.object.description
-
+            message = """Nouvuou ticket a ete ouvert
+            sous id : {0} et titre : {1};
+            par : {2};
+            (http://{3}{4})
+            """.format(self.object.id,
+                        self.object.titre,
+                        self.object.user,
+                        #self.object.Priorite([self.object.priorite]),
+                        self.request.META['HTTP_HOST'],
+                        reverse("solutions:questiondetail", kwargs={"pk": self.object.pk})
+                        )
             from_email = self.object.user.email
-            #send_mail(subject, message, from_email, ['no_replay@ntonadvisory.com'])
+            to = self.object.user.client.email
+            send_mail(subject, message, from_email, [to])
 
-            subject = self.object.titre
-            message = self.object.description
-            from_email = 'admin@example.com'
-            #send_mail(subject, message, from_email, [self.object.user.email,])
-            #return redirect('solutions:questiondetail', pk=self.object.pk)
+            message = """Votre ticket a ete ouvert
+            sous id : {0} et titre : {1};
+            Suivi le a (http://{2}{3})
+            """.format(self.object.id,
+                        self.object.titre,
+                        #self.object.Priorite([self.object.priorite]),
+                        self.request.META['HTTP_HOST'],
+                        reverse("solutions:questiondetail", kwargs={"pk": self.object.pk})
+                        )
+            from_email = self.object.user.email
+            to = self.object.user.client.email
+            send_mail(subject, message, '' , [from_email])
         return super().form_valid(form)
 
 class QuestionEdit(LoginRequiredMixin, generic.UpdateView):
