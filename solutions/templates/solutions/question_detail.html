@@ -45,7 +45,7 @@
             </div>
 
             <tr class="col-12 col-sm-12 col-sm-12 row no-gutters">
-              <th class="col-2 bg-light">{% trans "Lase edit" %}</th>
+              <th class="col-2 bg-light">{% trans "Last edit" %}</th>
               <td class="col bg-white">{{question.last_action|date:"Y-m-d H:m"}}</td>
             </tr>
             <tr class="col-md-6  col-sm-12 row no-gutters">
@@ -53,7 +53,7 @@
               <td class="col-8 bg-white">{{question.get_time_to_react}}</td>
             </tr>
             <tr class="col-md-6 col-sm-12 row no-gutters">
-              <th class="col-4  bg-light">{% trans "Time to resolv" %}</th>
+              <th class="col-4  bg-light">{% trans "Time to resolve" %}</th>
               <td class="col-8 bg-white">{{question.get_time_to_resolv}}</td>
             </tr>
             <tr class="col-12 col-sm-12 row no-gutters">
@@ -159,7 +159,7 @@
         <h3>{% trans "Statistics" %}</h3>
         <h4 class="text-center bg-dark py-2 text-white rounded">Dates</h4>
 
-        <p>{{question.created_at|date:"y-m-d H:m"}} <i class="fa fa-star-of-life"></i> {% trans "Ticket openning" %}</p>
+        <p>{{question.created_at|date:"y-m-d H:m"}} <i class="fa fa-star-of-life"></i> {% trans "Ticket opening" %}</p>
         <p>{{question.viwed_at|date:"y-m-d H:m"}} <i class="fa fa-star-of-life"></i> {% trans "Taking into account" %}</p>
         {% for reponce in question.reponces.all %}
         <p>{{reponce.created_at|date:"y-m-d H:m"}} <span class="fa {{reponce.status}}"></span> {{reponce.description}}</p>
@@ -169,7 +169,7 @@
         <h4 class="text-center bg-dark py-2 text-white rounded">{% trans "Times" %}</h4>
         <p>{% trans "Taking into account" %} {{question.get_time_to_view}}</p>
         <p>{% trans "Time to first react" %} {{question.get_time_to_react}}</p>
-        <p>{% trans "Time to resolv" %} {{question.get_time_to_resolv}}</p>
+        <p>{% trans "Time to resolve" %} {{question.get_time_to_resolv}}</p>
 
 
 

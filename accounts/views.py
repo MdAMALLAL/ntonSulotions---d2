@@ -1,5 +1,9 @@
 from django.contrib.auth import login, logout
 from django.urls import reverse_lazy,reverse
+
+from django.contrib.auth.decorators import login_required
+from django.shortcuts import render, get_object_or_404, redirect
+
 from django.views.generic import CreateView, DetailView, UpdateView,TemplateView,ListView
 from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
@@ -81,3 +85,25 @@ class ProfileUpdateView(LoginRequiredMixin, UpdateView):
 
 
     success_url = '/'
+
+
+@login_required
+def made_consultant(request, username):
+    user = get_object_or_404(User, username=username)
+    print(user)
+
+    if request.method == "POST":
+        try:
+            if user.is_staff:
+                user.is_staff = False
+                messages_text = _("{0} is removed from consultant list".format(user))
+            else:
+                user.is_staff = True
+                messages_text = _("{0} is added to consultant list".format(user))
+
+            user.save()
+        except IntegrityError:
+            messages.warning(request,_("Warning, Something went wrong, please try again"))
+        else:
+            messages.success(request,messages_text)
+    return redirect('accounts:profile', username=user.username)

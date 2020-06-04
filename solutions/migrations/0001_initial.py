@@ -43,7 +43,7 @@ class Migration(migrations.Migration):
                 ('first_react_at', models.DateTimeField(blank=True, null=True)),
                 ('time_to_react', models.DurationField(blank=True, null=True, verbose_name='time to react')),
                 ('resolved_at', models.DateTimeField(blank=True, null=True)),
-                ('time_to_resolv', models.DurationField(blank=True, null=True, verbose_name='time to resolv')),
+                ('time_to_resolv', models.DurationField(blank=True, null=True, verbose_name='Time to resolve')),
                 ('last_action', models.DateTimeField(auto_now=True)),
                 ('categorie', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='quesions', to='solutions.Categorie')),
             ],

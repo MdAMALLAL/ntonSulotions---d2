@@ -72,7 +72,7 @@ class Question(models.Model):
     first_react_at = models.DateTimeField(blank=True,null=True)
     time_to_react = models.DurationField(blank=True,null=True,verbose_name=_('time to react'))
     resolved_at = models.DateTimeField(blank=True,null=True)
-    time_to_resolv = models.DurationField(blank=True,null=True,verbose_name=_('time to resolv'))
+    time_to_resolv = models.DurationField(blank=True,null=True,verbose_name=_('Time to resolve'))
     last_action = models.DateTimeField(auto_now=True)
 
     def save(self, *args, **kwargs):

@@ -9,6 +9,8 @@ urlpatterns = [
     path("login/", auth_views.LoginView.as_view(),name='login'),
     path("logout/", auth_views.LogoutView.as_view(), name="logout"),
     path("new_user/", views.NewUser.as_view(), name="new"),
+    path("ajax/made_consultant/<username>", views.made_consultant, name="made-consultant"),
+
     path("list/", views.UserListView.as_view(), name="list"),
 
     path("profile/<username>",

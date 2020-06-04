@@ -13,6 +13,36 @@
 
     <a class="btn btn-primary"href="{% url 'accounts:edit' username=user.username %}">{% trans "Edit"  %}</a>
     <a class="btn btn-primary"href="{% url 'accounts:changepassword' username=user.username %}">{% trans "Change password"  %}</a>
+    <form class="form-inline" action="{% url 'accounts:made-consultant' username=user.username %}" method="post">
+      {% csrf_token %}
+      {% if user.is_staff %}
+      <button class="btn btn-danger" id="tagle-consultant" type="submit" name="button">{% trans "Remove to consultant list"  %}</button>
+      {% else %}
+      <button class="btn btn-warning" id="tagle-consultant" type="submit" name="button">{% trans "Add to consultant list"  %}</button>
+      {% endif %}
+    </form>
+    {% comment %} <script>
+      $("#id_categorie").change(function () {
+        var url = $("#quesionForm").attr("data-categorie-url");
+        var categorieId = $(this).val();
+        if (categorieId) {
+          $.ajax({
+            url: url,
+            data: {
+              'categorie': categorieId
+            },
+            success: function (data) {
+              $("#id_souscategorie").html(data);
+              $(".collapse").collapse('show');
+            }
+          });
+        }
+        else {
+          $(".collapse").collapse('hide');
+        }
+      });
+    </script> {% endcomment %}
+
 
 </div>
 {% endblock %}

@@ -6,7 +6,7 @@ from django.urls import reverse_lazy
 # Create your models here.
 class Client(models.Model):
     name = models.CharField(max_length=100,verbose_name=_('Name'))
-    address = models.TextField(blank=True,verbose_name=_('Adress'))
+    address = models.TextField(blank=True,verbose_name=_('Address'))
     tel = models.CharField(blank=True, max_length=40,verbose_name=_('Telephone'))
     url = models.URLField(blank=True, verbose_name=_('Web site'))
     email = models.EmailField(verbose_name=_('DSI Email'))
