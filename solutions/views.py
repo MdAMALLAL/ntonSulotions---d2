@@ -71,6 +71,7 @@ class QuestionCreate(LoginRequiredMixin, generic.CreateView):
                         reverse("solutions:questiondetail", kwargs={"pk": self.object.pk})
                         )
             from_email = self.object.user.email
+            print(from_email)
             to = self.object.user.client.email
             send_mail(subject, message, 'no_replay@ntonadvisory.com' , [from_email])
         return super().form_valid(form)
