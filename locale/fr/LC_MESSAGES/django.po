@@ -23,7 +23,6 @@ msgid "Display Name"
 msgstr "Nom d'affichage"
 
 #: .\accounts\models.py:41
-#, fuzzy
 msgid "email address"
 msgstr "Address electronique"
 
@@ -101,7 +100,7 @@ msgstr "Ajouter à la liste des consultants"
 #: .\clients\templates\clients\client_detail.html:15
 #: .\clients\templates\clients\client_detail.html:64
 #: .\clients\templates\clients\client_list.html:35 .\templates\base.html:83
-#, fuzzy
+
 msgid "Users"
 msgstr "utilisateurs"
 
@@ -111,7 +110,7 @@ msgid "New User"
 msgstr "Nouvel utilisateur"
 
 #: .\accounts\templates\accounts\user_list.html:28
-#, fuzzy
+
 msgid "Filter by client"
 msgstr "Filtrer par client"
 
@@ -122,7 +121,7 @@ msgid "All"
 msgstr "Tout"
 
 #: .\accounts\templates\accounts\user_list.html:68
-#, fuzzy
+
 msgid "username"
 msgstr "utilisateur"
 
@@ -133,14 +132,10 @@ msgstr "Email"
 
 #: .\accounts\templates\accounts\user_list.html:70
 #: .\clients\templates\clients\client_detail.html:14
-#, fuzzy
-#| msgid "Add Client"
 msgid "Client"
-msgstr "Ajouter un client"
+msgstr "Client"
 
 #: .\accounts\templates\accounts\user_list.html:71
-#, fuzzy
-#| msgid "staff"
 msgid "Staff"
 msgstr "Consultant"
 
@@ -149,7 +144,6 @@ msgid "Last login"
 msgstr "Dernière connexion"
 
 #: .\accounts\templates\accounts\user_list.html:125
-#, fuzzy
 msgid "New user"
 msgstr "Nouvel utilisateur"
 
@@ -164,8 +158,6 @@ msgid "Save"
 msgstr "Enregistrer"
 
 #: .\accounts\views.py:33
-#, fuzzy
-#| msgid "Answere has been saved."
 msgid "User has been saved."
 msgstr "utilisateur est enregistre."
 
@@ -209,8 +201,6 @@ msgid "Contact's tel"
 msgstr "tel du Contact"
 
 #: .\clients\templates\clients\client_confirm_delete.html:9
-#, fuzzy
-#| msgid "Delete"
 msgid "Delete Client"
 msgstr "Supprimer Client"
 
@@ -221,7 +211,6 @@ msgstr "Supprimer"
 
 #: .\clients\templates\clients\client_confirm_delete.html:14
 #: .\solutions\templates\solutions\question_form.html:33
-#, fuzzy
 msgid "Cancel"
 msgstr "Annulé"
 
@@ -235,8 +224,6 @@ msgid "Historique"
 msgstr ""
 
 #: .\clients\templates\clients\client_detail.html:38
-#, fuzzy
-#| msgid "Web site"
 msgid "Website"
 msgstr "Site Internet"
 
@@ -278,8 +265,6 @@ msgstr "Demandeur"
 
 #: .\clients\templates\clients\client_detail.html:89
 #: .\solutions\templates\solutions\question_list.html:65
-#, fuzzy
-#| msgid "Filtre by priority"
 msgid "priority"
 msgstr "priorité"
 
@@ -295,31 +280,24 @@ msgid "Resolution time"
 msgstr "Temps de résolution"
 
 #: .\clients\templates\clients\client_form.html:7
-#, fuzzy
 msgid "Edit Client"
 msgstr "Modifier le client"
 
 #: .\clients\templates\clients\client_form.html:9
 #: .\clients\templates\clients\client_list.html:14
 #: .\clients\templates\clients\client_list.html:58
-#, fuzzy
-#| msgid "Add Client"
 msgid "New Client"
 msgstr "Ajouter un client"
 
 #: .\clients\templates\clients\client_list.html:10 .\templates\base.html:82
-#, fuzzy
-#| msgid "Clients List"
 msgid "Clients"
 msgstr "Liste des clients"
 
 #: .\clients\views.py:27 .\clients\views.py:46
-#, fuzzy
 msgid "Client has been saved."
 msgstr "Client est enregistre."
 
 #: .\clients\views.py:92 .\solutions\views.py:207
-#, fuzzy
 msgid "ticket has been resolved, thanks for using owr platform."
 msgstr "Ticket a été résolue, merci d'utiliser notre plateforme."
 
@@ -368,8 +346,6 @@ msgstr "Fermé"
 #: .\solutions\models.py:48 .\solutions\models.py:150
 #: .\solutions\models_3.0.5.py:38
 #: .\solutions\templates\solutions\question_list.html:27
-#, fuzzy
-#| msgid "refused"
 msgid "Refused"
 msgstr "Refusé"
 
@@ -383,8 +359,6 @@ msgid "Deactiveted"
 msgstr "Desactivé"
 
 #: .\solutions\models.py:69
-#, fuzzy
-#| msgid "Comment"
 msgid "comment"
 msgstr "Commentaire"
 
@@ -419,14 +393,10 @@ msgid "Not viewed yet"
 msgstr ""
 
 #: .\solutions\models.py:114
-#, fuzzy
-#| msgid "created at"
 msgid "Not reacted yet"
 msgstr "créé le"
 
 #: .\solutions\models.py:139
-#, fuzzy
-#| msgid "New ticket"
 msgid "Ticket"
 msgstr "Nouveau ticket"
 
@@ -475,8 +445,6 @@ msgid "statistics"
 msgstr "statistiques"
 
 #: .\solutions\templates\solutions\question_detail.html:39
-#, fuzzy
-#| msgid "Open"
 msgid "Open date"
 msgstr "Date d'ouverture"
 
@@ -493,8 +461,6 @@ msgid "Time to react"
 msgstr "Le temps de réagir"
 
 #: .\solutions\templates\solutions\question_detail.html:61
-#, fuzzy
-#| msgid "Resolved"
 msgid "Resolved at"
 msgstr "Resolu le"
 
@@ -525,8 +491,6 @@ msgid "Taking into account"
 msgstr "Prise en compte"
 
 #: .\solutions\templates\solutions\question_detail.html:168
-#, fuzzy
-#| msgid "Low"
 msgid "Now"
 msgstr "Maintenant"
 
@@ -539,7 +503,6 @@ msgid "Time to first react"
 msgstr "temp de premier réaction"
 
 #: .\solutions\templates\solutions\question_form.html:7
-#, fuzzy
 msgid "Edit ticket"
 msgstr "Modifier ticket"
 
@@ -557,12 +520,10 @@ msgid "Search"
 msgstr "Chercher"
 
 #: .\solutions\views.py:47
-#, fuzzy
 msgid "Question has been saved."
 msgstr "Question est enregistre."
 
 #: .\solutions\views.py:100
-#, fuzzy
 msgid "ticket does not exist"
 msgstr "ticket n'exist pas"
 
