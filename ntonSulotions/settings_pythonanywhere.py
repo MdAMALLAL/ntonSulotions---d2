@@ -33,17 +33,17 @@ ALLOWED_HOSTS = ['*']
 DEFAULT_FROM_EMAIL = 'no_replay@ntonadvisory.com'
 EMAIL_BACKEND ='django.core.mail.backends.smtp.EmailBackend'
 
-EMAIL_HOST = 'mail.ntonadvisory.com'
-EMAIL_USE_TLS = True
-EMAIL_PORT = 26
-EMAIL_HOST_USER = 'no_replay@ntonadvisory.com'
-EMAIL_HOST_PASSWORD = 'Qx5fOsPRC^(K'
-
-# EMAIL_HOST = 'smtp.gmail.com'
+# EMAIL_HOST = 'mail.ntonadvisory.com'
 # EMAIL_USE_TLS = True
-# EMAIL_PORT = 587
-# EMAIL_HOST_USER = 'amallal.plus@gmail.com'
-# EMAIL_HOST_PASSWORD = 'ducnzyghruimljea'
+# EMAIL_PORT = 26
+# EMAIL_HOST_USER = 'no_replay@ntonadvisory.com'
+# EMAIL_HOST_PASSWORD = 'Qx5fOsPRC^(K'
+
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_USE_TLS = True
+EMAIL_PORT = 587
+EMAIL_HOST_USER = 'amallal.plus@gmail.com'
+EMAIL_HOST_PASSWORD = 'ducnzyghruimljea'
 
 # Application definition
 
@@ -98,21 +98,21 @@ WSGI_APPLICATION = 'ntonSulotions.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/1.11/ref/settings/#databases
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
-    }
-}
 # DATABASES = {
 #     'default': {
-#         'ENGINE': 'django.db.backends.mysql',
-#         'NAME': 'ntonadvisory$default',
-#         'USER': 'ntonadvisory',
-#         'PASSWORD': 'mYsqL@321qaZ',
-#         'HOST': 'ntonadvisory.mysql.pythonanywhere-services.com',
+#         'ENGINE': 'django.db.backends.sqlite3',
+#         'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
 #     }
 # }
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': 'ntonadvisory$default',
+        'USER': 'ntonadvisory',
+        'PASSWORD': 'mYsqL@321qaZ',
+        'HOST': 'ntonadvisory.mysql.pythonanywhere-services.com',
+    }
+}
 
 
 # Password validation
