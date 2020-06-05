@@ -13,4 +13,6 @@ urlpatterns = [
     path("<slug>/edit", views.ClientsUpdate.as_view(), name="edit"),
 
 
+
+
 ]

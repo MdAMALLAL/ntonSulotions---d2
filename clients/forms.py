@@ -10,4 +10,7 @@ class ClientForm(forms.ModelForm):
 
     class Meta:
         model = Client
-        fields=['name','email','tel','url','address','contact','contact_tel']
+        fields=['name','email','tel','url','address','contact','contact_tel','contact_email']
+        widgets = {
+            'url': forms.TextInput(attrs={'placeholder': 'http://'})
+        }

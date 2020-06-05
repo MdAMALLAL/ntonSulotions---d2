@@ -4,45 +4,106 @@
 
 
 {% block body_block %}
-<div class="container">
-    <h1>Welocome to your Profile</h1>
-    <p>{{user.get_full_name}}</p>
-    <p>{{user}}</p>
-    <p>{{user.email}}</p>
 
 
-    <a class="btn btn-primary"href="{% url 'accounts:edit' username=user.username %}">{% trans "Edit"  %}</a>
-    <a class="btn btn-primary"href="{% url 'accounts:changepassword' username=user.username %}">{% trans "Change password"  %}</a>
-    <form class="form-inline" action="{% url 'accounts:made-consultant' username=user.username %}" method="post">
-      {% csrf_token %}
-      {% if user.is_staff %}
-      <button class="btn btn-danger" id="tagle-consultant" type="submit" name="button">{% trans "Remove to consultant list"  %}</button>
-      {% else %}
-      <button class="btn btn-warning" id="tagle-consultant" type="submit" name="button">{% trans "Add to consultant list"  %}</button>
-      {% endif %}
-    </form>
-    {% comment %} <script>
-      $("#id_categorie").change(function () {
-        var url = $("#quesionForm").attr("data-categorie-url");
-        var categorieId = $(this).val();
-        if (categorieId) {
-          $.ajax({
-            url: url,
-            data: {
-              'categorie': categorieId
-            },
-            success: function (data) {
-              $("#id_souscategorie").html(data);
-              $(".collapse").collapse('show');
-            }
-          });
-        }
-        else {
-          $(".collapse").collapse('hide');
-        }
-      });
-    </script> {% endcomment %}
+<div class="container emp-profile">
+            <form method="post">
+                <div class="row">
+                    <div class="col-md-10">
+                        <div class="profile-head">
+                                    <h3>
+                                        {{user}}
+                                    </h3>
 
+                            <ul class="nav nav-tabs" id="myTab" role="tablist">
+                                <li class="nav-item">
+                                    <a class="nav-link active" id="home-tab" data-toggle="tab" href="#home" role="tab" aria-controls="home" aria-selected="true">About</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" id="tickets-tab" data-toggle="tab" href="#list-tickets" role="tab" aria-controls="list-tickets" aria-selected="false">{% trans "Tickets" %}</a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="col-md-2">
+                      <a class="profile-edit-btn btn btn-primary w-100 py-1 my-1"href="{% url 'accounts:edit' username=user.username %}">{% trans "Edit"  %}</a>
 
-</div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="tab-content profile-tab" id="myTabContent">
+                            <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <label>{% trans "Email" %}</label>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <p>{{ user.email}}</p>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <label>{% trans "Website" %}</label>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <p><a href="{{ user.url}}">{{ user.url}}</a></p>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <label>{% trans "Tel" %}</label>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <p>{{user.tel}}</p>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <label>{% trans "Tickets" %}</label>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <p>{{user.tickets.all.count}}</p>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-12">
+                                                <label>{% trans "Address" %}</label>
+                                                <p>{{user.address}}</p>
+                                            </div>
+                                        </div>
+                            </div>
+                            <div class="tab-pane fade" id="list-tickets" role="tabpanel" aria-labelledby="tickets-tab">
+                              <h4>{% trans "Tickets" %}</h4>
+                              <table class="table">
+                                <thead>
+                                  <td class="px-2">Id</td>
+                                  <td class="px-2">{% trans "Title" %}</td>
+                                  <td class="px-2">{% trans "Status" %}</td>
+                                  <td class="px-2">{% trans "Published on" %}</td>
+                                  <td class="px-2">{% trans "Applicant" %}</td>
+                                  <td class="px-2">{% trans "priority" %}</td>
+                                  <td class="px-2">{% trans "Categorie" %}</td>
+                                  <td class="px-2">{% trans "Resolution time" %}</td>
+                                </thead>
+                                {% for question in user.tickets.all %}
+
+                                <tr>
+                                  <td>{{question.id}}</td>
+                                  <td><a  href="{% url 'solutions:questiondetail' pk=question.pk %}">{{ question.titre }} </td>
+                                  <td>{{ question.get_status_display}}</td>
+                                  <td>{{ question.created_at|date:"d/M/Y"}}</td>
+                                  <td><a href="{% url 'accounts:profile' username=question.user.username %}">{{question.user}}</a></td>
+                                  <td>{{ question.get_priorite_display}}</td>
+                                  <td>{{ question.categorie.name}}</td>
+                                  <td>{{question.get_time_to_resolv}}</td>
+                                </tr>
+                                {% endfor %}
+                              </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
 {% endblock %}

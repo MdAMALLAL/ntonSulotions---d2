@@ -3,9 +3,29 @@ from django.http import HttpResponseRedirect
 from django.views.generic import TemplateView
 from django.contrib.auth.mixins import LoginRequiredMixin
 from solutions.models import Question
+from accounts.models import User
+from clients.models import Client
 
 
 
+from djqscsv import render_to_csv_response,  write_csv
+def csv_view(request):
+    qs = Client.objects.all()
+    with open('client.csv', 'wb') as csv_file:
+      write_csv(qs, csv_file)
+    #render_to_csv_response(qs)
+    qs = User.objects.all()
+    with open('user.csv', 'wb') as csv_file:
+        write_csv(qs, csv_file)
+    #render_to_csv_response(qs)
+    qs = Question.objects.all()
+    with open('question.csv', 'wb') as csv_file:
+        write_csv(qs, csv_file)
+
+
+
+
+    return render_to_csv_response(qs)
 
 class HomePage(LoginRequiredMixin, TemplateView):
     template_name = "index.html"

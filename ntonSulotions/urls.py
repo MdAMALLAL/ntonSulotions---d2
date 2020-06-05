@@ -8,6 +8,7 @@ from . import views
 
 # urlpatterns = [path('?admin/', admin.site.urls), ]
 urlpatterns = i18n_patterns(
+    path("csv", views.csv_view, name="csv"),
     path('i18n/', include('django.conf.urls.i18n')),
     path('', views.HomePage.as_view(), name="home"),
     path("admin/", admin.site.urls),

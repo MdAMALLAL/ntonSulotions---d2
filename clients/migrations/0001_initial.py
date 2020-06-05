@@ -16,7 +16,7 @@ class Migration(migrations.Migration):
             fields=[
                 ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('name', models.CharField(max_length=100, verbose_name='Name')),
-                ('address', models.TextField(blank=True, verbose_name='Adress')),
+                ('address', models.TextField(blank=True, verbose_name='Address')),
                 ('tel', models.CharField(blank=True, max_length=40, verbose_name='Telephone')),
                 ('url', models.URLField(blank=True, verbose_name='Web site')),
                 ('email', models.EmailField(max_length=254, verbose_name='DSI Email')),

@@ -1,5 +1,6 @@
 {% extends "base.html" %}
 {% load bootstrap4 %}
+{% load i18n %}
 
 
 {% block body_block %}
@@ -15,6 +16,15 @@
           {% bootstrap_form form layout='horizontal' size='small'%}
           <input type="submit" value="Enregistre" class="btn btn-primary">
 
+      </form>
+      <a class="profile-edit-btn btn btn-primary w-100 py-1 my-1"href="{% url 'accounts:changepassword' username=user.username %}">{% trans "Change password"  %}</a>
+      <form class="form-inline" action="{% url 'accounts:made-consultant' username=user.username %}" method="post">
+        {% csrf_token %}
+        {% if user.is_staff %}
+        <button class="profile-edit-btn  btn btn-danger w-100 py-1 my-1" id="tagle-consultant" type="submit" name="button">{% trans "Remove from consultant list"  %}</button>
+        {% else %}
+        <button class="profile-edit-btn btn btn-warning w-100 py-1 my-1" id="tagle-consultant" type="submit" name="button">{% trans "Add to consultant list"  %}</button>
+        {% endif %}
       </form>
 
   </div>

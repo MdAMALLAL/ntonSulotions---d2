@@ -51,3 +51,15 @@ try {
       return;
 }
 });
+$(function () {
+  try {
+    if ($("#id_url").val() == '') {
+      $("#id_url").val('http://');
+    }
+  }
+
+  catch(err) {
+        console.log(err);
+        return;
+      }
+});

@@ -34,7 +34,6 @@ from django.template import Context
 class QuestionCreate(LoginRequiredMixin, generic.CreateView):
     model = Question
     form_class = QuestionForm
-    print('in view')
     def form_valid(self, form):
         try:
             self.object = form.save(commit=False)

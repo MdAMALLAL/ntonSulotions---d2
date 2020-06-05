@@ -18,10 +18,22 @@ from django.utils.translation import gettext_lazy as _
 #User = get_user_model()
 from .models import User
 
+from djqscsv import render_to_csv_response,  write_csv
+def csv_view(request):
+  qs = User.objects.all()
+  with open('User.csv', 'wb') as csv_file:
+      write_csv(qs, csv_file)
+  return render_to_csv_response(qs)
+
 class NewUser(CreateView):
     model = User
     form_class = forms.UserCreateForm
     template_name = "registration/signup.html"
+
+    def get_form_kwargs(self):
+        kwargs = super(NewUser, self).get_form_kwargs()
+        kwargs['client'] = self.request.GET.get('client')
+        return kwargs
 
     def form_valid(self, form):
         try:
@@ -31,7 +43,8 @@ class NewUser(CreateView):
             messages.warning(self.request,_("Warning, Something went wrong, please try again"))
         else:
             messages.success(self.request,_("User has been saved."))
-            #success_url=reverse_lazy('clients:detail', slug=self.object.slug)
+            return redirect('accounts:profile', username=self.object.username)
+
         return super().form_valid(form)
 
 class ProfileView(DetailView):
@@ -67,7 +80,7 @@ class UserListView(ListView):
 
 class ProfileUpdateView(LoginRequiredMixin, UpdateView):
     model=User
-    fields=['username','first_name','last_name','email','client']
+    fields=['username','first_name','last_name','tel','email','client']
     slug_field='username'
     slug_url_kwarg='username'
     user = "user"

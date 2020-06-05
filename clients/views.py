@@ -8,12 +8,15 @@ from django.contrib.auth.decorators import login_required
 from django.db import IntegrityError
 from .models import  Client
 from .forms import ClientForm
+from djqscsv import render_to_csv_response,  write_csv
 
-
-
+def csv_view(request):
+  qs = Client.objects.all()
+  with open('Client.csv', 'wb') as csv_file:
+      write_csv(qs, csv_file)
+  return render_to_csv_response(qs)
 
 class ClientsCreate(LoginRequiredMixin,CreateView):
-    #fields=['name','email','tel','url','address','signed','comment']
     model = Client
     form_class = ClientForm
 
@@ -31,7 +34,6 @@ class ClientsCreate(LoginRequiredMixin,CreateView):
 class ClientsDetail(LoginRequiredMixin,DetailView):
     model = Client
 
-
 class ClientsUpdate(LoginRequiredMixin, UpdateView):
     model= Client
     #fields=['name','email','tel','url','address','signed','comment']
@@ -47,7 +49,6 @@ class ClientsUpdate(LoginRequiredMixin, UpdateView):
             success_url = reverse_lazy('clients:detail', slug=self.object.slug)
 
         return super().form_valid(form)
-
 
 class ClientsList(LoginRequiredMixin,ListView):
     model = Client
@@ -69,17 +70,13 @@ class ClientsList(LoginRequiredMixin,ListView):
         context['pages'] = [val for val in range(page - 5 , page + 5) if val > 0]
         return context
 
-
-
-
-
 class ClientsDelete(LoginRequiredMixin, DeleteView):
     model= Client
     success_url=reverse_lazy('clients:list')
 
 
 @login_required
-def add_user(request, slug, username):
+def add_user(request, slug):
     client = get_object_or_404(Client, slug=slug)
     user = get_object_or_404(User, username=username)
     if request.method == "POST":

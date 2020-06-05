@@ -4,6 +4,7 @@ from django.urls import reverse, reverse_lazy
 from django.utils.translation import gettext_lazy as _
 from django.conf import settings
 import os
+import datetime
 import uuid
 User = settings.AUTH_USER_MODEL
 
@@ -54,8 +55,17 @@ class Question(models.Model):
     def content_file_name(instance, filename):
         filename = "%s__%s" % (uuid.uuid4().hex[:6].upper(),filename)
         return os.path.join('images', str(instance.user.id), filename)
+    def ref():
+        this_year = datetime.date.today().year
+        no = Question.objects.filter(created_at__year=this_year).count()
+        if no == None:
+            return '{0}-{1}'.format(this_year, 1)
+        else:
+            return '{0}-{1}'.format(this_year, no + 1)
+
 
     user = models.ForeignKey(User,null=True, related_name="tickets",on_delete=models.SET_NULL)
+    ref = models.CharField(default=ref, unique=True, editable=False,  max_length=100)
     created_at = models.DateTimeField(auto_now_add=True,editable=False)
     titre = models.CharField(max_length=200)
 
@@ -69,6 +79,8 @@ class Question(models.Model):
     description = models.TextField(blank=True,verbose_name=_('comment'))
     viwed_at = models.DateTimeField(blank=True,null=True)
     time_to_view = models.DurationField(blank=True,null=True,verbose_name=_('time to view'))
+    charged_by = models.ForeignKey(User,null=True, related_name="charged_tickets",on_delete=models.SET_NULL)
+
     first_react_at = models.DateTimeField(blank=True,null=True)
     time_to_react = models.DurationField(blank=True,null=True,verbose_name=_('time to react'))
     resolved_at = models.DateTimeField(blank=True,null=True)
@@ -76,6 +88,7 @@ class Question(models.Model):
     last_action = models.DateTimeField(auto_now=True)
 
     def save(self, *args, **kwargs):
+
         if self.viwed_at:
             self.time_to_view = self.viwed_at - self.created_at
         if self.first_react_at:
