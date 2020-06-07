@@ -4,6 +4,7 @@
 
 
 {% block body_block %}
+{% comment %} <main role="main" class="container mb-3 body_main emp-profile">
 <div class="row">
   <form action="{% url 'solutions:questionlist' %}" method="get" class="form-row">
     <div class="input-group mb-1">
@@ -89,5 +90,126 @@
       <h2>Pas de ticket pour le moment!</h2>
     {%endif%}
 </div>
-</div>
+</main> {% endcomment %}
+<main role="main" class="container mb-3 body_main emp-profile">
+  <div class="wrapper">
+
+
+    <div class="fresh-table toolbar-color-blue">
+    <!--
+      Available colors for the full background: full-color-blue, full-color-azure, full-color-green, full-color-red, full-color-orange
+      Available colors only for the toolbar: toolbar-color-blue, toolbar-color-azure, toolbar-color-green, toolbar-color-red, toolbar-color-orange
+    -->
+      <table id="fresh-table" class="table">
+        <thead>
+          <th data-field="id" >Id</th>
+          <th data-field="Ref" >Ref</th>
+          <th data-field="title" data-sortable="true">{% trans "Title" %}</th>
+          <th data-field="status" data-sortable="true">{% trans "Status" %}</th>
+          <th data-field="published" data-sortable="true">{% trans "Published on" %}</th>
+          <th data-field="applicant" data-sortable="true">{% trans "Applicant" %}</th>
+          <th data-field="priority" data-sortable="true">{% trans "priority" %}</th>
+          <th data-field="categorie" data-sortable="true">{% trans "Categorie" %}</th>
+          <th data-field="resolution" data-sortable="true">{% trans "Resolution time" %}</th>
+          <th data-field="actions" data-formatter="operateFormatter" data-events="operateEvents">Actions</th>
+
+        </thead>
+        <tbody>
+          {% for question in question_list %}
+          <tr>
+            <td >{{question.id}}</td>
+            <td>{{question.ref}}</td>
+            <td>{{ question.titre }}</td>
+            <td>{{ question.get_status_display}}</td>
+            <td>{{ question.created_at|date:"d/M/Y"}}</td>
+            <td>{{question.user}}</td>
+            <td>{{ question.get_priorite_display}}</td>
+            <td>{{ question.categorie.name}}</td>
+            <td>{{question.get_time_to_resolv}}</td>
+            <td></td>
+          </tr>
+            {% endfor %}
+
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+
+  <script>
+    var $table = $('#fresh-table')
+    $table.bootstrapTable('hideColumn', 'id')
+
+    window.operateEvents = {
+      // 'click .like': function (e, value, row, index) {
+      //   alert('You click like icon, row: ' + JSON.stringify(row))
+      //   console.log(value, row, index)
+      // },
+      'click .edit': function (e, value, row, index) {
+        // alert('You click edit icon, row: ' + JSON.stringify(row))
+        console.log(row.id)
+        window.location.href = "{{ request.path }}" + row.id;
+      },
+      'click .remove': function (e, value, row, index) {
+        $table.bootstrapTable('remove', {
+          field: 'id',
+          values: [row.id]
+        })
+      }
+    }
+
+    function operateFormatter(value, row, index) {
+      return [
+        // '<a rel="tooltip" title="Like" class="table-action like" href="javascript:void(0)" title="Like">',
+        //   '<i class="fa fa-heart"></i>',
+        // '</a>',
+        '<a rel="tooltip" title="Edit" class="table-action edit" href="javascript:void(0)" title="Edit">',
+          '<i class="fa fa-edit"></i>',
+        '</a>',
+        '<a rel="tooltip" title="Remove" class="table-action remove" href="javascript:void(0)" title="Remove">',
+          '<i class="fa fa-remove"></i>',
+        '</a>'
+      ].join('')
+    }
+
+    $(function () {
+      $table.bootstrapTable({
+        classes: 'table table-hover table-striped',
+        toolbar: '.toolbar',
+
+        search: true,
+        showRefresh: true,
+        showToggle: true,
+        showColumns: true,
+        pagination: true,
+        striped: true,
+        sortable: true,
+        height: $(window).height(),
+        pageSize: 25,
+        pageList: [25, 50, 100],
+
+        formatShowingRows: function (pageFrom, pageTo, totalRows) {
+          return ''
+        },
+        formatRecordsPerPage: function (pageNumber) {
+          return pageNumber + ' rows visible'
+        }
+      })
+      $(function () {
+        $table.bootstrapTable('hideColumn', 'id')
+      })
+
+
+      $(window).resize(function () {
+        $table.bootstrapTable('resetView', {
+          height: $(window).height()
+        })
+      })
+    })
+
+  </script>
+
+
+
+</main>
 {% endblock %}

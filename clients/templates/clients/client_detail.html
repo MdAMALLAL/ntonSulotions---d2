@@ -5,187 +5,202 @@
 
 
 {% block body_block %}
-<link rel="stylesheet" href="{%static 'css/client.nton.css'%}?v=0.0.2">
+<main role="main" class="container mb-3 body_main emp-profile">
+    <form method="post">
+      <div class="row">
+        <div class="col-md-10">
+          <div class="profile-head">
+            <h3>
+              {{client}}
+            </h3>
+            <ul class="nav nav-tabs" id="myTab" role="tablist">
+              <li class="nav-item">
+                <a class="nav-link active" id="home-tab" data-toggle="tab" href="#home" role="tab" aria-controls="home" aria-selected="true">About</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" id="users-tab" data-toggle="tab" href="#list-users" role="tab" aria-controls="list-users" aria-selected="false">{% trans "Users" %}</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" id="tickets-tab" data-toggle="tab" href="#list-tickets" role="tab" aria-controls="list-tickets" aria-selected="false">{% trans "Tickets" %}</a>
+              </li>
 
-
-
-{% comment %} <link href="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
-<script src="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js"></script>
-<script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-<!------ Include the above in your HEAD tag ----------> {% endcomment %}
-
-<div class="container emp-profile">
-            <form method="post">
-                <div class="row">
-                    <div class="col-md-10">
-                        <div class="profile-head">
-                                    <h3>
-                                        {{client}}
-                                    </h3>
-
-                            <ul class="nav nav-tabs" id="myTab" role="tablist">
-                                <li class="nav-item">
-                                    <a class="nav-link active" id="home-tab" data-toggle="tab" href="#home" role="tab" aria-controls="home" aria-selected="true">About</a>
-                                </li>
-                                <li class="nav-item">
-                                    <a class="nav-link" id="users-tab" data-toggle="tab" href="#list-users" role="tab" aria-controls="list-users" aria-selected="false">{% trans "Users" %}</a>
-                                </li>
-                                <li class="nav-item">
-                                    <a class="nav-link" id="tickets-tab" data-toggle="tab" href="#list-tickets" role="tab" aria-controls="list-tickets" aria-selected="false">{% trans "Tickets" %}</a>
-                                </li>
-
-                            </ul>
-                        </div>
-                    </div>
-                    <div class="col-md-2">
-                      {% comment %} <input type="submit" class="profile-edit-btn" name="btnAddMore" value="Edit Profile"/> {% endcomment %}
-                        <a class="profile-edit-btn btn  btn-primary w-100 py-1 my-1"href="{% url 'clients:edit' slug=client.slug %}">{% trans "Edit" %}</a>
-                        <a class="profile-edit-btn btn btn-danger w-100 py-1 my-1"href="{% url 'clients:delete' slug=client.slug %}">{% trans "Delete" %}</a>
-                        <a class="profile-edit-btn btn btn-danger w-100 py-1 my-1"href="{% url 'accounts:new' %}?client={{client.slug}}">{% trans "Add user" %}</a>
-
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-md-12">
-                        <div class="tab-content profile-tab" id="myTabContent">
-                            <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
-                                        <div class="row">
-                                            <div class="col-md-6">
-                                                <label>{% trans "Email" %}</label>
-                                            </div>
-                                            <div class="col-md-6">
-                                                <p>{{ client.email}}</p>
-                                            </div>
-                                        </div>
-                                        <div class="row">
-                                            <div class="col-md-6">
-                                                <label>{% trans "Website" %}</label>
-                                            </div>
-                                            <div class="col-md-6">
-                                                <p><a href="{{ client.url}}">{{ client.url}}</a></p>
-                                            </div>
-                                        </div>
-                                        <div class="row">
-                                            <div class="col-md-6">
-                                                <label>{% trans "Tel" %}</label>
-                                            </div>
-                                            <div class="col-md-6">
-                                                <p>{{client.tel}}</p>
-                                            </div>
-                                        </div>
-                                        <div class="row">
-                                            <div class="col-md-6">
-                                                <label>{% trans "Users count" %}</label>
-                                            </div>
-                                            <div class="col-md-6">
-                                                <p>{{client.users.all.count}}</p>
-                                            </div>
-                                        </div>
-                                        <div class="row">
-                                            <div class="col-md-12">
-                                                <label>{% trans "Address" %}</label>
-                                                <p>{{client.address}}</p>
-                                            </div>
-                                        </div>
-                            </div>
-                            {% comment %} <div class="tab-pane fade" id="profile" role="tabpanel" aria-labelledby="profile-tab">
-                                        <div class="row">
-                                            <div class="col-md-6">
-                                                <label>Experience</label>
-                                            </div>
-                                            <div class="col-md-6">
-                                                <p>Expert</p>
-                                            </div>
-                                        </div>
-                                        <div class="row">
-                                            <div class="col-md-6">
-                                                <label>Hourly Rate</label>
-                                            </div>
-                                            <div class="col-md-6">
-                                                <p>10$/hr</p>
-                                            </div>
-                                        </div>
-                                        <div class="row">
-                                            <div class="col-md-6">
-                                                <label>Total Projects</label>
-                                            </div>
-                                            <div class="col-md-6">
-                                                <p>230</p>
-                                            </div>
-                                        </div>
-                                        <div class="row">
-                                            <div class="col-md-6">
-                                                <label>English Level</label>
-                                            </div>
-                                            <div class="col-md-6">
-                                                <p>Expert</p>
-                                            </div>
-                                        </div>
-                                        <div class="row">
-                                            <div class="col-md-6">
-                                                <label>Availability</label>
-                                            </div>
-                                            <div class="col-md-6">
-                                                <p>6 months</p>
-                                            </div>
-                                        </div>
-                                <div class="row">
-                                    <div class="col-md-12">
-                                        <label>Your Bio</label><br/>
-                                        <p>Your detail description</p>
-                                    </div>
-                                </div>
-                            </div>{% endcomment %}
-                            <div class="tab-pane fade" id="list-users" role="tabpanel" aria-labelledby="users-tab">
-                              <h4>{% trans "Users" %}</h4>
-                              <table class="table  table-sm">
-                                <tbody>
-                                    {% for user in client.users.all %}
-                                    <tr>
-                                      <td><a href="{% url 'accounts:profile' username=user.username %}">{{ user.username }}</a></td>
-                                      <td>{{ user.email }}</td>
-
-                                    </tr>
-                                  {% empty %}
-                                      <p>{% trans "No Users" %}.</p>
-                                  {% endfor %}
-                                  </tbody>
-                              </table>
-
-                            </div>
-                            <div class="tab-pane fade" id="list-tickets" role="tabpanel" aria-labelledby="tickets-tab">
-                              <h4>{% trans "Tickets" %}</h4>
-                              <table class="table">
-                                <thead>
-                                  <td class="px-2">Id</td>
-                                  <td class="px-2">{% trans "Title" %}</td>
-                                  <td class="px-2">{% trans "Status" %}</td>
-                                  <td class="px-2">{% trans "Published on" %}</td>
-                                  <td class="px-2">{% trans "Applicant" %}</td>
-                                  <td class="px-2">{% trans "priority" %}</td>
-                                  <td class="px-2">{% trans "Categorie" %}</td>
-                                  <td class="px-2">{% trans "Resolution time" %}</td>
-                                </thead>
-                                {% for users in client.users.all %}
-                                {% for question in users.tickets.all %}
-
-                                <tr>
-                                  <td>{{question.id}}</td>
-                                  <td><a  href="{% url 'solutions:questiondetail' pk=question.pk %}">{{ question.titre }} </td>
-                                  <td>{{ question.get_status_display}}</td>
-                                  <td>{{ question.created_at|date:"d/M/Y"}}</td>
-                                  <td><a href="{% url 'accounts:profile' username=question.user.username %}">{{question.user}}</a></td>
-                                  <td>{{ question.get_priorite_display}}</td>
-                                  <td>{{ question.categorie.name}}</td>
-                                  <td>{{question.get_time_to_resolv}}</td>
-                                </tr>
-                                {% endfor %}
-                                {% endfor %}
-                              </table>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </form>
+            </ul>
+          </div>
         </div>
+        <div class="col-md-2">
+          {% comment %} <input type="submit" class="profile-edit-btn" name="btnAddMore" value="Edit Profile"/> {% endcomment %}
+          <a class="profile-edit-btn btn  btn-primary w-100 pb-1 my-1"href="{% url 'clients:edit' slug=client.slug %}">{% trans "Edit" %}</a>
+          <a class="profile-edit-btn btn btn-primary w-100 pb-1 my-1"href="{% url 'accounts:new' %}?client={{client.slug}}">{% trans "Add user" %}</a>
+          <a class="profile-edit-btn btn btn-danger w-100 pb-1 my-1"href="{% url 'clients:delete' slug=client.slug %}">{% trans "Delete" %}</a>
+
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-12">
+          <div class="tab-content profile-tab" id="myTabContent">
+            <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
+              <div class="row">
+                <div class="col-md-6">
+                  <label>{% trans "Email" %}</label>
+                </div>
+                <div class="col-md-6">
+                  <p>{{ client.email}}</p>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-md-6">
+                  <label>{% trans "Website" %}</label>
+                </div>
+                <div class="col-md-6">
+                  <p><a href="{{ client.url}}">{{ client.url}}</a></p>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-md-6">
+                  <label>{% trans "Tel" %}</label>
+                </div>
+                <div class="col-md-6">
+                  <p>{{client.tel}}</p>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-md-6">
+                  <label>{% trans "Contact" %}</label>
+                </div>
+                <div class="col-md-6">
+                  <p>{{client.contact}}</p>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-md-6">
+                  <label>{% trans "Contact tel" %}</label>
+                </div>
+                <div class="col-md-6">
+                  <p>{{client.contact_tel}}</p>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-md-6">
+                  <label>{% trans "Contact Email" %}</label>
+                </div>
+                <div class="col-md-6">
+                  <p>{{client.contact_email}}</p>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-md-6">
+                  <label>{% trans "Users count" %}</label>
+                </div>
+                <div class="col-md-6">
+                  <p>{{client.users.all.count}}</p>
+                </div>
+              </div>
+
+              <div class="row">
+                <div class="col-md-12">
+                  <label>{% trans "Address" %}</label>
+                  <p>{{client.address}}</p>
+                </div>
+              </div>
+            </div>
+            {% comment %} <div class="tab-pane fade" id="profile" role="tabpanel" aria-labelledby="profile-tab">
+            <div class="row">
+            <div class="col-md-6">
+            <label>Experience</label>
+          </div>
+          <div class="col-md-6">
+          <p>Expert</p>
+        </div>
+      </div>
+      <div class="row">
+      <div class="col-md-6">
+      <label>Hourly Rate</label>
+    </div>
+    <div class="col-md-6">
+    <p>10$/hr</p>
+  </div>
+</div>
+<div class="row">
+<div class="col-md-6">
+<label>Total Projects</label>
+</div>
+<div class="col-md-6">
+<p>230</p>
+</div>
+</div>
+<div class="row">
+<div class="col-md-6">
+<label>English Level</label>
+</div>
+<div class="col-md-6">
+<p>Expert</p>
+</div>
+</div>
+<div class="row">
+<div class="col-md-6">
+<label>Availability</label>
+</div>
+<div class="col-md-6">
+<p>6 months</p>
+</div>
+</div>
+<div class="row">
+<div class="col-md-12">
+<label>Your Bio</label><br/>
+<p>Your detail description</p>
+</div>
+</div>
+</div>{% endcomment %}
+<div class="tab-pane fade" id="list-users" role="tabpanel" aria-labelledby="users-tab">
+  <h4>{% trans "Users" %}</h4>
+  <table class="table  table-sm">
+    <tbody>
+      {% for user in client.users.all %}
+      <tr>
+        <td><a href="{% url 'accounts:profile' username=user.username %}">{{ user.username }}</a></td>
+        <td>{{ user.email }}</td>
+
+      </tr>
+      {% empty %}
+      <p>{% trans "No Users" %}.</p>
+      {% endfor %}
+    </tbody>
+  </table>
+
+</div>
+<div class="tab-pane fade" id="list-tickets" role="tabpanel" aria-labelledby="tickets-tab">
+  <h4>{% trans "Tickets" %}</h4>
+  <table class="table">
+    <thead>
+      <td class="px-2">Id</td>
+      <td class="px-2">{% trans "Title" %}</td>
+      <td class="px-2">{% trans "Status" %}</td>
+      <td class="px-2">{% trans "Published on" %}</td>
+      <td class="px-2">{% trans "Applicant" %}</td>
+      <td class="px-2">{% trans "priority" %}</td>
+      <td class="px-2">{% trans "Categorie" %}</td>
+      <td class="px-2">{% trans "Resolution time" %}</td>
+    </thead>
+    {% for users in client.users.all %}
+    {% for question in users.tickets.all %}
+
+    <tr>
+      <td>{{question.id}}</td>
+      <td><a  href="{% url 'solutions:questiondetail' pk=question.pk %}">{{ question.titre }} </td>
+        <td>{{ question.get_status_display}}</td>
+        <td>{{ question.created_at|date:"d/M/Y"}}</td>
+        <td><a href="{% url 'accounts:profile' username=question.user.username %}">{{question.user}}</a></td>
+        <td>{{ question.get_priorite_display}}</td>
+        <td>{{ question.categorie.name}}</td>
+        <td>{{question.get_time_to_resolv}}</td>
+      </tr>
+      {% endfor %}
+      {% endfor %}
+    </table>
+  </div>
+</div>
+</div>
+</div>
+</form>
+</main>
 {% endblock %}

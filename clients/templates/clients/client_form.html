@@ -2,6 +2,7 @@
 {% load bootstrap4 %}
 {% load i18n %}
 {% block body_block %}
+<main role="main" class="container mb-3 body_main emp-profile">
 
     {% if form.instance.pk%}
       <h1>{% trans "Edit Client" %}</h1>
@@ -21,4 +22,5 @@
 
 
 
+</main>
 {% endblock %}

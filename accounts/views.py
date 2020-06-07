@@ -4,7 +4,7 @@ from django.urls import reverse_lazy,reverse
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, get_object_or_404, redirect
 
-from django.views.generic import CreateView, DetailView, UpdateView,TemplateView,ListView
+from django.views.generic import CreateView, DetailView,RedirectView, UpdateView,TemplateView,ListView
 from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db import IntegrityError
@@ -52,11 +52,15 @@ class ProfileView(DetailView):
     slug_field='username'
     slug_url_kwarg='username'
 
+
+def myProfileView(request):
+    return redirect('accounts:profile', username=request.user.username)
+
 class UserListView(ListView):
     model = User
 
     def get_queryset(self):
-        self.paginate_by =  int(self.request.GET.get('paginate_by', 4))
+        # self.paginate_by =  int(self.request.GET.get('paginate_by', 4))
 
         if self.request.user.is_staff:
             userlist =  User.objects.all()
@@ -71,8 +75,8 @@ class UserListView(ListView):
     def get_context_data(self, **kwargs):
         context = super(UserListView, self).get_context_data(**kwargs)
         context['form'] = forms.UserCreateForm
-        page = int(self.request.GET.get('page', 1))
-        context['pages'] = [val for val in range(page - 5 , page + 5) if val > 0]
+        # page = int(self.request.GET.get('page', 1))
+        # context['pages'] = [val for val in range(page - 5 , page + 5) if val > 0]
         context['clients']=Client.objects.all()
         return context
 
@@ -120,3 +124,14 @@ def made_consultant(request, username):
         else:
             messages.success(request,messages_text)
     return redirect('accounts:profile', username=user.username)
+
+@login_required
+def set_password(request, username):
+    print('inview')
+    user = get_object_or_404(User, username=username)
+    form = forms.PasswordSetForm(request.POST or None)
+    if form.is_valid():
+        user.set_password(form.cleaned_data['new_password'])
+        user.save()
+        return redirect('accounts:profile', username=user.username)
+    return render(request, 'accounts/password_set_form.html', {'form':form})

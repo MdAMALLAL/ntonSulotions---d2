@@ -11,10 +11,10 @@ class QuestionResource(resources.ModelResource):
         model = Question
 class QuestionAdmin(ImportExportModelAdmin):
     #fields=['titre', 'created_at','user','priorite','status']
-    list_display=['titre', 'created_at','user','priorite','status']
+    list_display=['titre', 'created_at','user','priorite','status','charged_by']
     list_editable=['priorite','status']
     search_fields = ['titre','description']
-    list_filter = ['created_at','user','priorite','status']
+    list_filter = ['created_at','user','priorite','status','charged_by']
     resource_class = QuestionResource
 
 class SousCategorieInline(TranslationTabularInline):

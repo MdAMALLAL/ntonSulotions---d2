@@ -68,19 +68,15 @@ class Question(models.Model):
     ref = models.CharField(default=ref, unique=True, editable=False,  max_length=100)
     created_at = models.DateTimeField(auto_now_add=True,editable=False)
     titre = models.CharField(max_length=200)
-
     image = models.ImageField(blank=True,null=True, upload_to=content_file_name)
-
     priorite=models.CharField(max_length=1,choices=Priorite,default='F',)
     status = models.CharField(max_length=2,choices=Status,default='OV',)
     categorie = models.ForeignKey(Categorie, on_delete=models.CASCADE, related_name='quesions',)
     souscategorie = models.ForeignKey(SousCategorie, on_delete=models.CASCADE, related_name='quesions',)
-
     description = models.TextField(blank=True,verbose_name=_('comment'))
     viwed_at = models.DateTimeField(blank=True,null=True)
     time_to_view = models.DurationField(blank=True,null=True,verbose_name=_('time to view'))
     charged_by = models.ForeignKey(User,null=True, related_name="charged_tickets",on_delete=models.SET_NULL)
-
     first_react_at = models.DateTimeField(blank=True,null=True)
     time_to_react = models.DurationField(blank=True,null=True,verbose_name=_('time to react'))
     resolved_at = models.DateTimeField(blank=True,null=True)
@@ -113,6 +109,9 @@ class Question(models.Model):
                 return '%02d %s %02d H %02d M' % (days, _('Days'),int((sec/3600)%3600), int((sec/60)%60))
             return '%02d H %02d M' % (int((sec/3600)%3600), int((sec/60)%60))
         return string
+
+    def date_to_minute(self, date):
+        return date.days * 24  + date.seconds / 3600
 
     def get_time_to_resolv(self):
         string = _("Not resolved yet")

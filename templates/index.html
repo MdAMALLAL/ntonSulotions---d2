@@ -2,6 +2,7 @@
 {% load i18n %}
 
 {% block static_content %}
+<main role="main" class="container mb-3 body_main emp-profile">
   {% if not user.is_staff %}
     <div class="row">
       <div class="col-5">
@@ -40,6 +41,9 @@
       </form>
       <div id="container2" class="chart" data-url="{% url 'solutions:ajax_load_chart' %}?type=line{% for key, value in request.GET.items %}{% if key != 'page' %}&{{ key }}={{ value }}{% endif %}{% endfor %}"></div>
     </div>
+    <div class="col-md-6">
+      <div id="container3" class="chart" data-url="{% url 'solutions:ajax_load_chart' %}?type=bar{% for key, value in request.GET.items %}{% if key != 'page' %}&{{ key }}={{ value }}{% endif %}{% endfor %}"></div>
+    </div>
   </div>
 
   <script src="https://code.highcharts.com/highcharts.src.js"></script>
@@ -59,8 +63,16 @@
         Highcharts.chart("container2", data);
       }
     });
+    $.ajax({
+      url: $("#container3").attr("data-url"),
+      dataType: 'json',
+      success: function (data) {
+        Highcharts.chart("container3", data);
+      }
+    });
   </script>
   {% endif %}
 
 
+</main>
 {% endblock %}

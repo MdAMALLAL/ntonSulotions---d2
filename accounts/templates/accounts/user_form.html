@@ -4,9 +4,32 @@
 
 
 {% block body_block %}
-  <div class="container">
+<main role="main" class="container mb-3 body_main emp-profile">
     {% if user.is_authenticated %}
-      <h2 class="profil-h2">Personnaliser le profile</h2>
+    <div class="row">
+      <div class="col-4">
+        <h2 class="profil-h2">Personnaliser le profile</h2>
+      </div>
+      <div class="col-4">
+        {% if user.is_staff %}
+        <a class="btn btn-primary  py-1 my-1"href="{% url 'accounts:changepassword' username=user.username %}">{% trans "Change password"  %}</a>
+        {% else %}
+        <a class="btn btn-primary  py-1 my-1"href="{% url 'accounts:changepassword' username=user.username %}">{% trans "Change password"  %}</a>
+        {% endif %}
+      </div>
+      <div class="col-4">
+        <form class="form-inline" action="{% url 'accounts:made-consultant' username=user.username %}" method="post">
+          {% csrf_token %}
+          {% if user.is_staff %}
+          <button class="  btn btn-danger  py-1 my-1" id="tagle-consultant" type="submit" name="button">{% trans "Remove from consultant list"  %}</button>
+          {% else %}
+          <button class=" btn btn-warning  py-1 my-1" id="tagle-consultant" type="submit" name="button">{% trans "Add to consultant list"  %}</button>
+          {% endif %}
+        </form>
+      </div>
+    </div>
+
+
       <h3 class="profil-h3">Profile Information</h3>
     {% endif %}
 
@@ -15,17 +38,8 @@
           {% csrf_token %}
           {% bootstrap_form form layout='horizontal' size='small'%}
           <input type="submit" value="Enregistre" class="btn btn-primary">
-
-      </form>
-      <a class="profile-edit-btn btn btn-primary w-100 py-1 my-1"href="{% url 'accounts:changepassword' username=user.username %}">{% trans "Change password"  %}</a>
-      <form class="form-inline" action="{% url 'accounts:made-consultant' username=user.username %}" method="post">
-        {% csrf_token %}
-        {% if user.is_staff %}
-        <button class="profile-edit-btn  btn btn-danger w-100 py-1 my-1" id="tagle-consultant" type="submit" name="button">{% trans "Remove from consultant list"  %}</button>
-        {% else %}
-        <button class="profile-edit-btn btn btn-warning w-100 py-1 my-1" id="tagle-consultant" type="submit" name="button">{% trans "Add to consultant list"  %}</button>
-        {% endif %}
       </form>
 
-  </div>
-{% endblock %}
+
+</main>
+{% endblock  %}

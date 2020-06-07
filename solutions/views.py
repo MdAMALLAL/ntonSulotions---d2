@@ -25,7 +25,7 @@ from django.template.loader import get_template
 from django.template import Context
 
 
-
+from django.db.models import Sum
 
 ####################################################
 # QUESTION: CRUD
@@ -58,7 +58,10 @@ class QuestionCreate(LoginRequiredMixin, generic.CreateView):
                         )
             from_email = self.object.user.email
             to = self.object.user.client.email
-            send_mail(subject, message, from_email, [to])
+            try:
+                send_mail(subject, message, from_email, [to])
+            except Exception as e:
+                print(e)
 
             message = """Votre ticket a ete ouvert
             sous id : {0} et titre : {1};
@@ -72,7 +75,10 @@ class QuestionCreate(LoginRequiredMixin, generic.CreateView):
             from_email = self.object.user.email
             print(from_email)
             to = self.object.user.client.email
-            send_mail(subject, message, 'no_replay@ntonadvisory.com' , [from_email])
+            try:
+                send_mail(subject, message, 'no_replay@ntonadvisory.com' , [from_email])
+            except Exception as e:
+                print(e)
         return super().form_valid(form)
 
 class QuestionEdit(LoginRequiredMixin, generic.UpdateView):
@@ -162,9 +168,9 @@ def add_reponce_to_question(request, pk):
                 question.last_action = timezone.now()
                 question.status = reponce.status
                 if not question.first_react_at: question.first_react_at = timezone.now()
+                if not question.charged_by: question.charged_by = reponce.user
                 if reponce.status == 'RS':
                     question.resolved_at = timezone.now()
-
                 reponce.save()
                 question.save()
             except IntegrityError:
@@ -172,14 +178,18 @@ def add_reponce_to_question(request, pk):
             else:
                 messages.success(request,_("Answere has been saved."))
                 try:
+                    subject = 'ntonadvisory : {}'.format(question.titre)
                     message = """des nouveautés sont enregistrés sur votre ticket,
                     visiter le lien ici,
                     Suivi le a (http://{0}{1})
-                    """.format(self.request.META['HTTP_HOST'],
-                                reverse("solutions:questiondetail", kwargs={"pk": self.object.pk})
+                    """.format( request.META['HTTP_HOST'],
+                                reverse("solutions:questiondetail", kwargs={"pk": question.pk})
                                 )
                     to = question.user.email
-                    send_mail(subject, message, 'no_replay@ntonadvisory.com' , [to])
+                    try:
+                        send_mail(subject, message, 'no_replay@ntonadvisory.com' , [to])
+                    except Exception as e:
+                        print(e)
                 except Exception as e:
                     raise
 
@@ -262,8 +272,7 @@ def load_chart(request):
             .annotate(**metrics)\
             .order_by('created_at__date')
 
-        datasetAction = Reponce.objects.filter(created_at__gte=start_date,\
-                    created_at__lte=end_date)\
+        datasetAction = Reponce.objects.all()\
             .values('created_at__date')\
             .annotate(**metrics)\
             .order_by('created_at__date')
@@ -305,5 +314,50 @@ def load_chart(request):
             'xAxis': {'categories': dates,},
             'series': [survived_series, action_series]
         }
+
+    if request.GET.get('type')=='bar':
+
+        #dataset = Question.objects.all() #\
+            #.values('time_to_view','time_to_react','time_to_resolv') \
+            #.order_by('created_at')
+        dataset = Question.objects.values('charged_by__username').annotate(time_to_resolv_total=Sum('time_to_resolv')).order_by('-time_to_resolv_total')
+
+
+
+        viewdata = list()
+        reactdate = list()
+        resolvedate = list()
+        ids = list()
+
+        for entry in dataset:
+
+            ids.append(entry.get('charged_by__username'))
+            time = entry.get('time_to_resolv_total')
+            print(time)
+            viewdata.append(time.days * 24  + time.seconds / 3600)
+            # reactdate.append(entry.date_to_minute(entry.time_to_react))
+            # resolvedate.append(entry.date_to_minute(entry.time_to_resolv))
+
+
+        chart = {
+            'chart': {'type': 'column'},
+            'title': {'text': ''},
+            'xAxis': {'categories': ids,},
+            'series': [{
+                          'name': 'Viewed time',
+                          'data': viewdata,
+                          'color': 'green'
+                       }]#, {
+                      #     'name': 'reacted time',
+                      #     'data': reactdate,
+                      #     'color': 'red'
+                      # }, {
+                      #     'name': 'Resolved time',
+                      #     'data': resolvedate,
+                      #     'color': 'blue'
+                      # }]
+        }
+
+
 
     return JsonResponse(chart)

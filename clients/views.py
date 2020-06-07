@@ -54,7 +54,7 @@ class ClientsList(LoginRequiredMixin,ListView):
     model = Client
 
     def get_queryset(self):
-        self.paginate_by =  int(self.request.GET.get('paginate_by', 10))
+        # self.paginate_by =  int(self.request.GET.get('paginate_by', 10))
 
         if self.request.user.is_staff:
             clientlist =  Client.objects.all()
@@ -66,8 +66,8 @@ class ClientsList(LoginRequiredMixin,ListView):
     def get_context_data(self, **kwargs):
         context = super(ClientsList, self).get_context_data(**kwargs)
         context['form'] = ClientForm
-        page = int(self.request.GET.get('page', 1))
-        context['pages'] = [val for val in range(page - 5 , page + 5) if val > 0]
+        # page = int(self.request.GET.get('page', 1))
+        # context['pages'] = [val for val in range(page - 5 , page + 5) if val > 0]
         return context
 
 class ClientsDelete(LoginRequiredMixin, DeleteView):
