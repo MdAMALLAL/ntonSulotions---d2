@@ -21,19 +21,19 @@
                   <div class="row">
 
                     {% if not form.instance.pk%}
-                    <div class="col-md-5">
+                    <div class="col-md-6">
                       <div class="form-group">
-                        {% bootstrap_field form.categorie  %}
+                        {% bootstrap_field form.categorie  placeholder=''  %}
                       </div>
                     </div>
-                    <div class="col-md-3">
+                    <div class="col-md-6">
                       <div class="form-group">
                           {% bootstrap_field form.souscategorie     field_class='collapse' %}
                       </div>
                     </div>
-                    <div class="col-md-4">
+                    <div class="col-md-8">
                       <div class="form-group">
-                          {% bootstrap_field form.priorite %}
+                          {% bootstrap_field form.priorite layouy='horizontal'%}
                       </div>
                     </div>
                     {% endif %}
@@ -41,31 +41,18 @@
                   <div class="row">
                     <div class="col-md-6">
                       <div class="form-group">
-                        {% bootstrap_field form.titre   %}
+                        {% bootstrap_field form.titre  placeholder='' %}
                       </div>
                     </div>
                     <div class="col-md-6">
                       {% bootstrap_field form.image    addon_after='<i class="fa fa-image"></i>' %}
 
-
-
-                      <div class="form-group form-file-upload form-file-multiple">
-                          <input type="file" name="image" multiple="" accept="image/*" class=" form-control-file " title="" id="id_image_1">
-                          <div class="input-group">
-                              <input type="text" class="form-control inputFileVisible" placeholder="Single File">
-                              <span class="input-group-btn">
-                                  <button type="button" class="btn btn-fab btn-round btn-primary">
-                                      <i class="material-icons">attach_file</i>
-                                  </button>
-                              </span>
-                          </div>
-                        </div>
-                    </div>
+                  </div>
                   </div>
                   <div class="row">
                     <div class="col-md-12">
                       <div class="form-group">
-                        {% bootstrap_field form.description show_label=False%}
+                        {% bootstrap_field form.description placeholder='' show_label=False%}
 
                       </div>
                     </div>

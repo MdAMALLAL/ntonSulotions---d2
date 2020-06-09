@@ -13288,7 +13288,13 @@ fieldset[disabled][disabled] .has-rose .form-control,
 .bmd-form-group label,
 .bmd-form-group input::placeholder {
   line-height: 1.1;
+
 }
+input::placeholder {
+  display: none;
+
+}
+
 
 .bmd-form-group label {
   color: #AAAAAA;

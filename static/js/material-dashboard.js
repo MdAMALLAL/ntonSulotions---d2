@@ -581,7 +581,7 @@ md = {
         swal({
             title: 'Create an Event',
             html: '<div class="form-group">' +
-              '<input class="form-control" placeholder="Event Title" id="input-field">' +
+              '<input class="form-control" id="input-field">' +
               '</div>',
             showCancelButton: true,
             confirmButtonClass: 'btn btn-success',
