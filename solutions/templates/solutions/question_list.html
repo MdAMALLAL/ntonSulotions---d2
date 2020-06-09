@@ -4,90 +4,108 @@
 
 
 {% block body_block %}
-<div class="row">
-  <form action="{% url 'solutions:questionlist' %}" method="get" class="form-row">
-    <div class="input-group mb-1">
-      <div class="input-group-prepend">
-        <label class="input-group-text" for="inputGroupSelect01">{% trans "Priorite"%}</label>
-      </div>
-      <select class="custom-select"name="priorite" id="inputGroupSelect01">
-        <option value="" {%if not priorite %} selected{%endif%}>{% trans "All"%}</option>
-        <option value="U" {{active.U}}>{% trans "Urgent"%}</option>
-        <option value="H" {{active.H}}>{% trans "Height"%}</option>
-        <option value="M" {{active.M}}>{% trans "Medium"%}</option>
-        <option value="F" {{active.F}}>{% trans "Low"%}</option>
-      </select>
-      <div class="input-group-prepend">
-        <label class="input-group-text" for="inputGroupSelect01">{% trans "Status"%}</label>
-      </div>
-      <select class="custom-select" name="status" id="inputGroupSelect02">
-        <option  value="" {%if not status %} selected{%endif%}>{% trans "All"%}</option>
-        <option value="OV" {{active.OV}}>{% trans "Open"%}</option>
-        <option value="RS" {{active.RS}}>{% trans "Resolved"%}</option>
-        <option value="RF" {{active.RF}}>{% trans "Refused"%}</option>
-      </select>
-      <div class="input-group-append">
-        <button class="btn btn-outline-secondary" for="inputGroupSelect02" type="submit">Filter</button>
-      </div>
-    </div>
-    <div class="input-group">
-      <div class="input-group-prepend">
-        <label class="input-group-text" for="q"><i class="fa fa-search"></i></label>
-      </div>
-      <input  type="text" class="form-control" id="q" name="q" type="text" aria-label="Recipient's username" aria-describedby="button-addon2" value="{{ query|default_if_none:''|cut:'&q=' }}" placeholder="Search...">
-      <div class="input-group-append">
-        <button class="btn btn-outline-secondary" type="submit" id="button-addon2">{% trans "Search" %}</button>
-      </div>
-    </div>
-  </form>
-</div>
-<div class="row my-2 text-white-50 bg-dark rounded shadow-sm">
-  <div class="lh-100">
-    <h6 class="mb-0  p-3 text-white lh-100">List des ticket</h6>
-  </div>
-</div>
-<div class="row">
-{%  if question_list%}
-
-  {% if is_paginated %}
-  <div class="d-flex w-100">
-      {% include "paginator.html" %}
-  </div>
-  {% endif %}
-
-  <table class="table">
+<div class="wrapper">
+  <div class="fresh-table toolbar-color-green">
+    <!--
+    Available colors for the full background: full-color-blue, full-color-azure, full-color-green, full-color-red, full-color-orange
+    Available colors only for the toolbar: toolbar-color-blue, toolbar-color-azure, toolbar-color-green, toolbar-color-red, toolbar-color-orange
+  -->
+  <table id="fresh-table" class="table">
     <thead>
-      <td class="px-2">Id</td>
-      <td class="px-2">{% trans "Title" %}</td>
-      <td class="px-2">{% trans "Status" %}</td>
-      <td class="px-2">{% trans "Published on" %}</td>
-      <td class="px-2">{% trans "Applicant" %}</td>
-      <td class="px-2">{% trans "priority" %}</td>
-      <td class="px-2">{% trans "Categorie" %}</td>
-      <td class="px-2">{% trans "Resolution time" %}</td>
+      <th data-field="id" >Id</th>
+      <th data-field="Ref" >Ref</th>
+      <th data-field="title" data-sortable="true">{% trans "Title" %}</th>
+      <th data-field="status" data-sortable="true">{% trans "Status" %}</th>
+      <th data-field="published" data-sortable="true">{% trans "Published on" %}</th>
+      <th data-field="applicant" data-sortable="true">{% trans "Applicant" %}</th>
+      <th data-field="priority" data-sortable="true">{% trans "priority" %}</th>
+      <th data-field="categorie" data-sortable="true">{% trans "Categorie" %}</th>
+      <th data-field="resolution" data-sortable="true">{% trans "Resolution time" %}</th>
+      <th data-field="actions" data-formatter="operateFormatter" data-events="operateEvents">Actions</th>
     </thead>
-    {% for question in question_list %}
-    <tr>
-      <td>{{question.ref}}</td>
-      <td><a  href="{% url 'solutions:questiondetail' pk=question.pk %}">{{ question.titre }} </td>
-      <td>{{ question.get_status_display}}</td>
-      <td>{{ question.created_at|date:"d/M/Y"}}</td>
-      <td><a href="{% url 'accounts:profile' username=question.user.username %}">{{question.user}}</a></td>
-      <td>{{ question.get_priorite_display}}</td>
-      <td>{{ question.categorie.name}}</td>
-      <td>{{question.get_time_to_resolv}}</td>
-    </tr>
+    <tbody>
+      {% for question in question_list %}
+      <tr>
+        <td>{{question.id}}</td>
+        <td>{{question.ref}}</td>
+        <td>{{ question.titre }}</td>
+        <td>{{ question.get_status_display}}</td>
+        <td>{{ question.created_at|date:"d/M/Y"}}</td>
+        <td>{{question.user}}</td>
+        <td>{{ question.get_priorite_display}}</td>
+        <td>{{ question.categorie.name}}</td>
+        <td>{{question.get_time_to_resolv}}</td>
+        <td></td>
+      </tr>
       {% endfor %}
+    </tbody>
   </table>
+</div>
+</div>
 
-  {% if is_paginated %}
-  <div class="d-flex w-100">
-      {% include "paginator.html" %}
-  </div>
-  {% endif %}
-    {% else %}
-      <h2>Pas de ticket pour le moment!</h2>
-    {%endif%}
-</div>
-</div>
+<script>
+  var $table = $('#fresh-table')
+
+  window.operateEvents = {
+    // 'click .like': function (e, value, row, index) {
+      //   alert('You click like icon, row: ' + JSON.stringify(row))
+      //   console.log(value, row, index)
+      // },
+      'click .edit': function (e, value, row, index) {
+        // alert('You click edit icon, row: ' + JSON.stringify(row))
+        console.log(row.id)
+        window.location.href = "{{ request.path }}" + row.id;
+      },
+      'click .remove': function (e, value, row, index) {
+        $table.bootstrapTable('remove', {
+          field: 'id',
+          values: [row.id]
+        })
+      }
+    }
+
+    function operateFormatter(value, row, index) {
+      return [
+      // '<a rel="tooltip" title="Like" class="table-action like" href="javascript:void(0)" title="Like">',
+        //   '<i class="fa fa-heart"></i>',
+        // '</a>',
+        '<a rel="tooltip" title="Edit" class="table-action edit" href="javascript:void(0)" title="Edit">',
+          '<i class="fa fa-edit"></i>',
+          '</a>'
+            ].join('')
+          }
+
+          $(function () {
+            $table.bootstrapTable({
+              classes: 'table table-hover table-striped',
+              toolbar: '.toolbar',
+
+              search: true,
+              showRefresh: true,
+              showToggle: true,
+              showColumns: true,
+              pagination: true,
+              striped: true,
+              sortable: true,
+              height: $(window).height(),
+              pageSize: 25,
+              pageList: [25, 50, 100],
+
+              formatShowingRows: function (pageFrom, pageTo, totalRows) {
+                return ''
+              },
+              formatRecordsPerPage: function (pageNumber) {
+                return pageNumber + ' rows visible'
+              }
+            })
+            $(function () {
+              $table.bootstrapTable('hideColumn', 'id')
+            })
+            $(window).resize(function () {
+              $table.bootstrapTable('resetView', {
+                height: $(window).height()
+              })
+            })
+          })
+        </script>
 {% endblock %}

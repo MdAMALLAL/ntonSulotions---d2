@@ -9,6 +9,10 @@ from import_export.admin import  ImportExportMixin, ImportExportModelAdmin
 class QuestionResource(resources.ModelResource):
     class Meta:
         model = Question
+class SousCategorieResource(resources.ModelResource):
+    class Meta:
+        model = SousCategorie
+
 class QuestionAdmin(ImportExportModelAdmin):
     #fields=['titre', 'created_at','user','priorite','status']
     list_display=['titre', 'created_at','user','priorite','status']
@@ -17,16 +21,25 @@ class QuestionAdmin(ImportExportModelAdmin):
     list_filter = ['created_at','user','priorite','status']
     resource_class = QuestionResource
 
-class SousCategorieInline(TranslationTabularInline):
+class CategorieResource(resources.ModelResource):
+    class Meta:
+        model = Categorie
+        fields = ('id', 'name', 'name_en', 'name_fr',)
+class SousCategorieInline(ImportExportMixin, TranslationTabularInline):
     model=SousCategorie
+    resource_class = SousCategorieResource
     extra=3
 
-class CategorieAdmin(admin.ModelAdmin):
+class CategorieAdmin(ImportExportMixin, admin.ModelAdmin):
     model = Categorie
+    resource_class = CategorieResource
+    list_display=['name_en','name_fr']
+
     inlines=[SousCategorieInline]
 
 class CategorieTranslatedAdmin(CategorieAdmin, TranslationAdmin):
     model = Categorie
+
 
 
 

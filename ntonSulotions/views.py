@@ -6,6 +6,8 @@ from solutions.models import Question
 from accounts.models import User
 from clients.models import Client
 
+active = {}
+active['dashboard']='active'
 
 
 from djqscsv import render_to_csv_response,  write_csv
@@ -47,7 +49,7 @@ class HomePage(LoginRequiredMixin, TemplateView):
         context['tickets_closed']=tickets_closed
         context['tickets_canceled']=tickets_canceled
 
-
+        context['active']= active
         #context['pagecounter']=self.pagecounter
 
 

@@ -18,49 +18,188 @@
   {% comment %} Client tab {% endcomment %}
   <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
     {%  if client_list%}
-    {% if pagecounter > 0 %}
-    {% if is_paginated %}
-    <div class="d-flex w-100">
-      {% include "paginator.html" %}
-    </div>
-    {% endif %}
-    {% endif %}
-    <table class="table">
-      <thead>
-        <td class="px-2">Id</td>
-        <td class="px-2">{% trans "Name" %}</td>
-        <td class="px-2">{% trans "DSI Email" %}</td>
-        <td class="px-2">{% trans "Address" %}</td>
-        <td class="px-2">{% trans "Users" %}</td>
-      </thead>
-      {% for client in client_list %}
-      <tr>
-        <td>{{client.id}}</td>
-        <td><a  href="{% url 'clients:detail' slug=client.slug %}">{{ client.name }} </td>
-          <td>{{ client.email}}</td>
-          <td>{{ client.address}}</td>
-          <td>{{client.users.all.count}}</td>
-        </tr>
-        {% endfor %}
-      </table>
-      {% if is_paginated %}
-      <div class="d-flex w-100">
-        {% include "paginator.html" %}
+
+    <div class="wrapper">
+
+
+        <div class="fresh-table toolbar-color-green">
+        <!--
+          Available colors for the full background: full-color-blue, full-color-azure, full-color-green, full-color-red, full-color-orange
+          Available colors only for the toolbar: toolbar-color-blue, toolbar-color-azure, toolbar-color-green, toolbar-color-red, toolbar-color-orange
+        -->
+          <table id="fresh-table" class="table">
+            <thead>
+              <th data-field="slug" data-sortable="true">Id</th>
+              <th data-field="name" data-sortable="true">{% trans "Name" %}</th>
+              <th data-field="email" data-sortable="true">{% trans "DSI Email" %}</th>
+              <th data-field="contact" data-sortable="true">{% trans "Contact" %}</th>
+              <th data-field="users" data-sortable="true">{% trans "Users" %}</th>
+
+              <th data-field="actions" data-formatter="operateFormatter" data-events="operateEvents">Actions</th>
+            </thead>
+            <tbody>
+              {% for client in client_list %}
+              <tr>
+                <td>{{client.slug}}</td>
+                <td>{{ client.name }}</td>
+                <td>{{ client.email}}</td>
+                <td>{{ client.contact}}</td>
+                <td>{{client.users.all.count}}</td>
+                <td></td>
+                </tr>
+                {% endfor %}
+            </tbody>
+          </table>
+        </div>
       </div>
-      {% endif %}
+
       {% else %}<h2>Pas de Client pour le moment!</h2>
       {%endif%}
     </div>
     {% comment %}New Client tab {% endcomment %}
     <div class="tab-pane fade" id="profile" role="tabpanel" aria-labelledby="profile-tab">
-      <h1>{% trans "New Client" %}</h1>
-      <form method="POST" enctype="multipart/form-data" action="{% url 'clients:new' %}">
-        {% csrf_token %}
-        {% bootstrap_form form layout='horizontal' %}
-        <button type="submit" class="save btn btn-info text_right">Save</button>
-      </form>
+      <div class="card">
+        <div class="card-header card-header-success">
+          <h4 class="card-title">{% if form.instance.pk%}{{client}}
+            {% else %}{% trans "New Client" %}
+            {% endif %}</h4>
+            <p class="card-category">{% trans "Complete le profile" %}</p>
+          </div>
+          <div class="card-body">
+            <form  action="{% url 'clients:new' %}" method="post">
+              {% csrf_token %}
+              <div class="row">
+                <div class="col-md-6">
+                  <div class="form-group">
+                    {% bootstrap_field form.name %}
+                  </div>
+                </div>
+                <div class="col-md-6">
+                  <div class="form-group">
+                    {% bootstrap_field form.email %}
+                  </div>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-md-6">
+                  <div class="form-group">
+                    {% bootstrap_field form.tel %}
+                  </div>
+                </div>
+                <div class="col-md-6">
+                  <div class="form-group">
+                    {% bootstrap_field form.url %}
+                  </div>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-md-4">
+                  <div class="form-group">
+                    {% bootstrap_field form.contact %}
+                  </div>
+                </div>
+                <div class="col-md-4">
+                  <div class="form-group">
+                    {% bootstrap_field form.contact_tel %}
+                  </div>
+                </div>
+                <div class="col-md-4">
+                  <div class="form-group">
+                    {% bootstrap_field form.contact_email %}
+                  </div>
+                </div>
+
+              </div>
+              <div class="row">
+                <div class="col-md-12">
+                  {% bootstrap_field form.address %}
+
+                </div>
+              </div>
+              <button type="submit" class="btn btn-primary pull-right">{% if form.instance.pk%}{% trans "Update Client" %}
+                {% else %}{% trans "Create Client" %}
+                {% endif %}</button>
+                <div class="clearfix"></div>
+              </form>
+            </div>
+      </div>
     </div>
-  </div>
+</div>
+
+
+  <script>
+    var $table = $('#fresh-table')
+
+    window.operateEvents = {
+      'click .like': function (e, value, row, index) {
+        // alert('You click like icon, row: ' + JSON.stringify(row))
+        window.location.href = "{{ request.path }}new_user/?client=" + row.slug;
+
+        console.log(value, row, index)
+      },
+      'click .edit': function (e, value, row, index) {
+        // alert('You click edit icon, row: ' + JSON.stringify(row))
+        console.log(row.id)
+        window.location.href = "{{ request.path }}" + row.slug;
+      },
+      'click .remove': function (e, value, row, index) {
+        $table.bootstrapTable('remove', {
+          field: 'id',
+          values: [row.id]
+        })
+      }
+    }
+
+    function operateFormatter(value, row, index) {
+      return [
+        '<a rel="tooltip"  class="table-action like" href="javascript:void(0)" title="Add user">',
+          '<i class="fa fa-user-plus"></i>',
+        '</a>',
+        '<a rel="tooltip" title="Edit" class="table-action edit" href="javascript:void(0)" title="Edit">',
+          '<i class="fa fa-edit"></i>',
+        '</a>',
+        // '<a rel="tooltip" title="Remove" class="table-action remove" href="javascript:void(0)" title="Remove">',
+        //   '<i class="fa fa-remove"></i>',
+        // '</a>'
+      ].join('')
+    }
+
+    $(function () {
+      $table.bootstrapTable({
+        classes: 'table table-hover table-striped',
+        toolbar: '.toolbar',
+
+        search: true,
+        showRefresh: true,
+        showToggle: true,
+        showColumns: true,
+        pagination: true,
+        striped: true,
+        sortable: true,
+        height: $(window).height(),
+        pageSize: 25,
+        pageList: [25, 50, 100],
+
+        formatShowingRows: function (pageFrom, pageTo, totalRows) {
+          return ''
+        },
+        formatRecordsPerPage: function (pageNumber) {
+          return pageNumber + ' rows visible'
+        }
+      })
+      $(function () {
+        $table.bootstrapTable('hideColumn', 'slug')
+      })
+
+
+      $(window).resize(function () {
+        $table.bootstrapTable('resetView', {
+          height: $(window).height()
+        })
+      })
+    })
+
+  </script>
 
 
 {% endblock %}

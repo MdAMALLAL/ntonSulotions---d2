@@ -8,20 +8,30 @@ app_name = 'accounts'
 urlpatterns = [
     path("login/", auth_views.LoginView.as_view(),name='login'),
     path("logout/", auth_views.LogoutView.as_view(), name="logout"),
-    path("new_user/", views.NewUser.as_view(), name="new"),
-    path("ajax/made_consultant/<username>", views.made_consultant, name="made-consultant"),
-
-    path("list/", views.UserListView.as_view(), name="list"),
-
-    path("profile/<username>",
-        views.ProfileView.as_view(),
-        name="profile"),
+    path("profile/",
+        views.myProfileView,
+        name="myprofile"),
     path("profile/<username>/edit",
         views.ProfileUpdateView.as_view(),
         name="edit"),
+    path("ajax/made_consultant/<username>", views.made_consultant, name="made-consultant"),
+
+    path("", views.UserListView.as_view(), name="list"),
+
+
+    # path("profile/<username>",
+    #     views.ProfileView.as_view(),
+    #     name="profile"),
+    path("profile/<username>",
+        views.ProfileUpdateView.as_view(),
+        name="profile"),
+
+
+
     path("profile/<username>/change_password",
         auth_views.PasswordChangeView.as_view(template_name='accounts/password_change_form.html'),
         name="changepassword"),
+
     path("password-reset/",
         auth_views.PasswordResetView.as_view(template_name='accounts/password_reset_form.html',
                                             email_template_name="accounts/password_reset_email.html",
@@ -36,6 +46,7 @@ urlpatterns = [
         name="password_reset_confirm"),
 
 
+    path("new_user/", views.NewUser.as_view(), name="new"),
 
 
 ]

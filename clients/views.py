@@ -10,6 +10,10 @@ from .models import  Client
 from .forms import ClientForm
 from djqscsv import render_to_csv_response,  write_csv
 
+active = {}
+active['client']='active'
+
+
 def csv_view(request):
   qs = Client.objects.all()
   with open('Client.csv', 'wb') as csv_file:
@@ -19,6 +23,10 @@ def csv_view(request):
 class ClientsCreate(LoginRequiredMixin,CreateView):
     model = Client
     form_class = ClientForm
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['active']=active
+        return context
 
     def form_valid(self, form):
         try:
@@ -33,10 +41,6 @@ class ClientsCreate(LoginRequiredMixin,CreateView):
 
 class ClientsDetail(LoginRequiredMixin,DetailView):
     model = Client
-
-class ClientsUpdate(LoginRequiredMixin, UpdateView):
-    model= Client
-    #fields=['name','email','tel','url','address','signed','comment']
     form_class = ClientForm
     def form_valid(self, form):
         try:
@@ -49,6 +53,38 @@ class ClientsUpdate(LoginRequiredMixin, UpdateView):
             success_url = reverse_lazy('clients:detail', slug=self.object.slug)
 
         return super().form_valid(form)
+    def get_context_data(self, **kwargs):
+        context = super(ClientsDetail, self).get_context_data(**kwargs)
+        context['form'] = ClientForm
+        context['active']=active
+
+        page = int(self.request.GET.get('page', 1))
+        context['pages'] = [val for val in range(page - 5 , page + 5) if val > 0]
+        return context
+
+
+class ClientsUpdate(LoginRequiredMixin, UpdateView):
+    model= Client
+    #fields=['name','email','tel','url','address','signed','comment']
+    form_class = ClientForm
+    template_name = 'clients/client_detail.html'
+    def form_valid(self, form):
+        try:
+            self.object = form.save(commit=False)
+            self.object.save()
+        except IntegrityError:
+            messages.warning(self.request,_("Warning, Something went wrong, please try again"))
+        else:
+            messages.success(self.request,_("Client has been saved."))
+            success_url = reverse_lazy('clients:detail', slug=self.object.slug)
+
+        return super().form_valid(form)
+    def get_context_data(self, **kwargs):
+        context = super(ClientsUpdate, self).get_context_data(**kwargs)
+        context['active']=active
+        page = int(self.request.GET.get('page', 1))
+        context['pages'] = [val for val in range(page - 5 , page + 5) if val > 0]
+        return context
 
 class ClientsList(LoginRequiredMixin,ListView):
     model = Client
@@ -66,6 +102,7 @@ class ClientsList(LoginRequiredMixin,ListView):
     def get_context_data(self, **kwargs):
         context = super(ClientsList, self).get_context_data(**kwargs)
         context['form'] = ClientForm
+        context['active']=active
         page = int(self.request.GET.get('page', 1))
         context['pages'] = [val for val in range(page - 5 , page + 5) if val > 0]
         return context
@@ -73,7 +110,10 @@ class ClientsList(LoginRequiredMixin,ListView):
 class ClientsDelete(LoginRequiredMixin, DeleteView):
     model= Client
     success_url=reverse_lazy('clients:list')
-
+    def get_context_data(self, **kwargs):
+        context = super(ClientsList, self).get_context_data(**kwargs)
+        context['active']=active
+        return context
 
 @login_required
 def add_user(request, slug):

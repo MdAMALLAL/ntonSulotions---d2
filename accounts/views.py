@@ -17,6 +17,8 @@ from django.utils.translation import gettext_lazy as _
 #from django.contrib.auth import get_user_model
 #User = get_user_model()
 from .models import User
+active = {}
+active['users']='active'
 
 from djqscsv import render_to_csv_response,  write_csv
 def csv_view(request):
@@ -31,7 +33,7 @@ class NewUser(CreateView):
     template_name = "registration/signup.html"
 
     def get_form_kwargs(self):
-        kwargs = super(NewUser, self).get_form_kwargs()
+        kwargs = super().get_form_kwargs()
         kwargs['client'] = self.request.GET.get('client')
         return kwargs
 
@@ -46,11 +48,30 @@ class NewUser(CreateView):
             return redirect('accounts:profile', username=self.object.username)
 
         return super().form_valid(form)
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['active']=active
+        return context
 
 class ProfileView(DetailView):
     model = User
     slug_field='username'
     slug_url_kwarg='username'
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        print(self.request.user.username)
+        print(self.kwargs.get('username'))
+
+        if self.request.user.username == self.kwargs.get('username'):
+            active['users']=''
+            active['person']='active'
+
+        context['active']=active
+        return context
+
+def myProfileView(request):
+    return redirect('accounts:profile', username=request.user.username)
+
 
 class UserListView(ListView):
     model = User
@@ -70,6 +91,8 @@ class UserListView(ListView):
 
     def get_context_data(self, **kwargs):
         context = super(UserListView, self).get_context_data(**kwargs)
+
+        context['active']=active
         context['form'] = forms.UserCreateForm
         page = int(self.request.GET.get('page', 1))
         context['pages'] = [val for val in range(page - 5 , page + 5) if val > 0]
@@ -77,10 +100,14 @@ class UserListView(ListView):
         return context
 
 
+def get_context_data(self, **kwargs):
+    context = super().get_context_data(**kwargs)
+    context['active']=active
+    return context
 
 class ProfileUpdateView(LoginRequiredMixin, UpdateView):
     model=User
-    fields=['username','first_name','last_name','tel','email','client']
+    fields=['username','first_name','last_name','tel','email','client','is_staff','avatar']
     slug_field='username'
     slug_url_kwarg='username'
     user = "user"
@@ -95,9 +122,19 @@ class ProfileUpdateView(LoginRequiredMixin, UpdateView):
             messages.success(self.request,"Profile est enregistre.")
         return super().form_valid(form)
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['active']=active
+        return context
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['active']=active
+        return context
 
 
     success_url = '/'
+
 
 
 @login_required

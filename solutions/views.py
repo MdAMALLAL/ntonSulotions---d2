@@ -25,6 +25,8 @@ from django.template.loader import get_template
 from django.template import Context
 
 
+active = {}
+active['ticket']='active'
 
 
 ####################################################
@@ -75,16 +77,32 @@ class QuestionCreate(LoginRequiredMixin, generic.CreateView):
             send_mail(subject, message, 'no_replay@ntonadvisory.com' , [from_email])
         return super().form_valid(form)
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        active['ticket'] = ''
+        active['new_ticket'] = "active"
+        context['active']= active
+        return context
+
 class QuestionEdit(LoginRequiredMixin, generic.UpdateView):
     fields = ("titre", "description","image")
     model = Question
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        active['ticket'] = "active"
+        context['active']= active
+        return context
     #success_url = reverse_lazy("solutions:questiondetail ",kwargs={"pk": Question.pk})
 
 class QuestionSingle(LoginRequiredMixin, generic.DetailView):
     model = Question
+
     def get_context_data(self, **kwargs):
         context = super(QuestionSingle, self).get_context_data(**kwargs)
         context['form'] = ReponceForm
+        active['ticket'] = "active"
+        context['active'] = active
         return context
 
     def get_object(self):
@@ -101,8 +119,7 @@ class QuestionSingle(LoginRequiredMixin, generic.DetailView):
 
 class QuestionList(LoginRequiredMixin, generic.ListView):
     model = Question
-    paginate_by = 10
-
+    paginate_by = 100
 
     def get_queryset(self):
         query = self.request.GET.get('q')
@@ -129,11 +146,11 @@ class QuestionList(LoginRequiredMixin, generic.ListView):
 
 
     def get_context_data(self, **kwargs):
-        active = {}
         context = super(QuestionList, self).get_context_data(**kwargs)
         page = int(self.request.GET.get('page', 1))
         context['pages'] = [val for val in range(page - 5 , page + 5) if val > 0]
-
+        active['ticket'] = "active"
+        context['active'] = active
 
         if self.request.GET.get('q') : context['query'] = '&q='+self.request.GET.get('q')
 
@@ -246,6 +263,7 @@ def load_chart(request):
 
         chart = {
             'chart': {'type': 'pie'},
+            'backgroundColor': 'transparent',
             'title': {'text': _("Ticket's Status - Total ({})".format(Question.objects.count()) )},
             'series': [{
                 'name': 'Status',
@@ -301,6 +319,7 @@ def load_chart(request):
         }
         chart = {
             'chart': {'type': 'line'},
+            'backgroundColor': 'transparent',
             'title': {'text': ''},
             'xAxis': {'categories': dates,},
             'series': [survived_series, action_series]
