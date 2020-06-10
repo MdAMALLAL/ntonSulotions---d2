@@ -1,1 +1,2 @@
 {{ message }}
+{{ticket_url}}

@@ -21,15 +21,15 @@ from datetime import timedelta
 #from django.utils.timezone import make_aware
 #### send email
 from django.core.mail import EmailMultiAlternatives
-from django.template.loader import get_template
+from django.template.loader import get_template, render_to_string
 from django.template import Context
 
 
 active = {}
 active['ticket']='active'
 
-plaintext = get_template('email.txt')
-htmly     = get_template('email.html')
+plaintext = get_template('email/email.txt')
+htmly     = get_template('email/email.html')
 ####################################################
 # QUESTION: CRUD
 
@@ -57,16 +57,17 @@ class QuestionCreate(LoginRequiredMixin, generic.CreateView):
                         self.object.user,
                         #self.object.Priorite([self.object.priorite]),
                         )
-            _url = "http://{0}{1}".format(
-                        reverse("solutions:questiondetail", kwargs={"pk": self.object.pk})
-                        )
-            d = Context({ 'message': message,
-                          'url': _url,})
-            from_email = self.object.user.email
-            to = self.object.user.client.email
-            text_content = plaintext.render(d)
-            html_content = htmly.render(d)
-            msg = EmailMultiAlternatives(subject, text_content, from_email, [to])
+            ticket_url = "http://{0}{1}".format(self.request.META['HTTP_HOST'],
+                        reverse("solutions:questiondetail", kwargs={"pk": self.object.pk}))
+            d = { 'message': message,
+                          'url': ticket_url,}
+            user_email = self.object.user.email
+            dsi_email = self.object.user.client.email
+            # text_content = plaintext.render(d)
+            # html_content = htmly.render(d)
+            text_content = render_to_string('email/email_client.txt',d)
+            html_content = render_to_string('email/email_client.html',d)
+            msg = EmailMultiAlternatives(subject, text_content, user_email, [dsi_email])
             msg.attach_alternative(html_content, "text/html")
             msg.send()
             #send_mail(subject, message, from_email, [to])
@@ -75,12 +76,11 @@ class QuestionCreate(LoginRequiredMixin, generic.CreateView):
             sous id : {0} et titre : {1};
             """.format(self.object.id,
                         self.object.titre,)
-                        )
-            d = Context({ 'message': message,
-                          'url': _url,})l
+            d = { 'message': message,
+                          'url': ticket_url,}
             text_content = plaintext.render(d)
             html_content = htmly.render(d)
-            msg = EmailMultiAlternatives(subject, text_content, from_email, [to])
+            msg = EmailMultiAlternatives(subject, text_content, dsi_email, [user_email])
             msg.attach_alternative(html_content, "text/html")
             msg.send()
             # send_mail(subject, message, 'no_replay@ntonadvisory.com' , [from_email])
