@@ -28,7 +28,8 @@ from django.template import Context
 active = {}
 active['ticket']='active'
 
-
+plaintext = get_template('email.txt')
+htmly     = get_template('email.html')
 ####################################################
 # QUESTION: CRUD
 
@@ -46,35 +47,43 @@ class QuestionCreate(LoginRequiredMixin, generic.CreateView):
             messages.warning(self.request,_("Warning, Something went wrong, please try again"))
         else:
             messages.success(self.request,_("Question has been saved."))
+
+
             subject = self.object.titre
             message = """Nouvuou ticket a ete ouvert
-            sous id : {0} et titre : {1};
-            par : {2};
-            (http://{3}{4})
+            sous id : {0}
+            par : {1}
             """.format(self.object.id,
-                        self.object.titre,
                         self.object.user,
                         #self.object.Priorite([self.object.priorite]),
-                        self.request.META['HTTP_HOST'],
+                        )
+            _url = "http://{0}{1}".format(
                         reverse("solutions:questiondetail", kwargs={"pk": self.object.pk})
                         )
+            d = Context({ 'message': message,
+                          'url': _url,})
             from_email = self.object.user.email
             to = self.object.user.client.email
-            send_mail(subject, message, from_email, [to])
+            text_content = plaintext.render(d)
+            html_content = htmly.render(d)
+            msg = EmailMultiAlternatives(subject, text_content, from_email, [to])
+            msg.attach_alternative(html_content, "text/html")
+            msg.send()
+            #send_mail(subject, message, from_email, [to])
 
             message = """Votre ticket a ete ouvert
             sous id : {0} et titre : {1};
-            Suivi le a (http://{2}{3})
             """.format(self.object.id,
-                        self.object.titre,
-                        #self.object.Priorite([self.object.priorite]),
-                        self.request.META['HTTP_HOST'],
-                        reverse("solutions:questiondetail", kwargs={"pk": self.object.pk})
+                        self.object.titre,)
                         )
-            from_email = self.object.user.email
-            print(from_email)
-            to = self.object.user.client.email
-            send_mail(subject, message, 'no_replay@ntonadvisory.com' , [from_email])
+            d = Context({ 'message': message,
+                          'url': _url,})l
+            text_content = plaintext.render(d)
+            html_content = htmly.render(d)
+            msg = EmailMultiAlternatives(subject, text_content, from_email, [to])
+            msg.attach_alternative(html_content, "text/html")
+            msg.send()
+            # send_mail(subject, message, 'no_replay@ntonadvisory.com' , [from_email])
         return super().form_valid(form)
 
     def get_context_data(self, **kwargs):
