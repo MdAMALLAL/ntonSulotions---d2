@@ -20,7 +20,7 @@ class QuestionForm(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
             super().__init__(*args, **kwargs)
-            print('in form')
+            # print('in form')
             self.fields['souscategorie'].queryset = SousCategorie.objects.none()
             if 'categorie' in self.data:
                 try:

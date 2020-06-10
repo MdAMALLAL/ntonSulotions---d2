@@ -59,8 +59,8 @@ class ProfileView(DetailView):
     slug_url_kwarg='username'
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        print(self.request.user.username)
-        print(self.kwargs.get('username'))
+        # print(self.request.user.username)
+        # print(self.kwargs.get('username'))
 
         if self.request.user.username == self.kwargs.get('username'):
             active['users']=''
@@ -140,7 +140,7 @@ class ProfileUpdateView(LoginRequiredMixin, UpdateView):
 @login_required
 def made_consultant(request, username):
     user = get_object_or_404(User, username=username)
-    print(user)
+    # print(user)
 
     if request.method == "POST":
         try:

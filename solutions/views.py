@@ -139,7 +139,7 @@ class QuestionList(LoginRequiredMixin, generic.ListView):
             questionlist =  Question.objects.all()
         else:
             questionlist =  Question.objects.filter(user=self.request.user)
-        print(questionlist)
+        # print(questionlist)
         #### filtre by priorite
         if self.request.GET.get('priorite'):
             questionlist = questionlist.filter(priorite = self.request.GET.get('priorite'))

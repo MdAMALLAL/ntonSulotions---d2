@@ -13,7 +13,6 @@ class UserCreateForm(UserCreationForm):
         self.client = kwargs.pop('client', None)
 
         super().__init__(*args, **kwargs)
-        print(self.client)
         if self.client:
             try:
                 self.fields['client'].initial = Client.objects.get(slug=self.client)
