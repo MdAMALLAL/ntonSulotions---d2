@@ -7,10 +7,10 @@
     <title></title>
   </head>
   <body>
-    <img  src={% static "img/logo.png" %} alt="NTON ADVISORY" >
+    <img  src="https://helpdesk.ntonadvisory.com/static/img/logo.png" alt="NTON ADVISORY" >
 
-    <p>{{message}}</p>
-    <p>Click<a href="{{ ticket_url }}">{% trans "here" %}</a>{% trans "to follow newest activities" %}</p>
+    <p>{{context.message}}</p>
+    <p>Click <a href="{{ context.ticket_url }}">{% trans "here" %}</a> {% trans "to view ticket" %}</p>
 
   </body>
 </html>

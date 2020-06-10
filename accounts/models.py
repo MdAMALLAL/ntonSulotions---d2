@@ -4,10 +4,12 @@ from django.db import models
 from django.core.mail import send_mail
 from django.contrib.auth.models import PermissionsMixin
 from django.contrib.auth.base_user import AbstractBaseUser, BaseUserManager
+from django.contrib.auth.models import AbstractUser, UserManager as AbstractUserManager
+
 from django.utils.translation import ugettext_lazy as _
 
 
-class UserManager(BaseUserManager):
+class UserManager(AbstractUserManager):
     use_in_migrations = True
 
     def _create_user(self, email, password, **extra_fields):
@@ -37,7 +39,7 @@ class UserManager(BaseUserManager):
 
 
 
-class User(AbstractBaseUser, PermissionsMixin):
+class User(AbstractBaseUser , PermissionsMixin):
     username = models.CharField(_('Display Name'), max_length=100)
     email = models.EmailField(_('email address'), unique=True)
     first_name = models.CharField(_('first name'), max_length=30, blank=True)

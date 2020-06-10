@@ -40,7 +40,7 @@
 
         Tip 2: you can also add an image using data-image tag
     -->
-      <div class="logo"><a href="{% url 'home' %}" class="simple-text logo-normal">
+      <div class="logo"><a href="http://www.ntonadvisory.com/" class="simple-text logo-normal">
           <img class="img-fluid" src={% static "img/logo.png" %} alt="NTON ADVISORY">
         </a></div>
       <div class="sidebar-wrapper">
@@ -48,7 +48,7 @@
           <li class="nav-item {{active.dashboard}} ">
             <a class="nav-link" href="{% url 'home' %}">
               <i class="material-icons">dashboard</i>
-              <p>Dashboard</p>
+              <p>{% trans "Dashboard" %}</p>
             </a>
           </li>
           <li class="nav-item {{active.new_ticket}}">
@@ -93,7 +93,7 @@
       <nav class="navbar navbar-expand-lg navbar-transparent navbar-absolute fixed-top ">
         <div class="container-fluid">
           <div class="navbar-wrapper">
-            <a class="navbar-brand" href="{% url 'home' %}">{% trans "NTON.COM ADVISORY HELP DESK" %}</a>
+            <a class="navbar-brand" href="{% url 'home' %}">{% trans "HELP DESK" %}</a>
           </div>
           <button class="navbar-toggler" type="button" data-toggle="collapse" aria-controls="navigation-index" aria-expanded="false" aria-label="Toggle navigation">
             <span class="sr-only">Toggle navigation</span>

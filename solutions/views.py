@@ -65,8 +65,8 @@ class QuestionCreate(LoginRequiredMixin, generic.CreateView):
             dsi_email = self.object.user.client.email
             # text_content = plaintext.render(d)
             # html_content = htmly.render(d)
-            text_content = render_to_string('email/email_client.txt',d)
-            html_content = render_to_string('email/email_client.html',d)
+            text_content = render_to_string('email/email_client.txt',{'context':d})
+            html_content = render_to_string('email/email_client.html',{'context':d})
             msg = EmailMultiAlternatives(subject, text_content, user_email, [dsi_email])
             msg.attach_alternative(html_content, "text/html")
             msg.send()
@@ -78,8 +78,8 @@ class QuestionCreate(LoginRequiredMixin, generic.CreateView):
                         self.object.titre,)
             d = { 'message': message,
                           'url': ticket_url,}
-            text_content = plaintext.render(d)
-            html_content = htmly.render(d)
+            text_content = plaintext.render({'context':d})
+            html_content = htmly.render({'context':d})
             msg = EmailMultiAlternatives(subject, text_content, dsi_email, [user_email])
             msg.attach_alternative(html_content, "text/html")
             msg.send()
@@ -197,17 +197,7 @@ def add_reponce_to_question(request, pk):
                 messages.warning(request,_("Warning, Something went wrong, please try again"))
             else:
                 messages.success(request,_("Answere has been saved."))
-                try:
-                    message = """des nouveautés sont enregistrés sur votre ticket,
-                    visiter le lien ici,
-                    Suivi le a (http://{0}{1})
-                    """.format(self.request.META['HTTP_HOST'],
-                                reverse("solutions:questiondetail", kwargs={"pk": self.object.pk})
-                                )
-                    to = question.user.email
-                    send_mail(subject, message, 'no_replay@ntonadvisory.com' , [to])
-                except Exception as e:
-                    raise
+
 
             return redirect('solutions:questiondetail', pk=question.pk)
 
@@ -275,7 +265,7 @@ def load_chart(request):
             'backgroundColor': 'transparent',
             'title': {'text': _("Ticket's Status - Total ({})".format(Question.objects.count()) )},
             'series': [{
-                'name': 'Status',
+                'name': 'Tickets',
                 'data': list(map(lambda row: {'name': port_display_name[row['status']], 'y': row['total']}, dataset))
             }]
         }
@@ -331,7 +321,35 @@ def load_chart(request):
             'backgroundColor': 'transparent',
             'title': {'text': ''},
             'xAxis': {'categories': dates,},
-            'series': [survived_series, action_series]
+            'series': [survived_series, ]
+        }
+    if request.GET.get('type')=='colomn':
+        #client = request.GET.get('client')
+        dataset = Question.objects \
+            .values('user__client__name') \
+            .annotate(total=Count('user__client__name')) \
+            .order_by('user__client__name')
+
+        categories = list()
+        tickets_series = list()
+
+        for entry in dataset:
+            categories.append('%s' % entry['user__client__name'])
+            tickets_series.append(entry['total'])
+
+        tickets_series_data = {
+            'name': 'Tickets',
+            'data': tickets_series,
+            'color': 'green'
+        }
+
+
+        chart = {
+            'chart': {'type': 'column'},
+            'backgroundColor': 'transparent',
+            'title': {'text': ''},
+            'xAxis': {'categories': categories,},
+            'series': [tickets_series_data, ]
         }
 
     return JsonResponse(chart)

@@ -1,2 +1,2 @@
-{{ message }}
-{{ticket_url}}
+{{ context.message }}
+{{context.ticket_url}}
