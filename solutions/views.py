@@ -26,7 +26,7 @@ from django.template import Context
 
 
 active = {}
-active['ticket']='active'
+
 
 plaintext = get_template('email/email.txt')
 htmly     = get_template('email/email.html')
@@ -53,7 +53,7 @@ class QuestionCreate(LoginRequiredMixin, generic.CreateView):
             message = """Nouvuou ticket a ete ouvert
             sous id : {0}
             par : {1}
-            """.format(self.object.id,
+            """.format(self.object.get_ref,
                         self.object.user,
                         #self.object.Priorite([self.object.priorite]),
                         )
@@ -74,7 +74,7 @@ class QuestionCreate(LoginRequiredMixin, generic.CreateView):
 
             message = """Votre ticket a ete ouvert
             sous id : {0} et titre : {1};
-            """.format(self.object.id,
+            """.format(self.object.get_ref,
                         self.object.titre,)
             d = { 'message': message,
                           'url': ticket_url,}

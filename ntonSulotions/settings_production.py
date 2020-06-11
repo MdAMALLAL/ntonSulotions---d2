@@ -25,7 +25,9 @@ SECRET_KEY = '(5qpl&b-b48^jszl@nz02#lgbw%tp(o)_wb!)b&k(j9*kueh@&'
 AUTH_USER_MODEL = 'accounts.User'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+#DEBUG = True
+ADMINS = [('Mohammed', 'amallal.officiel@outlook.com'), ]
+
 
 ALLOWED_HOSTS = ['*']
 

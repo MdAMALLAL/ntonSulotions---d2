@@ -9,18 +9,20 @@ from django.db import IntegrityError
 from .models import  Client
 from .forms import ClientForm
 from djqscsv import render_to_csv_response,  write_csv
+from django.contrib.auth.mixins import UserPassesTestMixin
 
 active = {}
 active['client']='active'
-
-
+class IsStaffTestMixin(UserPassesTestMixin):
+    def test_func(self):
+        return self.request.user.is_staff
 def csv_view(request):
   qs = Client.objects.all()
   with open('Client.csv', 'wb') as csv_file:
       write_csv(qs, csv_file)
   return render_to_csv_response(qs)
 
-class ClientsCreate(LoginRequiredMixin,CreateView):
+class ClientsCreate(LoginRequiredMixin, IsStaffTestMixin, CreateView):
     model = Client
     form_class = ClientForm
     def get_context_data(self, **kwargs):
@@ -39,7 +41,7 @@ class ClientsCreate(LoginRequiredMixin,CreateView):
             #success_url=reverse_lazy('clients:detail', slug=self.object.slug)
         return super().form_valid(form)
 
-class ClientsDetail(LoginRequiredMixin,DetailView):
+class ClientsDetail(LoginRequiredMixin, IsStaffTestMixin, DetailView):
     model = Client
     form_class = ClientForm
     def form_valid(self, form):
@@ -63,7 +65,7 @@ class ClientsDetail(LoginRequiredMixin,DetailView):
         return context
 
 
-class ClientsUpdate(LoginRequiredMixin, UpdateView):
+class ClientsUpdate(LoginRequiredMixin, IsStaffTestMixin,  UpdateView):
     model= Client
     #fields=['name','email','tel','url','address','signed','comment']
     form_class = ClientForm
@@ -86,7 +88,7 @@ class ClientsUpdate(LoginRequiredMixin, UpdateView):
         context['pages'] = [val for val in range(page - 5 , page + 5) if val > 0]
         return context
 
-class ClientsList(LoginRequiredMixin,ListView):
+class ClientsList(LoginRequiredMixin, IsStaffTestMixin, ListView):
     model = Client
 
     def get_queryset(self):
@@ -107,7 +109,7 @@ class ClientsList(LoginRequiredMixin,ListView):
         context['pages'] = [val for val in range(page - 5 , page + 5) if val > 0]
         return context
 
-class ClientsDelete(LoginRequiredMixin, DeleteView):
+class ClientsDelete(LoginRequiredMixin, IsStaffTestMixin,  DeleteView):
     model= Client
     success_url=reverse_lazy('clients:list')
     def get_context_data(self, **kwargs):

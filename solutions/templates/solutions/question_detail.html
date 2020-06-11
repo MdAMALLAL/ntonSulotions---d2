@@ -22,7 +22,7 @@
           <tbody class="row row-col-1  no-gutters">
             <tr class="col-12 bg-light text-center align-self-center">
               <th class="">Id</th>
-              <td>{{question.ref}}</td>
+              <td>{{question.get_ref}}</td>
               <td><a class="btn btn-primary" href="{% url 'solutions:questionedit' pk=question.pk %}">{% trans "Edit" %}</a></td>
               {% if  question.status == "OV"%}
               <td>

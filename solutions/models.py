@@ -3,6 +3,7 @@ from django.utils import timezone
 from django.urls import reverse, reverse_lazy
 from django.utils.translation import gettext_lazy as _
 from django.conf import settings
+from django.db.models import Max
 import os
 import datetime
 import uuid
@@ -57,15 +58,16 @@ class Question(models.Model):
         return os.path.join('images', str(instance.user.id), filename)
     def ref():
         this_year = datetime.date.today().year
-        no = Question.objects.filter(created_at__year=this_year).count()
+        no = Question.objects.filter(created_at__year=this_year).aggregate(Max('ref')).get('ref__max')
         if no == None:
-            return '{0}-{1}'.format(this_year, 1)
+            return 1
         else:
-            return '{0}-{1}'.format(this_year, no + 1)
+            return  no + 1
 
 
     user = models.ForeignKey(User,null=True, related_name="tickets",on_delete=models.SET_NULL)
-    ref = models.CharField(default=ref, unique=True, editable=False,  max_length=100)
+    ref = models.PositiveIntegerField(default=ref, verbose_name='Reference')
+    # ref = models.CharField(default=ref, unique=True, editable=False,  max_length=100)
     created_at = models.DateTimeField(auto_now_add=True,editable=False)
     titre = models.CharField(max_length=200)
 
@@ -102,7 +104,8 @@ class Question(models.Model):
 
 
 
-
+    def get_ref(self):
+        return '{}-{}'.format(self.created_at.year,self.ref)
     def date_to_string(self,date, string, *args):
         if date:
             days = date.days

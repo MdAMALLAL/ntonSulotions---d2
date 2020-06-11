@@ -45,16 +45,20 @@
                   </div>
                 </div>
                 <div class="row">
+                  {% comment %} <div class="col-md-2">
+                  {% bootstrap_field form.avatar  placeholder='' %}
+                  </div> {% endcomment %}
                   <div class="col-md-6">
                     <div class="form-group">
                       {% bootstrap_field form.tel  placeholder='' %}
                     </div>
                   </div>
+                  {% if  request.user.is_staff %}
                   <div class="col-md-4">
-                    <div class="form-group">
+                    <div class="form-group collapse hide">
                       <div class="form-check">
                         <label class="form-check-label">
-                            <input type="checkbox" name="is_staff" class="form-check-input" id="id_is_staff" checked="">
+                            <input type="checkbox" name="is_staff" class="form-check-input " id="id_is_staff" checked="">
                             Consultant
                             <span class="form-check-sign">
                                 <span class="check"></span>
@@ -63,15 +67,10 @@
                       </div>
                     </div>
                   </div>
-                  {% comment %} <div class="col-md-2">
-                      {% bootstrap_field form.avatar  placeholder='' %}
-                  </div> {% endcomment %}
-                </div>
-                <div class="row">
                   <div class="col-md-6">
                       {% bootstrap_field form.client  placeholder='' %}
-
                   </div>
+                  {% endif %}
                 </div>
                 <button type="submit" class="btn btn-primary pull-right">Update Profile</button>
                 <div class="clearfix"></div>
@@ -87,8 +86,9 @@
               </a>
             </div>
             <div class="card-body">
-
-              <a class="profile-edit-btn btn btn-primary w-100 py-1 my-1"href="{% url 'accounts:changepassword' username=user.username %}">{% trans "Change password"  %}</a>
+              {% if user == request.user %}
+              <a class="profile-edit-btn btn btn-primary w-100 py-1 my-1"href="{% url 'accounts:changepassword'  %}">{% trans "Change password"  %}</a>
+              {% endif %}
               {% if request.user.is_staff %}
               <form class="form-inline" action="{% url 'accounts:made-consultant' username=user.username %}" method="post">
                 {% csrf_token %}
@@ -105,4 +105,24 @@
       </div>
     </div>
   </div>
+
+  <script>
+  function show_consutat() {
+    var clientId = $("#id_client").children("option:selected").text();
+    if (clientId == 'ntonadvisory') {
+          $(".collapse").collapse('show');
+    }
+    else {
+      $(".collapse").collapse('hide');
+    }
+  }
+
+  $("#id_client").change(function () {
+      show_consutat();
+    });
+
+  $(document).ready(function(){
+      show_consutat();
+    });
+  </script>
 {% endblock %}

@@ -1,0 +1,9 @@
+{% extends "password_base.html" %}
+{% load i18n %}
+
+{% block body_block %}
+<h1>Ooops</h1>
+<p>500 {% trans "internal server error" %}</p>
+<p>{% trans "please try again later  or contact admin at " %}helpdesk@ntonadvisory.com</p>
+
+{% endblock %}

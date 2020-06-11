@@ -31,90 +31,104 @@
         {% endfor %}
       </div>
     </div>
-<div class=" fresh-table toolbar-color-green">
-  <table id="fresh-table" class="table">
-    <thead>
-        <th data-field="id"  data-sortable="true">Id</th>
-        <th data-field="username" data-sortable="true">{% trans "username" %}</th>
-        <th data-field="email" data-sortable="true">{% trans "Email" %}</th>
-        <th data-field="client" data-sortable="true">{% trans "Client" %}</th>
-        <th data-field="conultant" data-sortable="true">{% trans "Staff" %}</th>
-        <th data-field="last_login" data-sortable="true">{% trans "Last login" %}</th>
-        <th data-field="actions" data-formatter="operateFormatter" data-events="operateEvents">Actions</th>
-    </thead>
-    <tbody>
-  {% for user in user_list %}
-      <tr>
-        <td>{{user.id}}</td>
-        <td>{{ user.username }}</td>
-        <td>{{ user.email}}</td>
-        <td>{{ user.client.name}}</td>
-        <td>{{ user.is_staff}}</td>
-        <td>{{ user.last_login}}</td>
-        <td></td>
-      </tr>
-    {% endfor %}
-    </tbody>
-  </table>
+      <div class=" fresh-table toolbar-color-green">
+        <table id="fresh-table" class="table">
+          <thead>
+              <th data-field="id"  data-sortable="true">Id</th>
+              <th data-field="username" data-sortable="true">{% trans "username" %}</th>
+              <th data-field="email" data-sortable="true">{% trans "Email" %}</th>
+              <th data-field="client" data-sortable="true">{% trans "Client" %}</th>
+              <th data-field="conultant" data-sortable="true">{% trans "Staff" %}</th>
+              <th data-field="last_login" data-sortable="true">{% trans "Last login" %}</th>
+              <th data-field="actions" data-formatter="operateFormatter" data-events="operateEvents">Actions</th>
+          </thead>
+          <tbody>
+        {% for user in user_list %}
+            <tr>
+              <td>{{user.id}}</td>
+              <td>{{ user.username }}</td>
+              <td>{{ user.email}}</td>
+              <td>{{ user.client.name}}</td>
+              <td>{{ user.is_staff}}</td>
+              <td>{{ user.last_login}}</td>
+              <td></td>
+            </tr>
+          {% endfor %}
+          </tbody>
+        </table>
 
-</div>
+      </div>
 
 </div>
   {% comment %}New User tab {% endcomment %}
   <div class="tab-pane fade" id="profile" role="tabpanel" aria-labelledby="profile-tab">
-    <div class="card">
-      <div class="card-header card-header-success">
-        <h4 class="card-title">{% trans "New user" %}</h4>
-        {% comment %} <p class="card-category">{% trans "New user" %}</p> {% endcomment %}
-      </div>
-      <div class="card-body">
-        <form action="{% url 'accounts:new' %}" method="post">
-          {% csrf_token %}
-          <div class="row">
-            <div class="col-md-6">
-              <div class="form-group">
-                {% bootstrap_field form.username  placeholder='' %}
+    <div class="row">
+      <div class="col-12 col-md-10 col-md-6">
+        <div class="card">
+        <div class="card-header card-header-success">
+          <h4 class="card-title">{% trans "New user" %}</h4>
+          {% comment %} <p class="card-category">{% trans "New user" %}</p> {% endcomment %}
+        </div>
+        <div class="card-body">
+          <form action="{% url 'accounts:new' %}" method="post">
+            {% csrf_token %}
+            <div class="row">
+              <div class="col-md-6">
+                <div class="form-group">
+                  {% bootstrap_field form.username  placeholder='' %}
+                </div>
               </div>
-            </div>
-            <div class="col-md-6">
-              <div class="form-group">
-                {% bootstrap_field form.email  placeholder='' %}
+              <div class="col-md-6">
+                <div class="form-group">
+                  {% bootstrap_field form.email  placeholder='' %}
+                </div>
               </div>
-            </div>
-          </div>
-          <div class="row">
-            <div class="col-md-6">
-              <div class="form-group">
-                {% bootstrap_field form.password1  placeholder='' %}
+              <div class="col-md-6">
+                <div class="form-group">
+                  {% bootstrap_field form.first_name  placeholder='' %}
+                </div>
               </div>
-            </div>
-            <div class="col-md-6">
-              <div class="form-group">
-                {% bootstrap_field form.password2  placeholder='' %}
-              </div>
-            </div>
-            <div class="col-md-6">
-              {% bootstrap_field form.client layout='horizontal' %}
-
-            </div>
-            <div class="col-md-6">
-              <div class="form-group">
-                <div class="form-check">
-                  <label class="form-check-label">
-                      <input type="checkbox" name="is_staff" class="form-check-input" id="id_is_staff" checked="">
-                      Consultant
-                      <span class="form-check-sign">
-                          <span class="check"></span>
-                      </span>
-                  </label>
+              <div class="col-md-6">
+                <div class="form-group">
+                  {% bootstrap_field form.last_name placeholder='' %}
                 </div>
               </div>
             </div>
+            <div class="row">
+              <div class="col-md-6">
+                <div class="form-group">
+                  {% bootstrap_field form.password1  placeholder='' %}
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="form-group">
+                  {% bootstrap_field form.password2  placeholder='' %}
+                </div>
+              </div>
+              <div class="col-md-6">
+                {% bootstrap_field form.client layout='horizontal' %}
 
-          </div>
-          <button type="submit" class="btn btn-primary pull-right">{% trans "Add user" %}</button>
-          <div class="clearfix"></div>
-        </form>
+              </div>
+              <div class="col-md-6">
+                <div class="form-group">
+                  <div class="form-check">
+                    <label class="form-check-label">
+                        <input type="checkbox" name="is_staff" class="form-check-input" id="id_is_staff" checked="">
+                        Consultant
+                        <span class="form-check-sign">
+                            <span class="check"></span>
+                        </span>
+                    </label>
+                  </div>
+                </div>
+              </div>
+
+            </div>
+            <button type="submit" class="btn btn-primary pull-right">{% trans "Add user" %}</button>
+            <div class="clearfix"></div>
+          </form>
+        </div>
+        </div>
       </div>
     </div>
   </div>
