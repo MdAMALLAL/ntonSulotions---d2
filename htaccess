@@ -1,13 +1,10 @@
 # DO NOT REMOVE. CLOUDLINUX PASSENGER CONFIGURATION BEGIN
-#LoadModule passenger_module
 PassengerAppRoot "/home/ntonadvisory/public_html/helpdesk"
 PassengerBaseURI "/"
-PassengerPython "/home/ntonadvisory/virtualenv/public_html/helpdesk/3.5/bin/python3.5"
+PassengerPython "/home/ntonadvisory/virtualenv/public_html/helpdesk/3.7/bin/python3.7"
 PassengerAppLogFile "/home/ntonadvisory/logs/helpdesk.log"
-#Alias /admin/ /home/ntonadvisory/public_html/helpdesk/static/admin
-#Alias /media/ /home/ntonadvisory/public_html/helpdesk/media/
-
 # DO NOT REMOVE. CLOUDLINUX PASSENGER CONFIGURATION END
+
 # DO NOT REMOVE OR MODIFY. CLOUDLINUX ENV VARS CONFIGURATION BEGIN
 <IfModule Litespeed>
 </IfModule>
@@ -15,7 +12,6 @@ PassengerAppLogFile "/home/ntonadvisory/logs/helpdesk.log"
 AddHandler wsgi-script .wsgi
 
 RewriteRule "^/helpdesk/(.*)$" "/"
-
 
 #PassengerAppType wsgi
 #PassengerStartupFile passenger_wsgi.py
