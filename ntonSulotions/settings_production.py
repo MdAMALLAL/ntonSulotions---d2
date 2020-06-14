@@ -94,7 +94,7 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = 'ntonSulotions.wsgi.application'
+WSGI_APPLICATION = 'ntonSulotions.wsgi_production.application'
 
 
 # Database

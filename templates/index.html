@@ -99,7 +99,7 @@
         </div>
       </form>
     </div>
-    <div class="col-md-4">
+    <div class="col-md-5">
       <div class="card card-chart">
         <div class="card-header card-header-success">
           <div id="container" class="ct-chart" data-url="{% url 'solutions:ajax_load_chart' %}?type=pie{% for key, value in request.GET.items %}{% if key != 'page' %}&{{ key }}={{ value }}{% endif %}{% endfor %}"></div>
@@ -107,52 +107,21 @@
         </div>
         <div class="card-body">
           <h4 class="card-title">{% trans "Tickets Status" %}</h4>
-          {% comment %} <p class="card-category">
-            <span class="text-success"><i class="fa fa-long-arrow-up"></i> 55% </span> increase in today sales.</p>
-        {% endcomment %}</div>
-        {% comment %} <div class="card-footer">
-          <div class="stats">
-            <i class="material-icons">access_time</i> updated 4 minutes ago
-          </div>
-        </div> {% endcomment %}
+        </div>
       </div>
     </div>
-    <div class="col-md-4">
+    <div class="col-md-7">
       <div class="card card-chart">
         <div class="card-header card-header-warning">
           <div id="container2" class="ct-chart" data-url="{% url 'solutions:ajax_load_chart' %}?type=line{% for key, value in request.GET.items %}{% if key != 'page' %}&{{ key }}={{ value }}{% endif %}{% endfor %}"></div>
         </div>
         <div class="card-body">
           <h4 class="card-title">{% trans "Tickets and Actions per day" %}</h4>
-          {% comment %} <p class="card-category">Last Campaign Performance</p> {% endcomment %}
         </div>
-        {% comment %} <div class="card-footer">
-          <div class="stats">
-            <i class="material-icons">access_time</i> campaign sent 2 days ago
-          </div>
-        </div> {% endcomment %}
-      </div>
-    </div>
-    <div class="col-md-4">
-      <div class="card card-chart">
-        <div class="card-header card-header-warning">
-          <div id="container2" class="ct-chart" data-url="{% url 'solutions:ajax_load_chart' %}?type=line{% for key, value in request.GET.items %}{% if key != 'page' %}&{{ key }}={{ value }}{% endif %}{% endfor %}"></div>
-        </div>
-        <div class="card-body">
-          <h4 class="card-title">{% trans "Tickets and Actions per day" %}</h4>
-          {% comment %} <p class="card-category">Last Campaign Performance</p> {% endcomment %}
-        </div>
-        {% comment %} <div class="card-footer">
-          <div class="stats">
-            <i class="material-icons">access_time</i> campaign sent 2 days ago
-          </div>
-        </div> {% endcomment %}
       </div>
     </div>
   </div>
-
-  {% else %}
-
+  {% elif user.is_superuser %}
   <div class="row">
     <div class="col-12">
       <form>
@@ -177,14 +146,7 @@
         </div>
         <div class="card-body">
           <h4 class="card-title">{% trans "Tickets Status" %}</h4>
-          {% comment %} <p class="card-category">
-            <span class="text-success"><i class="fa fa-long-arrow-up"></i> 55% </span> increase in today sales.</p>
-        {% endcomment %}</div>
-        {% comment %} <div class="card-footer">
-          <div class="stats">
-            <i class="material-icons">access_time</i> updated 4 minutes ago
-          </div>
-        </div> {% endcomment %}
+        </div>
       </div>
     </div>
     <div class="col-md-4">
@@ -193,14 +155,8 @@
           <div id="container2" class="ct-chart" data-url="{% url 'solutions:ajax_load_chart' %}?type=line{% for key, value in request.GET.items %}{% if key != 'page' %}&{{ key }}={{ value }}{% endif %}{% endfor %}"></div>
         </div>
         <div class="card-body">
-          <h4 class="card-title">{% trans "Tickets per day" %}</h4>
-          {% comment %} <p class="card-category">Last Campaign Performance</p> {% endcomment %}
+          <h4 class="card-title">{% trans "Tickets and Actions per day" %}</h4>
         </div>
-        {% comment %} <div class="card-footer">
-          <div class="stats">
-            <i class="material-icons">access_time</i> campaign sent 2 days ago
-          </div>
-        </div> {% endcomment %}
       </div>
     </div>
     <div class="col-md-4">
@@ -209,17 +165,179 @@
           <div id="containerClient" class="ct-chart" data-url="{% url 'solutions:ajax_load_chart' %}?type=colomn{% for key, value in request.GET.items %}{% if key != 'page' %}&{{ key }}={{ value }}{% endif %}{% endfor %}"></div>
         </div>
         <div class="card-body">
-          <h4 class="card-title">{% trans "Tickets per client" %}</h4>
-          {% comment %} <p class="card-category">Last Campaign Performance</p> {% endcomment %}
+          <h4 class="card-title">{% trans "Tickets and Actions per day" %}</h4>
         </div>
-        {% comment %} <div class="card-footer">
-          <div class="stats">
-            <i class="material-icons">access_time</i> campaign sent 2 days ago
-          </div>
-        </div> {% endcomment %}
+
+      </div>
+    </div>
+    <div class="col-lg-12 col-md-12">
+      <div class="card">
+        <div class="card-header card-header-warning">
+          <h4 class="card-title">{% trans "Users statistics" %}</h4>
+          <p class="card-category">{% trans "users's charged tickets and resolved tickets" %}</p>
+        </div>
+        <div class="card-body table-responsive">
+          <table class="table table-hover">
+            <thead class="text-warning">
+              <th>{% trans "Consultant" %}</th>
+              <th>{% trans "Consultat email" %}</th>
+              <th>{% trans "Charged tickets" %}</th>
+              <th>{% trans "Resolved tickets" %}</th>
+              <th>{% trans "Efficiency" %}</th>
+              <th>{% trans "Average" %}</th>
+
+
+            </thead>
+            <tbody>
+
+              {% for Consultant in usersStatics  %}
+              <tr>
+                <td>{{Consultant.username}}</td>
+                <td>{{Consultant.email}}</td>
+                <td>{{Consultant.total|default_if_none:'0'}}</td>
+                <td>{{Consultant.resolved|default_if_none:'0'}}</td>
+                <td>{{Consultant.avg|default_if_none:'0'}}%</td>
+                <td>{{Consultant.avgTime|default_if_none:' '}}</td>
+
+              </tr>
+              {% endfor %}
+
+            </tbody>
+          </table>
+        </div>
       </div>
     </div>
   </div>
+
+  {% elif user.is_staff %}
+  <div class="row">
+    <div class="col-lg-3 col-md-6 col-sm-6">
+      <div class="card card-stats">
+        <div class="card-header card-header-warning card-header-icon">
+          <div class="card-icon">
+            <i class="fa fa-ticket-alt"></i>
+          </div>
+          <p class="card-category">Tickets</p>
+          <h3 class="card-title">{{tickets_open}}
+            <small>{% trans "Open " %}</small>
+          </h3>
+        </div>
+        <div class="card-footer">
+          <div class="stats">
+            <i class="material-icons text-danger">warning</i>
+            <a href="{% url 'solutions:questionlist' %}?status=OV">{% trans "Open more tickets" %}</a>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-lg-3 col-md-6 col-sm-6">
+      <div class="card card-stats">
+        <div class="card-header card-header-success card-header-icon">
+          <div class="card-icon">
+            <i class="fa fa-clipboard-check"></i>
+          </div>
+          <p class="card-category">Tickets</p>
+          <h3 class="card-title">{{tickets_resolved}}
+            <small>{% trans "Resolved " %}</small>
+          </h3>
+        </div>
+        <div class="card-footer">
+          <div class="stats">
+            <i class="material-icons">warning</i>
+            <a href="{% url 'solutions:questionlist' %}?status=RS">{% trans "Explore" %}</a>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-lg-3 col-md-6 col-sm-6">
+      <div class="card card-stats">
+        <div class="card-header card-header-info card-header-icon">
+          <div class="card-icon">
+            <i class="fa fa-ticket-alt"></i>
+          </div>
+          <p class="card-category">Tickets</p>
+          <h3 class="card-title">{{tickets_waiting}}
+            <small>{% trans "Waiting " %}</small>
+          </h3>
+        </div>
+        <div class="card-footer">
+          <div class="stats">
+            <i class="material-icons text-danger">warning</i>
+            <a href="{% url 'solutions:questionlist' %}?status=EA">{% trans "Explore" %}</a>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-lg-3 col-md-6 col-sm-6">
+      <div class="card card-stats">
+        <div class="card-header card-header-azure card-header-icon">
+          <div class="card-icon">
+            <i class="fa fa-window-close"></i>
+          </div>
+          <p class="card-category">Tickets</p>
+          <h3 class="card-title">{{tickets_closed}}
+            <small>{% trans "Closed " %}</small>
+          </h3>
+        </div>
+        <div class="card-footer">
+          {% comment %} <div class="stats">
+            <i class="material-icons text-danger">warning</i>
+            <a href="{% url 'solutions:questionlist' %}?status=OV"></a>
+          </div> {% endcomment %}
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-12">
+      <form>
+        <div class="row">
+          <div class="col">
+            <input type="text" name="start_date" class="form-control dateField" value='{{request.GET.start_date}}' placeholder='{% trans "Start date" %}'>
+          </div>
+          <div class="col">
+            <input type="text" name="end_date" class="form-control dateField" value='{{request.GET.end_date}}' placeholder='{% trans "End date" %}'>
+          </div>
+          <div class="col">
+            <button type="submit" class="btn btn-primary">{% trans "Filter" %}</button>
+          </div>
+        </div>
+      </form>
+    </div>
+    <div class="col-md-4">
+      <div class="card card-chart">
+        <div class="card-header card-header-success">
+          <div id="container" class="ct-chart" data-url="{% url 'solutions:ajax_load_chart' %}?type=pie{% for key, value in request.GET.items %}{% if key != 'page' %}&{{ key }}={{ value }}{% endif %}{% endfor %}"></div>
+
+        </div>
+        <div class="card-body">
+          <h4 class="card-title">{% trans "Tickets Status" %}</h4>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-4">
+      <div class="card card-chart">
+        <div class="card-header card-header-warning">
+          <div id="container2" class="ct-chart" data-url="{% url 'solutions:ajax_load_chart' %}?type=line{% for key, value in request.GET.items %}{% if key != 'page' %}&{{ key }}={{ value }}{% endif %}{% endfor %}"></div>
+        </div>
+        <div class="card-body">
+          <h4 class="card-title">{% trans "Tickets and Actions per day" %}</h4>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-4">
+      <div class="card card-chart">
+        <div class="card-header card-header-warning">
+          <div id="containerClient" class="ct-chart" data-url="{% url 'solutions:ajax_load_chart' %}?type=colomn{% for key, value in request.GET.items %}{% if key != 'page' %}&{{ key }}={{ value }}{% endif %}{% endfor %}"></div>
+        </div>
+        <div class="card-body">
+          <h4 class="card-title">{% trans "Tickets and Actions per day" %}</h4>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
 
   {% endif %}
   <script src="https://code.highcharts.com/highcharts.src.js"></script>

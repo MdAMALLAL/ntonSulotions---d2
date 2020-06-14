@@ -8,12 +8,13 @@ from clients.models import Client
 from django.shortcuts import render_to_response
 from django.template import RequestContext
 
+from django.db.models import Count,Q,Avg,Sum,F,FloatField
+from django.db.models.functions import Cast
+
 
 
 active = {}
 active['dashboard']='active'
-
-
 from djqscsv import render_to_csv_response,  write_csv
 def csv_view(request):
     qs = Client.objects.all()
@@ -39,7 +40,10 @@ class HomePage(LoginRequiredMixin, TemplateView):
     def get_context_data(self,**kwargs):
 
         context=super().get_context_data(**kwargs)
-        questionlist =  Question.objects.filter(user=self.request.user)
+        if self.request.user.is_staff:
+            questionlist =  Question.objects.values('status').filter(charged_by=self.request.user)
+        else:
+            questionlist =  Question.objects.values('status').filter(user=self.request.user)
 
         tickets_open = questionlist.filter(status = 'OV').count()
         tickets_resolved = questionlist.filter(status = 'RS').count()
@@ -53,8 +57,20 @@ class HomePage(LoginRequiredMixin, TemplateView):
         context['tickets_closed']=tickets_closed
         context['tickets_canceled']=tickets_canceled
 
-        context['active']= active
+        context['activePage']= 'dashboard'
         #context['pagecounter']=self.pagecounter
+
+        usersStatics  = User.objects\
+            .values('username','email')\
+            .filter(is_staff=True)\
+            .annotate(total=Count(F('charged_tickets'),output_field=FloatField()),
+                resolved=Count('charged_tickets__status', filter=Q(charged_tickets__status='RS')),
+                avg = Cast('resolved', FloatField()) / Cast('total', FloatField())    * 100,
+                avgTime = Avg('charged_tickets__time_to_resolv', filter=Q(charged_tickets__status='RS')),# / Count('charged_tickets__status', filter=Q(charged_tickets__status='RS')),
+                #avgTime = Sum(F('charged_tickets__time_to_resolv')) / Count('charged_tickets__status', filter=Q(charged_tickets__status='RS')),
+                )
+        print(usersStatics)
+        context['usersStatics']= usersStatics
 
 
         return context

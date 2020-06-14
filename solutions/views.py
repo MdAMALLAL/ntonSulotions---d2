@@ -12,7 +12,7 @@ from .models import Question,Reponce, Categorie, SousCategorie
 from .forms import ReponceForm, QuestionForm
 from django.http import Http404
 from django.utils import timezone
-from django.db.models import Count,Q
+from django.db.models import Count,Q,Avg,Sum,F
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 import json
 from django.utils.translation import gettext_lazy as _
@@ -24,12 +24,10 @@ from django.core.mail import EmailMultiAlternatives
 from django.template.loader import get_template, render_to_string
 from django.template import Context
 
+from accounts.models import User
 
-active = {}
 
 
-plaintext = get_template('email/email.txt')
-htmly     = get_template('email/email.html')
 ####################################################
 # QUESTION: CRUD
 
@@ -48,49 +46,63 @@ class QuestionCreate(LoginRequiredMixin, generic.CreateView):
         else:
             messages.success(self.request,_("Question has been saved."))
 
-
+            ########################
+            #  USER EMAIl
+            plaintext = get_template('email/email.txt')
+            htmly     = get_template('email/email.html')
             subject = self.object.titre
-            message = """Nouvuou ticket a ete ouvert
-            sous id : {0}
-            par : {1}
-            """.format(self.object.get_ref,
-                        self.object.user,
-                        #self.object.Priorite([self.object.priorite]),
-                        )
-            ticket_url = "http://{0}{1}".format(self.request.META['HTTP_HOST'],
-                        reverse("solutions:questiondetail", kwargs={"pk": self.object.pk}))
-            d = { 'message': message,
-                          'url': ticket_url,}
+            d = {}
+            d['ref'] = self.object.get_ref
+            d['user'] = self.object.titre
+            d['user'] = self.object.user.username
+            d['client'] = self.object.user.client.name
+
+            d['ticket_url'] = "http://{0}{1}".format(self.request.META['HTTP_HOST'],
+                                reverse("solutions:questiondetail", kwargs={"pk": self.object.pk}))
+
+
             user_email = self.object.user.email
             dsi_email = self.object.user.client.email
             # text_content = plaintext.render(d)
             # html_content = htmly.render(d)
-            text_content = render_to_string('email/email_client.txt',{'context':d})
-            html_content = render_to_string('email/email_client.html',{'context':d})
+            text_content = render_to_string('email/email.txt',{'context':d})
+            html_content = render_to_string('email/email.html',{'context':d})
             msg = EmailMultiAlternatives(subject, text_content, user_email, [dsi_email])
             msg.attach_alternative(html_content, "text/html")
-            msg.send()
+            try:
+                msg.send()
+            except Exception as e:
+                raise
+
             #send_mail(subject, message, from_email, [to])
 
-            message = """Votre ticket a ete ouvert
-            sous id : {0} et titre : {1};
-            """.format(self.object.get_ref,
-                        self.object.titre,)
-            d = { 'message': message,
-                          'url': ticket_url,}
-            text_content = plaintext.render({'context':d})
-            html_content = htmly.render({'context':d})
+            ########################
+            #  DSI EMAIl
+            d = {}
+            d['ref'] = self.object.get_ref
+            d['user'] = self.object.titre
+            d['user'] = self.object.user.username
+            d['client'] = self.object.user.client.name
+
+
+            d['ticket_url'] = "http://{0}{1}".format(self.request.META['HTTP_HOST'],
+                            reverse("solutions:questiondetail", kwargs={"pk": self.object.pk}))
+
+
+            text_content = render_to_string('email/email_client.txt',{'context':d})
+            html_content = render_to_string('email/email_client.html',{'context':d})
             msg = EmailMultiAlternatives(subject, text_content, dsi_email, [user_email])
             msg.attach_alternative(html_content, "text/html")
-            msg.send()
+            try:
+                msg.send()
+            except Exception as e:
+                raise
             # send_mail(subject, message, 'no_replay@ntonadvisory.com' , [from_email])
         return super().form_valid(form)
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        active['ticket'] = ''
-        active['new_ticket'] = "active"
-        context['active']= active
+        context['activePage']= 'new_ticket'
         return context
 
 class QuestionEdit(LoginRequiredMixin, generic.UpdateView):
@@ -99,8 +111,7 @@ class QuestionEdit(LoginRequiredMixin, generic.UpdateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        active['ticket'] = "active"
-        context['active']= active
+        context['activePage']= 'ticket'
         return context
     #success_url = reverse_lazy("solutions:questiondetail ",kwargs={"pk": Question.pk})
 
@@ -110,8 +121,7 @@ class QuestionSingle(LoginRequiredMixin, generic.DetailView):
     def get_context_data(self, **kwargs):
         context = super(QuestionSingle, self).get_context_data(**kwargs)
         context['form'] = ReponceForm
-        active['ticket'] = "active"
-        context['active'] = active
+        context['activePage']= 'ticket'
         return context
 
     def get_object(self):
@@ -158,9 +168,6 @@ class QuestionList(LoginRequiredMixin, generic.ListView):
         context = super(QuestionList, self).get_context_data(**kwargs)
         page = int(self.request.GET.get('page', 1))
         context['pages'] = [val for val in range(page - 5 , page + 5) if val > 0]
-        active['ticket'] = "active"
-        context['active'] = active
-
         if self.request.GET.get('q') : context['query'] = '&q='+self.request.GET.get('q')
 
         if self.request.GET.get('status'):
@@ -169,7 +176,9 @@ class QuestionList(LoginRequiredMixin, generic.ListView):
         if self.request.GET.get('priorite'):
             context['priorite']= '&priorite='+(self.request.GET.get('priorite'))
             active[self.request.GET.get('priorite')] = "selected"
-        context['active'] = active
+        context['activePage']= 'ticket'
+
+
 
         return context
 
@@ -250,11 +259,18 @@ def load_chart(request):
 
 
     if request.GET.get('type')=='pie':
-        dataset = Question.objects \
-            .values('status') \
-            .exclude(status='') \
-            .annotate(total=Count('status')) \
-            .order_by('status')
+        if request.user.is_staff:
+            dataset = Question.objects \
+                .values('status') \
+                .exclude(status='') \
+                .annotate(total=Count('status')) \
+                .order_by('status')
+        else:
+            dataset = Question.objects.filter(user = request.user) \
+                .values('status') \
+                .exclude(status='') \
+                .annotate(total=Count('status')) \
+                .order_by('status')
 
         port_display_name = dict()
         for port_tuple in Question.Status:
@@ -263,7 +279,7 @@ def load_chart(request):
         chart = {
             'chart': {'type': 'pie'},
             'backgroundColor': 'transparent',
-            'title': {'text': _("Ticket's Status - Total ({})".format(Question.objects.count()) )},
+            'title': {'text': _("Ticket's Status - Total ({})".format(dataset.count()) )},
             'series': [{
                 'name': 'Tickets',
                 'data': list(map(lambda row: {'name': port_display_name[row['status']], 'y': row['total']}, dataset))
@@ -274,10 +290,18 @@ def load_chart(request):
         metrics = {
             'total': Count('created_at__date')
         }
-        dataset = Question.objects.all()\
-            .values('created_at__date')\
-            .annotate(**metrics)\
-            .order_by('created_at__date')
+
+        if request.user.is_staff:
+            dataset = Question.objects.all()\
+                .values('created_at__date')\
+                .annotate(**metrics)\
+                .order_by('created_at__date')
+        else:
+            dataset = Question.objects.filter(user = request.user)\
+                .values('created_at__date')\
+                .annotate(**metrics)\
+                .order_by('created_at__date')
+
 
         datasetAction = Reponce.objects.filter(created_at__gte=start_date,\
                     created_at__lte=end_date)\
@@ -351,5 +375,41 @@ def load_chart(request):
             'xAxis': {'categories': categories,},
             'series': [tickets_series_data, ]
         }
+
+    if request.GET.get('type')=='users':
+                #\
+            # dataset = User.objects\
+            #     .filter(is_staff=True)\
+            #     .annotate(total=Count('charged_tickets'))\
+            #     .annotate(status=Count('charged_tickets__status'=='RS'))\
+            #     .annotate(avg = Avg('charged_tickets__time_to_resolv'))
+            dataset = User.objects\
+                .values('username','email')\
+                .filter(is_staff=True)\
+                .annotate(total=Count(F('charged_tickets'),output_field=FloatField()),
+                    resolved=Count('charged_tickets__status', filter=Q(charged_tickets__status='RS')),
+                    avg = Cast('resolved', FloatField()) / Cast('total', FloatField())    * 100,
+                    avgTime = Avg('charged_tickets__time_to_resolv', filter=Q(charged_tickets__status='RS')),# / Count('charged_tickets__status', filter=Q(charged_tickets__status='RS')),
+                    #avgTime = Sum(F('charged_tickets__time_to_resolv')) / Count('charged_tickets__status', filter=Q(charged_tickets__status='RS')),
+                    )
+
+            # avg = dataset
+            print(dataset)
+            # for entry in dataset:
+            #     print(entry.avg)
+
+            #ds = json.dumps(dataset)
+            # data = list(dataset)  # wrap in list(), because QuerySet is not JSON serializable
+            # return JsonResponse({'data': data})
+            from django.core import serializers
+            from django.http import HttpResponse
+
+
+            dataset=''
+            qs_json = serializers.serialize('json', dataset)
+            return HttpResponse(qs_json, content_type='application/json')
+
+
+
 
     return JsonResponse(chart)

@@ -24,18 +24,32 @@
                     <div class="col-md-6">
                       <div class="form-group">
                         {% bootstrap_field form.categorie  placeholder=''  %}
+
                       </div>
                     </div>
                     <div class="col-md-6">
-                      <div class="form-group">
-                          {% bootstrap_field form.souscategorie     field_class='collapse' %}
+                      <div id="categoryGrow"class="collapse" >
+                        <div class="spinner-grow text-success  " role="status">
+                          <span class="sr-only">Loading...</span>
+                        </div>
                       </div>
+                        <div id="souscategorieForm" class="form-group collapse">
+                          <label for="id_souscategorie">Souscategorie</label>
+                          <div >
+                            <select name="souscategorie" class="form-control " title="" required="" id="id_souscategorie">
+                              <option value="" selected="">---------</option>
+                            </select>
+                          </div>
+                        </div>
                     </div>
-                    <div class="col-md-8">
+                    <div class="col-md-6">
                       <div class="form-group">
                           {% bootstrap_field form.priorite layouy='horizontal'%}
                       </div>
                     </div>
+                    <div class="col-md-6">
+                      {% bootstrap_field form.image  show_label=False  addon_after='<i class="fa fa-image"></i>' %}
+                  </div>
                     {% endif %}
                   </div>
                   <div class="row">
@@ -44,10 +58,7 @@
                         {% bootstrap_field form.titre  placeholder='' %}
                       </div>
                     </div>
-                    <div class="col-md-6">
-                      {% bootstrap_field form.image    addon_after='<i class="fa fa-image"></i>' %}
 
-                  </div>
                   </div>
                   <div class="row">
                     <div class="col-md-12">
@@ -70,23 +81,34 @@
       </div>
 
       <script>
+        $(document).ajaxStart(function() {
+            $("#categoryGrow").collapse('show');
+          });
+
+        $(document).ajaxComplete(function() {
+            $("#categoryGrow").hide();
+          });
+
         $("#id_categorie").change(function () {
           var url = $("#quesionForm").attr("data-categorie-url");
           var categorieId = $(this).val();
           if (categorieId) {
+
             $.ajax({
               url: url,
               data: {
                 'categorie': categorieId
               },
               success: function (data) {
-                $("#id_souscategorie").html(data);
-                $(".collapse").collapse('show');
-              }
+                  $("#souscategorieForm").collapse('show');
+                  $("#id_souscategorie").html(data);
+               }
             });
           }
           else {
-            $(".collapse").collapse('hide');
+            $("#souscategorieForm").collapse('hide');
+            $("#categoryGrow").collapse('hide');
+
           }
         });
       </script>

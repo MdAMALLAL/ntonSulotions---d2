@@ -1,2 +1,9 @@
-{{ context.message }}
-{{context.ticket_url}}
+{% load i18n %}
+Nton.com ADVISORY ticketing platform
+
+un nouvoux ticket est créé saus l'ID:{{ context.ref }}
+le ticket est créé par: {{ context.user }} client: {{ context.client }}
+
+Titre de ticket: {{ context.title }}
+
+pour accéder directement a ce ticket utiliser le lien suivant : {{ context.ticket_url }}">

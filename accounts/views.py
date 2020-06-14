@@ -21,7 +21,6 @@ class DoesLoggedInUserOwnThisRowMixin(object):
     def get_object(self):
         '''only allow owner (or superuser) to access the table row'''
         obj = super(DoesLoggedInUserOwnThisRowMixin, self).get_object()
-        print(obj)
         if self.request.user.is_superuser:
             pass
         elif obj != self.request.user:
@@ -69,7 +68,7 @@ class NewUser(IsStaffTestMixin, CreateView):
         return super().form_valid(form)
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['active']=active
+        context['activePage']= 'accounts'
         return context
 
 class ProfileView(DetailView):
@@ -78,14 +77,12 @@ class ProfileView(DetailView):
     slug_url_kwarg='username'
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        # print(self.request.user.username)
-        # print(self.kwargs.get('username'))
 
+        context['activePage']= 'accounts'
         if self.request.user.username == self.kwargs.get('username'):
-            active['users']=''
-            active['person']='active'
+            context['activePage']= 'profile'
 
-        context['active']=active
+
         return context
 
 def myProfileView(request):
@@ -111,7 +108,7 @@ class UserListView(IsStaffTestMixin, ListView):
     def get_context_data(self, **kwargs):
         context = super(UserListView, self).get_context_data(**kwargs)
 
-        context['active']=active
+        context['activePage']= 'accounts'
         context['form'] = forms.UserCreateForm
         page = int(self.request.GET.get('page', 1))
         context['pages'] = [val for val in range(page - 5 , page + 5) if val > 0]
@@ -127,9 +124,6 @@ class ProfileUpdateView(LoginRequiredMixin, UpdateView):
     user = "user"
     def get_object(self, *args, **kwargs):
         obj = super(ProfileUpdateView, self).get_object(*args, **kwargs)
-        print(obj.username)
-        print(self.request.user.username)
-
         if obj.username != self.request.user.username and not self.request.user.is_staff:
             raise PermissionDenied() #or Http404
         return obj
@@ -147,13 +141,14 @@ class ProfileUpdateView(LoginRequiredMixin, UpdateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['active']=active
+        context['activePage'] = 'accounts'
+        if self.request.user.username == self.kwargs.get('username'):
+            context['activePage'] = 'profile'
+        print(context['activePage'])
+
+
         return context
 
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context['active']=active
-        return context
 
 
     success_url = '/'
@@ -161,7 +156,6 @@ class ProfileUpdateView(LoginRequiredMixin, UpdateView):
 @login_required
 def made_consultant(request, username):
     user = get_object_or_404(User, username=username)
-    # print(user)
     if request.user.is_staff:
         if request.method == "POST":
             try:
@@ -189,8 +183,6 @@ class UserPasswordChang( auth_views.PasswordChangeView):
         '''only allow owner (or superuser) to access the table row'''
         obj = Users.objects.get(username = self.request.user.username)
         # obj = super(UserPasswordChang, self).get_object()
-        # print('''only allow owner (or superuser) to access the table row''')
-        # print(obj)
         # if self.request.user.is_superuser:
         #     pass
         # elif obj != self.request.user:

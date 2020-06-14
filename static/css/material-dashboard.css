@@ -13648,8 +13648,6 @@ textarea {
 }
 
 .form-group input[type=file] {
-  opacity: 0;
-  position: absolute;
   top: 0;
   right: 0;
   bottom: 0;
@@ -17854,7 +17852,7 @@ html[dir="rtl"] .form-check .form-check-sign .check:before {
 }
 
 .card [class*="card-header-"] {
-  margin: 0px 15px 0;
+  margin: 0px 0 0 15px ;
   padding: 0;
   position: relative;
 }

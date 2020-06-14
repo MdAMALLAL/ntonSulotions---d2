@@ -15,7 +15,7 @@ class SousCategorieResource(resources.ModelResource):
 
 class QuestionAdmin(ImportExportModelAdmin):
     #fields=['titre', 'created_at','user','priorite','status']
-    list_display=['titre', 'created_at','user','priorite','status']
+    list_display=['titre', 'created_at','user','charged_by','priorite','status']
     list_editable=['priorite','status']
     search_fields = ['titre','description']
     list_filter = ['created_at','user','priorite','status']
