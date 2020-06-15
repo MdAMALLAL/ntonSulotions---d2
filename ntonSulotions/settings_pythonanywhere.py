@@ -114,6 +114,9 @@ DATABASES = {
         'USER': 'ntonadvisory',
         'PASSWORD': 'mYsqL@321qaZ',
         'HOST': 'ntonadvisory.mysql.pythonanywhere-services.com',
+        'OPTIONS': {
+        'init_command': "SET sql_mode='STRICT_TRANS_TABLES'",
+        },
     }
 }
 
