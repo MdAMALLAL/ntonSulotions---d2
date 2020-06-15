@@ -60,7 +60,7 @@
           <li class="nav-item {% if activePage == 'profile' %}active{% endif %}">
             <a class="nav-link" href="{% url 'accounts:profile' username=request.user.username %}">
               <i class="material-icons">person</i>
-              <p>User Profile</p>
+              <p>{% trans "My profile" %}</p>
             </a>
           </li>
           <li class="nav-item {% if activePage == 'ticket' %}active{% endif %}">
