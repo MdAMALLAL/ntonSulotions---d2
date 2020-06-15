@@ -109,12 +109,12 @@ WSGI_APPLICATION = 'ntonSulotions.wsgi_production.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'ntonadvisory$ntonadvisory_db',
-        'USER': 'ntonadvisory',
-        'PASSWORD': 'mYsqL@321qaZ',
-        'HOST': 'ntonadvisory.mysql.pythonanywhere-services.com',
+        'NAME': 'ntonadvisory_db',
+        'USER': 'ntonadvisory_db',
+        'PASSWORD': '96b$@]j~B$Ks',
+        'HOST': 'localhost',
         'OPTIONS': {
-        'init_command': "SET sql_mode='STRICT_TRANS_TABLES'",
+        'init_command': 'SET default_storage_engine=INNODB',
         },
     }
 }
@@ -156,7 +156,7 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.11/howto/static-files/
 
-STATIC_URL = '/static/'
+STATIC_URL = '/assets/'
 STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static')]
 STATIC_ROOT= os.path.join(BASE_DIR, 'assets')
 MEDIA_URL = '/media/'
