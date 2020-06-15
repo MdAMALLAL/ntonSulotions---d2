@@ -109,7 +109,7 @@ WSGI_APPLICATION = 'ntonSulotions.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'ntonadvisory$default',
+        'NAME': 'ntonadvisory$ntonadvisory_db',
         'USER': 'ntonadvisory',
         'PASSWORD': 'mYsqL@321qaZ',
         'HOST': 'ntonadvisory.mysql.pythonanywhere-services.com',
