@@ -69,7 +69,7 @@ class HomePage(LoginRequiredMixin, TemplateView):
                 avgTime = Avg('charged_tickets__time_to_resolv', filter=Q(charged_tickets__status='RS')),# / Count('charged_tickets__status', filter=Q(charged_tickets__status='RS')),
                 #avgTime = Sum(F('charged_tickets__time_to_resolv')) / Count('charged_tickets__status', filter=Q(charged_tickets__status='RS')),
                 )
-        print(usersStatics)
+        #print(usersStatics)
         context['usersStatics']= usersStatics
 
 
