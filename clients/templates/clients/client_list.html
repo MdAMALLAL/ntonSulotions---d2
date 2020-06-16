@@ -29,23 +29,28 @@
         -->
           <table id="fresh-table" class="table">
             <thead>
-              <th data-field="slug" data-sortable="true">Id</th>
               <th data-field="name" data-sortable="true">{% trans "Name" %}</th>
               <th data-field="email" data-sortable="true">{% trans "DSI Email" %}</th>
               <th data-field="contact" data-sortable="true">{% trans "Contact" %}</th>
               <th data-field="users" data-sortable="true">{% trans "Users" %}</th>
 
-              <th data-field="actions" data-formatter="operateFormatter" data-events="operateEvents">Actions</th>
+              <th data-field="actions" >Actions</th>
             </thead>
             <tbody>
               {% for client in client_list %}
               <tr>
-                <td>{{client.slug}}</td>
-                <td>{{ client.name }}</td>
+                <td><a class="text-dark" href="{% url 'clients:detail' slug=client.slug %}">{{client.name}}</a></td>
                 <td>{{ client.email}}</td>
                 <td>{{ client.contact}}</td>
                 <td>{{client.users.all.count}}</td>
-                <td></td>
+                <td>
+                  <a rel="tooltip" title="Edit" class="table-action edit" href="{% url 'clients:detail' slug=client.slug %}?edit" title="Edit">
+                    <i class="fa fa-edit"></i>
+                  </a>
+                  <a rel="tooltip" title="Remove" class="table-action remove" href="{% url 'clients:delete' slug=client.slug %}" title="Remove">
+                   <i class="fa fa-remove"></i>
+                  </a>
+                </td>
                 </tr>
                 {% endfor %}
             </tbody>
@@ -130,47 +135,13 @@
   <script>
     var $table = $('#fresh-table')
 
-    window.operateEvents = {
-      'click .like': function (e, value, row, index) {
-        // alert('You click like icon, row: ' + JSON.stringify(row))
-        window.location.href = "{{ request.path }}new_user/?client=" + row.slug;
-
-        console.log(value, row, index)
-      },
-      'click .edit': function (e, value, row, index) {
-        // alert('You click edit icon, row: ' + JSON.stringify(row))
-        console.log(row.id)
-        window.location.href = "{{ request.path }}" + row.slug;
-      },
-      'click .remove': function (e, value, row, index) {
-        $table.bootstrapTable('remove', {
-          field: 'id',
-          values: [row.id]
-        })
-      }
-    }
-
-    function operateFormatter(value, row, index) {
-      return [
-        '<a rel="tooltip"  class="table-action like" href="javascript:void(0)" title="Add user">',
-          '<i class="fa fa-user-plus"></i>',
-        '</a>',
-        '<a rel="tooltip" title="Edit" class="table-action edit" href="javascript:void(0)" title="Edit">',
-          '<i class="fa fa-edit"></i>',
-        '</a>',
-        // '<a rel="tooltip" title="Remove" class="table-action remove" href="javascript:void(0)" title="Remove">',
-        //   '<i class="fa fa-remove"></i>',
-        // '</a>'
-      ].join('')
-    }
-
     $(function () {
       $table.bootstrapTable({
         classes: 'table table-hover table-striped',
         toolbar: '.toolbar',
 
         search: true,
-        showRefresh: true,
+        showRefresh: false,
         showToggle: true,
         showColumns: true,
         pagination: true,
@@ -187,9 +158,7 @@
           return pageNumber + ' rows visible'
         }
       })
-      $(function () {
-        $table.bootstrapTable('hideColumn', 'slug')
-      })
+
 
 
       $(window).resize(function () {

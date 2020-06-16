@@ -1,23 +1,27 @@
 {% extends 'base.html' %}
 {% load bootstrap4 %}
+{% load static %}
 {% load i18n %}
 
 {% block body_block %}
 
 
-<div class="row">
-  <div class="col-md-4  col-lg-2">
-    <div class="list-group" id="list-tab" role="tablist">
-      <a class="list-group-item list-group-item-action active" id="list-home-list" data-toggle="list" href="#list-home" role="tab" aria-controls="home">Ticket</a>
-      <a class="list-group-item list-group-item-action" id="list-profile-list" data-toggle="list" href="#list-profile" role="tab" aria-controls="profile">{% trans "Ticket's traitment" %}</a>
-      <a class="list-group-item list-group-item-action" id="list-statistics-list" data-toggle="list" href="#list-statistics" role="tab" aria-controls="profile">{% trans "statistics" %}</a>
-      <a class="list-group-item list-group-item-action" id="list-messages-list" data-toggle="list" href="#list-messages" role="tab" aria-controls="messages">Historique</a>
-      {% comment %} <a class="list-group-item list-group-item-action" id="list-settings-list" data-toggle="list" href="#list-settings" role="tab" aria-controls="settings">Tous</a> {% endcomment %}
+<div class="row row-col-1">
+  <div class="col-12">
+    <ul class="nav nav-tabs nav justify-content-center" id="list-tab" role="tablist">
+      <li class="nav-item">
+        <a class="nav-link active" id="list-home-list" data-toggle="list" href="#list-home" role="tab" aria-controls="home">Ticket</a>
+      </li><li class="nav-item">
+        <a class="nav-link" id="list-profile-list" data-toggle="list" href="#list-profile" role="tab" aria-controls="profile">{% trans "Ticket's traitment" %}</a>
+      </li><li class="nav-item">
+        <a class="nav-link" id="list-statistics-list" data-toggle="list" href="#list-statistics" role="tab" aria-controls="profile">{% trans "historic" %}</a>
+      </li><li class="nav-item">
+        <a class="nav-link" id="list-messages-list" data-toggle="list" href="#list-messages" role="tab" aria-controls="messages"></a>
+      </li>
+    </ul>
     </div>
-  </div>
-  <div class="col ">
-    <div class="tab-content" id="nav-tabContent">
-      <div class="tab-pane fade show active" id="list-home" role="tabpanel" aria-labelledby="list-home-list">
+    <div class="tab-content w-100" id="nav-tabContent">
+      <div class="tab-pane fade show active w-100" id="list-home" role="tabpanel" aria-labelledby="list-home-list">
         <table class="table table-borderless  mx-xs-2 ">
           <tbody class="row row-col-1  no-gutters">
             <tr class="col-12 bg-light text-center align-self-center">
@@ -93,11 +97,11 @@
           </tbody>
         </table>
       </div>
-      <div class="tab-pane fade" id="list-profile" role="tabpanel" aria-labelledby="list-profile-list">
+      <div class="tab-pane fade w-100" id="list-profile" role="tabpanel" aria-labelledby="list-profile-list">
         <h4>Action</h4>
         <form method="post" action="{% url 'solutions:questionereponder' pk=question.pk %}">
           {% csrf_token %}
-          <div class="row">
+          <div class="row row-col-1">
             <div class="col-sm-10">
               <div class="wmd-panel">
                 <div id="wmd-button-bar" ></div>
@@ -111,54 +115,41 @@
             </div>
           </div>
         </form>
-        <table class="table  table-sm">
-          <tbody>
+        <div class="frame">
+          <ul class="actionul">
             {% for reponce in question.reponces.all %}
               {% if reponce.user.is_staff %}
-              <tr>
-                <div class="col-8">
-                  <td>{{ reponce.created_at|date:"d/M/Y" }}</td>
-                  <td>{{ reponce.description|safe|linebreaks }}</td>
-                </div>
-                <div class="col-4">
-                  <td>{% trans "Posted by" %}: <strong> {%if reponce.user.get_full_name %} {{ reponce.user.get_full_name  }} {%else%} {{ reponce.user  }}{%endif%}</strong> ({{reponce.get_status_display}})</td>
-
-                </div>
-
-              </tr>
+                <li style="width:100%">
+                      <div class="msj macro">
+                        <div class="avatar align-bottom"><img class="rounded-circle " style="width:100%;" src='{% static "img/avatar-admin.png" %}' /></div>
+                            <div class="actiontext text-l">
+                                <p>{{ reponce.description|safe|linebreaks }} </p>
+                                <p><small>{% trans "by" %} {{ reponce.user }} {{ reponce.created_at|date:"d/M/Y H:m" }}</small></p>
+                            </div>
+                        </div>
+                </li>
               {% else %}
-              <tr>
-
-                <div class="col-4">
+                <li style="width:100%;">
+                    <div class="msj-rta macro">
+                        <div class="actiontext text-r">
+                            <p>{{ reponce.description|safe|linebreaks }}</p>
+                            <p><small>{% trans "by" %}  {{ reponce.user }} {{ reponce.created_at|date:"d/M/Y H:m" }}</small></p>
+                        </div>
+                    <div class="avatar align-bottom" style="padding:0px 0px 0px 10px !important"><img class="rounded-circle" style="width:100%;" src='{% static "img/avatar.png" %}' /></div>
+                </li>
+                {% comment %} <div class="col-4">
                   <td>{% trans "Posted by" %}: <strong> {%if reponce.user.get_full_name %} {{ reponce.user.get_full_name  }} {%else%} {{ reponce.user  }}{%endif%}</strong> ({{reponce.get_status_display}})</td>
-                </div>
-                <div class="col-8">
-                  <td>{{ reponce.created_at|date:"d/M/Y" }}</td>
-                  <td>{{ reponce.description|safe|linebreaks }}</td>
-                </div>
-
-              </tr>
-
+                </div> {% endcomment %}
               {% endif %}
-
-
-
-
-
-
-
-
             {% empty %}
             <p>{% trans "No action" %}.</p>
             {% endfor %}
-          </tbody>
-        </table>
-
+          </ul>
+        </div>
       </div>
-      <div class="tab-pane fade" id="list-statistics" role="tabpanel" aria-labelledby="list-statistics-list">
-        <h3>{% trans "Statistics" %}</h3>
-        <h4 class="text-center bg-dark py-2 text-white rounded">Dates</h4>
-
+      <div class="tab-pane fade w-100" id="list-statistics" role="tabpanel" aria-labelledby="list-statistics-list">
+        <h3>{% trans "historic" %}</h3>
+        <h4 class="text-center bg-dark py-2 text-white w-100 rounded">Dates</h4>
         <p>{{question.created_at|date:"y-m-d H:m"}} <i class="fa fa-star-of-life"></i> {% trans "Ticket opening" %}</p>
         <p>{{question.viwed_at|date:"y-m-d H:m"}} <i class="fa fa-star-of-life"></i> {% trans "Taking into account" %}</p>
         {% for reponce in question.reponces.all %}
@@ -166,19 +157,12 @@
         {% endfor %}
         <p>{% now "y-m-d H:m"%} <span class="fa fa-caret-down"></span> {% trans "Now" %}</p>
 
-        <h4 class="text-center bg-dark py-2 text-white rounded">{% trans "Times" %}</h4>
+        <h4 class="text-center bg-dark py-2 text-white w-100 rounded">{% trans "Times" %}</h4>
         <p>{% trans "Taking into account" %} {{question.get_time_to_view}}</p>
         <p>{% trans "Time to first react" %} {{question.get_time_to_react}}</p>
         <p>{% trans "Time to resolve" %} {{question.get_time_to_resolv}}</p>
 
-
-
-
-
       </div>
-      <div class="tab-pane fade" id="list-messages" role="tabpanel" aria-labelledby="list-messages-list">...</div>
-      <div class="tab-pane fade" id="list-settings" role="tabpanel" aria-labelledby="list-settings-list">...</div>
     </div>
-  </div>
 </div>
 {% endblock %}

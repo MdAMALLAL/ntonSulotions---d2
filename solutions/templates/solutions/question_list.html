@@ -13,7 +13,7 @@
   <table id="fresh-table" class="table">
     <thead>
       <!-- <th data-field="id" >Id</th> -->
-      <th data-field="Ref" >Ref</th>
+      <th data-field="Ref" data-sortable="true">Ref</th>
       <th data-field="title" data-sortable="true">{% trans "Title" %}</th>
       <th data-field="status" data-sortable="true">{% trans "Status" %}</th>
       <th data-field="published" data-sortable="true">{% trans "Published on" %}</th>
@@ -21,13 +21,13 @@
       <th data-field="priority" data-sortable="true">{% trans "priority" %}</th>
       <th data-field="categorie" data-sortable="true">{% trans "Categorie" %}</th>
       <th data-field="resolution" data-sortable="true">{% trans "Resolution time" %}</th>
-      <th data-field="actions" data-formatter="operateFormatter" data-events="operateEvents">Actions</th>
+      <th data-field="actions" >Actions</th>
     </thead>
     <tbody>
       {% for question in question_list %}
       <tr>
         <!-- <td>{{question.id}}</td> -->
-        <td>{{question.get_ref}}</td>
+        <td><a class="text-dark" href="{% url 'solutions:questiondetail' pk=question.pk %}">{{question.get_ref}}</a></td>
         <td>{{ question.titre }}</td>
         <td>{{ question.get_status_display}}</td>
         <td>{{ question.created_at|date:"d/M/Y"}}</td>
@@ -35,7 +35,11 @@
         <td>{{ question.get_priorite_display}}</td>
         <td>{{ question.categorie.name}}</td>
         <td>{{question.get_time_to_resolv}}</td>
-        <td></td>
+        <td>
+          <a rel="tooltip" title="Edit" class="table-action edit" href="{% url 'solutions:questionedit' pk=question.pk %}" title="Edit">
+            <i class="fa fa-edit"></i>
+          </a>
+        </td>
       </tr>
       {% endfor %}
     </tbody>
@@ -46,34 +50,6 @@
 <script>
   var $table = $('#fresh-table')
 
-  window.operateEvents = {
-    // 'click .like': function (e, value, row, index) {
-      //   alert('You click like icon, row: ' + JSON.stringify(row))
-      //   console.log(value, row, index)
-      // },
-      'click .edit': function (e, value, row, index) {
-        // alert('You click edit icon, row: ' + JSON.stringify(row))
-        console.log(row.id)
-        window.location.href = "{{ request.path }}" + row.id;
-      },
-      'click .remove': function (e, value, row, index) {
-        $table.bootstrapTable('remove', {
-          field: 'id',
-          values: [row.id]
-        })
-      }
-    }
-
-    function operateFormatter(value, row, index) {
-      return [
-      // '<a rel="tooltip" title="Like" class="table-action like" href="javascript:void(0)" title="Like">',
-        //   '<i class="fa fa-heart"></i>',
-        // '</a>',
-        '<a rel="tooltip" title="Edit" class="table-action edit" href="javascript:void(0)" title="Edit">',
-          '<i class="fa fa-edit"></i>',
-          '</a>'
-            ].join('')
-          }
 
           $(function () {
             $table.bootstrapTable({
@@ -81,7 +57,7 @@
               toolbar: '.toolbar',
 
               search: true,
-              showRefresh: true,
+              showRefresh: false,
               showToggle: true,
               showColumns: true,
               pagination: true,

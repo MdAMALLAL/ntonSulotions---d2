@@ -116,7 +116,7 @@
           <div id="container2" class="ct-chart" data-url="{% url 'solutions:ajax_load_chart' %}?type=line{% for key, value in request.GET.items %}{% if key != 'page' %}&{{ key }}={{ value }}{% endif %}{% endfor %}"></div>
         </div>
         <div class="card-body">
-          <h4 class="card-title">{% trans "Tickets and Actions per day" %}</h4>
+          <h4 class="card-title">{% trans "Tickets per day" %}</h4>
         </div>
       </div>
     </div>

@@ -59,6 +59,7 @@ INSTALLED_APPS = [
     'django.contrib.humanize',
     'modeltranslation',
     'bootstrap4',
+    'import_export',
     'clients',
     'accounts',
     'solutions'

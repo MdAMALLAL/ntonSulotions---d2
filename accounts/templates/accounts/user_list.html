@@ -34,24 +34,29 @@
       <div class=" fresh-table toolbar-color-green">
         <table id="fresh-table" class="table">
           <thead>
-              <th data-field="id"  data-sortable="true">Id</th>
               <th data-field="username" data-sortable="true">{% trans "username" %}</th>
               <th data-field="email" data-sortable="true">{% trans "Email" %}</th>
               <th data-field="client" data-sortable="true">{% trans "Client" %}</th>
               <th data-field="conultant" data-sortable="true">{% trans "Staff" %}</th>
               <th data-field="last_login" data-sortable="true">{% trans "Last login" %}</th>
-              <th data-field="actions" data-formatter="operateFormatter" data-events="operateEvents">Actions</th>
+              <th data-field="actions" >Actions</th>
           </thead>
           <tbody>
         {% for user in user_list %}
             <tr>
-              <td>{{user.id}}</td>
-              <td>{{ user.username }}</td>
+              <td><a <a class="text-dark" href="{% url 'accounts:profile' username=user.username %}">{{ user.username }}</a></td>
               <td>{{ user.email}}</td>
               <td>{{ user.client.name}}</td>
               <td>{{ user.is_staff}}</td>
               <td>{{ user.last_login}}</td>
-              <td></td>
+              <td>
+                <a rel="tooltip" title="Edit" class="table-action edit" href="{% url 'accounts:profile' username=user.username %}" title="Edit">
+                  <i class="fa fa-edit"></i>
+                </a>
+                <a rel="tooltip" title="Remove" class="table-action remove" href="{% url 'accounts:profile' username=user.username %}" title="Remove">
+                 <i class="fa fa-remove"></i>
+                </a>
+              </td>
             </tr>
           {% endfor %}
           </tbody>
@@ -139,37 +144,37 @@
 <script>
   var $table = $('#fresh-table')
 
-  window.operateEvents = {
-    // 'click .like': function (e, value, row, index) {
-    //   alert('You click like icon, row: ' + JSON.stringify(row))
-    //   console.log(value, row, index)
-    // },
-    'click .edit': function (e, value, row, index) {
-      // alert('You click edit icon, row: ' + JSON.stringify(row))
-      console.log(row.id)
-      window.location.href = "{{ request.path }}profile/" + row.username;
-    },
-    'click .remove': function (e, value, row, index) {
-      $table.bootstrapTable('remove', {
-        field: 'id',
-        values: [row.id]
-      })
-    }
-  }
+  // window.operateEvents = {
+  //   // 'click .like': function (e, value, row, index) {
+  //   //   alert('You click like icon, row: ' + JSON.stringify(row))
+  //   //   console.log(value, row, index)
+  //   // },
+  //   'click .edit': function (e, value, row, index) {
+  //     // alert('You click edit icon, row: ' + JSON.stringify(row))
+  //     console.log(row.id)
+  //     window.location.href = "{{ request.path }}profile/" + row.username;
+  //   },
+  //   'click .remove': function (e, value, row, index) {
+  //     $table.bootstrapTable('remove', {
+  //       field: 'id',
+  //       values: [row.id]
+  //     })
+  //   }
+  // }
 
-  function operateFormatter(value, row, index) {
-    return [
-      // '<a rel="tooltip" title="Like" class="table-action like" href="javascript:void(0)" title="Like">',
-      //   '<i class="fa fa-heart"></i>',
-      // '</a>',
-      '<a rel="tooltip" title="Edit" class="table-action edit" href="javascript:void(0)" title="Edit">',
-        '<i class="fa fa-edit"></i>',
-      '</a>',
-      '<a rel="tooltip" title="Remove" class="table-action remove" href="javascript:void(0)" title="Remove">',
-        '<i class="fa fa-remove"></i>',
-      '</a>'
-    ].join('')
-  }
+  // function operateFormatter(value, row, index) {
+  //   return [
+  //     // '<a rel="tooltip" title="Like" class="table-action like" href="javascript:void(0)" title="Like">',
+  //     //   '<i class="fa fa-heart"></i>',
+  //     // '</a>',
+  //     '<a rel="tooltip" title="Edit" class="table-action edit" href="javascript:void(0)" title="Edit">',
+  //       '<i class="fa fa-edit"></i>',
+  //     '</a>',
+  //     '<a rel="tooltip" title="Remove" class="table-action remove" href="javascript:void(0)" title="Remove">',
+  //       '<i class="fa fa-remove"></i>',
+  //     '</a>'
+  //   ].join('')
+  // }
 
   $(function () {
     $table.bootstrapTable({
@@ -177,7 +182,7 @@
       toolbar: '.toolbar',
 
       search: true,
-      showRefresh: true,
+      showRefresh: false,
       showToggle: true,
       showColumns: true,
       pagination: true,
@@ -194,9 +199,9 @@
         return pageNumber + ' rows visible'
       }
     })
-    $(function () {
-      $table.bootstrapTable('hideColumn', 'id')
-    })
+    // $(function () {
+    //   $table.bootstrapTable('hideColumn', 'id')
+    // })
 
 
     $(window).resize(function () {
