@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import User
+from .models import User, Notification
 # Register your models here.
 from import_export import resources
 from import_export.admin import  ImportExportModelAdmin
@@ -15,3 +15,4 @@ class UseAdmin(ImportExportModelAdmin):
     list_filter = ['is_staff','client']
     resource_class = UserResource
 admin.site.register(User, UseAdmin)
+admin.site.register(Notification)

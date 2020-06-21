@@ -91,9 +91,10 @@
 
                           </div>
                         </div>
-                        <button type="submit" class="btn btn-primary pull-right">{% if form.instance.pk%}{% trans "Update Client" %}
-                          {% else %}{% trans "Create Client" %}
-                          {% endif %}</button>
+
+                          <button id="stertedit" type="button" class="btn btn-primary pull-left collapse show">{% trans "Edit" %}</button>
+                          <button id="send" type="submit" class="btn btn-primary pull-right collapse hide">{% trans "Update Client" %}</button>
+                          </button>
                           <div class="clearfix"></div>
                         </form>
                       </div>
@@ -210,6 +211,20 @@
       success: function (data) {
         Highcharts.chart("container", data);
       }
+    });
+
+    $("#stertedit").click(function () {
+        $(".form-control-plaintext").addClass('form-control');
+        $(".form-control").removeClass('form-control-plaintext');
+
+        $("#stertedit").collapse('hide');
+        $("#send").collapse('show');
+      });
+
+  $(document).ready(function(){
+    $(".form-control").addClass('form-control-plaintext');
+    $(".form-control-plaintext").removeClass('form-control');
+
     });
   </script>
   <script>

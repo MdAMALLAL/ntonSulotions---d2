@@ -8,6 +8,12 @@ app_name = 'accounts'
 urlpatterns = [
     path("login/", auth_views.LoginView.as_view(),name='login'),
     path("logout/", auth_views.LogoutView.as_view(), name="logout"),
+    path('ajax/load_notification/',views.get_new_notification, name='load_notification'),
+    path('notifications/',views.NotificationView.as_view(), name='notifications'),
+    path('notifications/<pk>',views.notifications_redirectView, name='notifications_redirect'),
+    path('notifications/<pk>/remove/',views.notifications_remove, name='notifications_remove'),
+    path('notifications/<pk>/mark_as_read',views.notifications_markread, name='notifications_markread'),
+
     path("profile/",
         views.myProfileView,
         name="myprofile"),

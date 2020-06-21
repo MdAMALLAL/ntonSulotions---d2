@@ -1,13 +1,13 @@
 from django.urls import  reverse_lazy
-from clients import models as client
 from django.db import models
 from django.core.mail import send_mail
 from django.contrib.auth.models import PermissionsMixin
 from django.contrib.auth.base_user import AbstractBaseUser, BaseUserManager
 from django.contrib.auth.models import AbstractUser, UserManager as AbstractUserManager
-
 from django.utils.translation import ugettext_lazy as _
+from django.utils import timezone
 
+from clients import models as client
 
 class UserManager(AbstractUserManager):
     use_in_migrations = True
@@ -36,8 +36,6 @@ class UserManager(AbstractUserManager):
             raise ValueError('Superuser must have is_superuser=True.')
 
         return self._create_user(email, password, **extra_fields)
-
-
 
 class User(AbstractBaseUser , PermissionsMixin):
     username = models.CharField(_('Display Name'), max_length=100)
@@ -85,3 +83,48 @@ class User(AbstractBaseUser , PermissionsMixin):
 
     def get_absolute_url(self):
         return reverse_lazy("accounts:edit", kwargs={"username": self.username})
+
+    def get_consultant(self):
+        return User.objects.filter(is_staff = True)
+
+    def add_notification(self, description, url):
+        notification = Notification.objects.create(user=self, description = description, url=url)
+        notification.save
+
+    def get_notification(self):
+        querySet = Notification.objects.filter(user=self).update(new=False)
+        querySet = Notification.objects.filter(user=self)
+        return querySet
+    def get_last_10_notification(self):
+        querySet = Notification.objects.filter(user=self).update(new=False)
+        querySet = Notification.objects.filter(user=self)#[0:10]
+        return querySet
+
+    def get_new_notification(self):
+        return Notification.objects.filter(user=self, new=True )
+
+    def get_notification_count(self):
+        return Notification.objects.filter(user=self, seen__isnull=True).count()
+
+class Notification(models.Model):
+    user = models.ForeignKey(User, related_name='notifications', on_delete=models.CASCADE)
+    date = models.DateTimeField(auto_now=True)
+    description = models.TextField()
+    url = models.CharField(max_length = 55)
+    new = models.BooleanField(default=True)
+    seen = models.DateTimeField(null=True, blank=True, default=None)
+
+    def __str__(self):
+        return self.description
+
+    def viewed(self):
+        self.seen = timezone.now()
+        return self.save()
+
+    def displayed(self):
+        self.new = False
+
+    class Meta:
+        ordering = ["-date"]
+        verbose_name = _('Notification')
+        verbose_name_plural = _('Notifications')

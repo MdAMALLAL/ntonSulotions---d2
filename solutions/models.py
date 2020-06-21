@@ -31,7 +31,6 @@ class SousCategorie(models.Model):
     def __str__(self):
         return str(self.categorie.name + '/'+self.name)
 
-
 class Question(models.Model):
 
 ###           Priorite           ###
@@ -155,33 +154,18 @@ class Question(models.Model):
         verbose_name = _('Ticket')
         verbose_name_plural = _('Tickets')
 
-
-
-
 class Reponce(models.Model):
     Status= (
         ('EA', _('Waiting')),
         ('RS', _('Resolved')),
         ('FR', _('Closed')),
         ('RF', _('Refused')),
-        ('AN', _('Canceled')),
         )
     user = models.ForeignKey(User,null=True, related_name="reponces",on_delete=models.SET_NULL)
     created_at = models.DateTimeField(auto_now_add=True,editable=False,)
-    description = models.TextField(null=True)
+    description = models.TextField(null=True, blank=True,)
     question = models.ForeignKey(Question,null=True, related_name="reponces",on_delete=models.SET_NULL)
-    image = models.ImageField(null=True,blank=True, upload_to='images/')
     status = models.CharField(max_length=2,choices=Status,default='EA',)
-
+    send_mail = models.BooleanField(default=False)
     def __str__(self):
         return self.description
-
-# class notification(models.Model):
-#     user = models.ForeignKey(User, related_name='notifications', on_delete=models.EN_CASCADE)
-#     date = models.DateTimeField(auto_now=True)
-#     description = models.TextField()
-#     url = models.CharField()
-#     seen = models.BooleanField(blank=True, default=False-*+)
-#
-#     def __str__(self):
-#         return self.description

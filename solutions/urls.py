@@ -12,6 +12,8 @@ urlpatterns = [
     path('nouvou/',views.QuestionCreate.as_view(),name='questioncreate'),
     path('<int:pk>/addanswere/',views.add_reponce_to_question,name='questionereponder'),
     path('<int:pk>/resolved/',views.questioneResolved,name='questioneResolved'),
+    path('<int:pk>/charged/',views.questioneCharged,name='questioneCharged'),
+
     #path('page/<int:page>/',views.QuestionList.as_view(),name='questionlistpages'),
     path('',views.QuestionList.as_view(),name='questionlist'),
     path('ajax/load-categories/', views.load_categories, name='ajax_load_categorie'),

@@ -111,7 +111,7 @@
             <span class="navbar-toggler-icon icon-bar"></span>
           </button>
           <div class="collapse navbar-collapse justify-content-end">
-            <form class="navbar-form d-none">
+            {% comment %} <form class="navbar-form d-none">
               <div class="input-group no-border">
                 <input type="text" value="" class="form-control" placeholder="Search...">
                 <button type="submit" class="btn btn-white btn-round btn-just-icon">
@@ -119,7 +119,7 @@
                   <div class="ripple-container"></div>
                 </button>
               </div>
-            </form>
+            </form> {% endcomment %}
             <ul class="navbar-nav">
               <li class="nav-item">
                 <a class="nav-link" href="{% url 'solutions:questioncreate' %}">
@@ -130,22 +130,21 @@
 
                 </a>
               </li>
-              {% comment %} <li class="nav-item dropdown">
-                <a class="nav-link" href="http://example.com" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+              <li class="nav-item dropdown">
+                <a class="nav-link" href="{% url 'home' %}" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                   <i class="material-icons">notifications</i>
-                  <span class="notification">5</span>
+                  <span id="notification_count" class="notification ">{{request.user.get_notification_count}}</span>
                   <p class="d-lg-none d-md-block">
                     Some Actions
                   </p>
                 </a>
-                <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdownMenuLink">
-                  <a class="dropdown-item" href="#">Mike John responded to your email</a>
-                  <a class="dropdown-item" href="#">You have 5 new tasks</a>
-                  <a class="dropdown-item" href="#">You're now friend with Andrew</a>
-                  <a class="dropdown-item" href="#">Another Notification</a>
-                  <a class="dropdown-item" href="#">Another One</a>
+                <div id="notification_dropdown" class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdownMenuLink">
+                  {% for notification in request.user.get_last_10_notification %}
+                    <a class="dropdown-item" href="{% url 'accounts:notifications_redirect' pk=notification.pk %}">{{notification.description|truncatewords:"30"}}</a>
+                  {% endfor %}
+                  <a class="dropdown-item" href="{% url 'accounts:notifications' %}">{% trans "View all" %}</a>
                 </div>
-              </li> {% endcomment %}
+              </li>
               <li class="nav-item dropdown">
                 <form class="form-inline my-2 ml-1 my-lg-0" action="{% url 'set_language' %}" method="post">
                   {% csrf_token %}
@@ -265,6 +264,28 @@
 
   <script>
     $(document).ready(function() {
+
+      function get_notification() {
+          var url = "http://{{request.META.HTTP_HOST}}{% url 'accounts:load_notification' %}";
+          $.ajax({
+            url: url,
+
+            success: function (data) {
+              $("#notification_count").html(data.notifications_count);
+              notification_body = "";
+              for (notification in data.notifications) {
+                notification_body += '<a class="dropdown-item" href="' + data.notifications[notification].link + '">'+ data.notifications[notification].description +'</a>';
+              };
+              notification_body += '<a class="dropdown-item" href="{% url 'accounts:notifications' %}">{% trans "View all" %}</a>';
+                $("#notification_dropdown").html(notification_body);
+             }
+          });
+
+        setTimeout(
+            function(){
+                get_notification()
+            }, 50000);
+          };
 
       $().ready(function() {
         $sidebar = $('.sidebar');
@@ -435,12 +456,17 @@
         });
       });
 
-        $('.sidebar .sidebar-wrapper, .main-panel').perfectScrollbar();
+        get_notification();
 
     });
-  </script>
+
+
+
+
 
   </script>
+
+
 </body>
 
 </html>

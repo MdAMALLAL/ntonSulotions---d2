@@ -36,6 +36,20 @@
                 </form>
               </td>
               {% endif %}
+              {% if not question.charged_by and request.user.is_staff %}
+              <td>
+                <a id="charged" class="btn btn-primary" href="javascript:void(0)" >{% trans "Take in charge" %} </a>
+                  <script type="text/javascript">
+                    $("#charged").click(function () {
+                        $.ajax({url: "http://{{request.META.HTTP_HOST}}{% url 'solutions:questioneCharged' pk=question.pk %}",
+                         success: function (data) {
+                              $("charged").remove();
+                        }});
+                    });
+                  </script>
+
+              </td>
+              {% endif %}
             </tr>
             <div class="col-12 row">
               <tr class="col-md-6 col-sm-12 row no-gutters">

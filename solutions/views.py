@@ -1,37 +1,37 @@
-from django.http import HttpResponseRedirect, JsonResponse
-from django.contrib import messages
-from django.core.mail import BadHeaderError, send_mail
-from django.contrib.auth.mixins import(LoginRequiredMixin, PermissionRequiredMixin  )
-from django.shortcuts import render, get_object_or_404, redirect
-from django.contrib.auth.decorators import login_required
-from django.urls import reverse, reverse_lazy
+from django.db.models import Count,Q,Avg,Sum,F
 from django.db import IntegrityError
+from django.contrib import messages
+from django.contrib.auth.decorators import login_required
+from django.contrib.auth.mixins import(LoginRequiredMixin, PermissionRequiredMixin  )
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
+from django.core.mail import BadHeaderError, send_mail, EmailMultiAlternatives
+from django.http import HttpResponseRedirect, JsonResponse, Http404
+from django.shortcuts import render, get_object_or_404, redirect
+from django.urls import reverse, reverse_lazy
+from django.utils import timezone
+from django.utils.translation import gettext_lazy as _
 from django.views import generic
+from django.template.loader import get_template, render_to_string
+from django.template import Context
+import json
+import datetime, pytz
+from datetime import timedelta
+
+## models
+from accounts.models import User,Notification
 from clients.models import Client
 from .models import Question,Reponce, Categorie, SousCategorie
 from .forms import ReponceForm, QuestionForm
-from django.http import Http404
-from django.utils import timezone
-from django.db.models import Count,Q,Avg,Sum,F
-from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
-import json
-from django.utils.translation import gettext_lazy as _
-import datetime, pytz
-from datetime import timedelta
-#from django.utils.timezone import make_aware
-#### send email
-from django.core.mail import EmailMultiAlternatives
-from django.template.loader import get_template, render_to_string
-from django.template import Context
-
-from accounts.models import User
-
 
 
 ####################################################
 # QUESTION: CRUD
 
-
+def add_notification_to_cosultant(description, url):
+    consultants = User.objects.filter(is_staff = True)
+    for consultant in consultants:
+        notification = Notification.objects.create(user=consultant, description = description, url=url)
+        notification.save
 class QuestionCreate(LoginRequiredMixin, generic.CreateView):
     model = Question
     form_class = QuestionForm
@@ -97,12 +97,15 @@ class QuestionCreate(LoginRequiredMixin, generic.CreateView):
                 msg.send()
             except Exception as e:
                 raise
+            add_notification_to_cosultant("{0} {1}".format(self.object.user.username, _('Has opened a new ticket')), self.object.pk)
+
             # send_mail(subject, message, 'no_replay@ntonadvisory.com' , [from_email])
         return super().form_valid(form)
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['activePage']= 'new_ticket'
+        context['notification'] = self.request.user.get_notification()
         return context
 
 class QuestionEdit(LoginRequiredMixin, generic.UpdateView):
@@ -193,7 +196,7 @@ def add_reponce_to_question(request, pk):
             try:
                 reponce = form.save(commit=False)
                 reponce.question = question
-                reponce.user= request.user
+                reponce.user = request.user
                 question.last_action = timezone.now()
                 question.status = reponce.status
                 if not question.first_react_at: question.first_react_at = timezone.now()
@@ -202,6 +205,10 @@ def add_reponce_to_question(request, pk):
 
                 reponce.save()
                 question.save()
+                if reponce.user.is_staff:
+                    question.user.add_notification('{0} {1} {2}'.format(reponce.user,_('acted on ticket'),question.ref),question.pk)
+                else:
+                    question.charged_by.add_notification('{0} {1} {2}'.format(reponce.user,_('acted on ticket'),question.ref),question.pk)
             except IntegrityError:
                 messages.warning(request,_("Warning, Something went wrong, please try again"))
             else:
@@ -229,17 +236,13 @@ def questioneResolved(request, pk):
             messages.warning(request,_("Warning, Something went wrong, please try again"))
         else:
             messages.success(request,_("ticket has been resolved, thanks for using owr platform."))
-        return redirect('solutions:questiondetail', pk=question.pk)
 
-    else:
-        return redirect('solutions:questiondetail', pk=question.pk)
-
+    return redirect('solutions:questiondetail', pk=question.pk)
 
 def load_categories(request):
     categorieId = request.GET.get('categorie')
     souscategorie = SousCategorie.objects.filter(categorie=categorieId).order_by('name')
     return render(request, 'solutions/categorie_dropdown_list_options.html', {'souscategorie': souscategorie})
-
 
 def load_chart(request):
     chart = {}
@@ -413,3 +416,20 @@ def load_chart(request):
 
 
     return JsonResponse(chart)
+
+@login_required
+def questioneCharged(request, pk):
+    question = get_object_or_404(Question, pk=pk)
+    try:
+        question.charged_by = request.user
+        question.resolved_at = timezone.now()
+        if not question.first_react_at: question.first_react_at = timezone.now()
+        question.last_action = timezone.now()
+        question.save()
+    except IntegrityError:
+        messages.warning(request,_("Warning, Something went wrong, please try again"))
+    else:
+        messages.success(request,_("ticket has been taked in charge."))
+        question.user.add_notification(_("ticket has been taked in charge."), question.pk)
+
+    return JsonResponse({'ok':'ok'}, status=200)
