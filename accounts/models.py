@@ -112,7 +112,7 @@ class Notification(models.Model):
     description = models.TextField()
     url = models.CharField(max_length = 55)
     new = models.BooleanField(default=True)
-    seen = models.DateTimeField(null=True, blank=True, default=None)
+    seen = models.DateTimeField(null=True, blank=True)
 
     def __str__(self):
         return self.description
