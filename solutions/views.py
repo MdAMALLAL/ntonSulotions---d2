@@ -66,8 +66,9 @@ class QuestionCreate(LoginRequiredMixin, generic.CreateView):
             dsi_email = self.object.user.client.email
             # text_content = plaintext.render(d)
             # html_content = htmly.render(d)
-            text_content = render_to_string('email/email.txt',{'context':d})
-            html_content = render_to_string('email/email.html',{'context':d})
+            text_content = render_to_string('email/email_client.txt',{'context':d})
+            html_content = render_to_string('email/email_client.html',{'context':d})
+
             msg = EmailMultiAlternatives(subject, text_content, user_email, [dsi_email])
             msg.attach_alternative(html_content, "text/html")
             try:
@@ -89,9 +90,8 @@ class QuestionCreate(LoginRequiredMixin, generic.CreateView):
             d['ticket_url'] = "http://{0}{1}".format(self.request.META['HTTP_HOST'],
                             reverse("solutions:questiondetail", kwargs={"pk": self.object.pk}))
 
-
-            text_content = render_to_string('email/email_client.txt',{'context':d})
-            html_content = render_to_string('email/email_client.html',{'context':d})
+            text_content = render_to_string('email/email.txt',{'context':d})
+            html_content = render_to_string('email/email.html',{'context':d})
             msg = EmailMultiAlternatives(subject, text_content, dsi_email, [user_email])
             msg.attach_alternative(html_content, "text/html")
             try:
@@ -185,8 +185,6 @@ class QuestionList(LoginRequiredMixin, generic.ListView):
 
 
         return context
-
-
 
 
 @login_required
@@ -329,7 +327,7 @@ def load_chart(request):
     if client : client = get_object_or_404(Client, slug=client)
     user = get_object_or_404(User, username= request.GET.get('user', request.user.username))
     type = request.GET.get('type')
-    all = request.GET.get('all')
+    all = request.GET.get('all',False)
 
     if type =='pie':
         if all :
@@ -378,14 +376,14 @@ def load_chart(request):
         metrics = {
             'total': Count('created_at__date')
         }
-        if all :
-            dataset = Question.objects.all() \
+        if all == True :
+            dataset = Question.objects.all()\
                 .values('created_at__date')\
                 .annotate(**metrics)\
                 .order_by('created_at__date')
 
         elif client:
-            dataset = Question.objects.filter(user__client = client) \
+            dataset = Question.objects.filter(user__client = client)\
                 .values('created_at__date')\
                 .annotate(**metrics)\
                 .order_by('created_at__date')
@@ -486,6 +484,6 @@ def questioneCharged(request, pk):
     else:
         messages.success(request,_("ticket has been taked in charge."))
         ref = question.get_ref()
-        question.user.add_notification('Ticket ({0}) {1} {2}'.format(ref, _('has been taked in charge by'),reponce.user),question.pk)
+        question.user.add_notification('Ticket ({0}) {1} {2}'.format(ref, _('has been taked in charge by'),request.user),question.pk)
 
     return JsonResponse({'ok':'ok'}, status=200)

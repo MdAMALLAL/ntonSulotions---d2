@@ -74,10 +74,6 @@
           </h3>
         </div>
         <div class="card-footer">
-          {% comment %} <div class="stats">
-            <i class="material-icons text-danger">warning</i>
-            <a href="{% url 'solutions:questionlist' %}?status=OV"></a>
-          </div> {% endcomment %}
         </div>
       </div>
     </div>
@@ -141,7 +137,7 @@
     <div class="col-md-4">
       <div class="card card-chart">
         <div class="card-header card-header-success">
-          <div id="container" class="ct-chart" data-url="{% url 'solutions:ajax_load_chart' %}?type=pie&all=True"></div>
+          <div id="container" class="ct-chart" data-url="{% url 'solutions:ajax_load_chart' %}?type=pie&all=True{% for key, value in request.GET.items %}{% if key != 'page' %}&{{ key }}={{ value }}{% endif %}{% endfor %}"></div>
 
         </div>
         <div class="card-body">
@@ -152,7 +148,7 @@
     <div class="col-md-4">
       <div class="card card-chart">
         <div class="card-header card-header-warning">
-          <div id="container2" class="ct-chart" data-url="{% url 'solutions:ajax_load_chart' %}?type=line&all=True"></div>
+          <div id="container2" class="ct-chart" data-url="{% url 'solutions:ajax_load_chart' %}?type=line&all=True{% for key, value in request.GET.items %}{% if key != 'page' %}&{{ key }}={{ value }}{% endif %}{% endfor %}"></div>
         </div>
         <div class="card-body">
           <h4 class="card-title">{% trans "Tickets per day" %}</h4>
@@ -319,7 +315,7 @@
           <div id="container2" class="ct-chart" data-url="{% url 'solutions:ajax_load_chart' %}?type=line{% for key, value in request.GET.items %}{% if key != 'page' %}&{{ key }}={{ value }}{% endif %}{% endfor %}"></div>
         </div>
         <div class="card-body">
-          <h4 class="card-title">{% trans "Tickets and Actions per day" %}</h4>
+          <h4 class="card-title">{% trans "Tickets per day" %}</h4>
         </div>
       </div>
     </div>
@@ -329,7 +325,7 @@
           <div id="containerClient" class="ct-chart" data-url="{% url 'solutions:ajax_load_chart' %}?type=colomn{% for key, value in request.GET.items %}{% if key != 'page' %}&{{ key }}={{ value }}{% endif %}{% endfor %}"></div>
         </div>
         <div class="card-body">
-          <h4 class="card-title">{% trans "Tickets and Actions per day" %}</h4>
+          <h4 class="card-title">{% trans "Tickets per client" %}</h4>
         </div>
 
       </div>
