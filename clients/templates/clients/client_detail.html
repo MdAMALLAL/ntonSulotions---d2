@@ -94,7 +94,7 @@
 
                           <button id="stertedit" type="button" class="btn btn-primary pull-left collapse show">{% trans "Edit" %}</button>
                           <button id="send" type="submit" class="btn btn-primary pull-right collapse hide">{% trans "Update Client" %}</button>
-                          </button>
+
                           <div class="clearfix"></div>
                         </form>
                       </div>
@@ -112,7 +112,7 @@
                       <div class="col-12">
                         <div class="card card-chart">
                           <div class="card-header card-header-success">
-                            <div id="container" class="ct-chart" data-url="{% url 'solutions:ajax_load_chart' %}?type=pie{% for key, value in request.GET.items %}{% if key != 'page' %}&{{ key }}={{ value }}{% endif %}{% endfor %}"></div>
+                            <div id="client_chart_container" class="ct-chart" data-url="{% url 'solutions:ajax_load_chart' %}?type=pie&client={{client.slug}}"></div>
 
                           </div>
                           <div class="card-body">
@@ -206,10 +206,10 @@
   <script src="https://code.highcharts.com/highcharts.src.js"></script>
   <script>
     $.ajax({
-      url: $("#container").attr("data-url"),
+      url: $("#client_chart_container").attr("data-url"),
       dataType: 'json',
       success: function (data) {
-        Highcharts.chart("container", data);
+        Highcharts.chart("client_chart_container", data);
       }
     });
 
@@ -224,6 +224,8 @@
   $(document).ready(function(){
     $(".form-control").addClass('form-control-plaintext');
     $(".form-control-plaintext").removeClass('form-control');
+    // $(".form-control-plaintext").addAttr('readonly');
+
 
     });
   </script>
@@ -285,9 +287,9 @@
           return pageNumber + ' rows visible'
         }
       })
-      $(function () {
-        $table.bootstrapTable('hideColumn', 'id')
-      })
+      // $(function () {
+      //   $table.bootstrapTable('hideColumn', 'id')
+      // })
 
 
       $(window).resize(function () {

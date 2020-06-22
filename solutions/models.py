@@ -169,3 +169,5 @@ class Reponce(models.Model):
     send_mail = models.BooleanField(default=False)
     def __str__(self):
         return self.description
+    class Meta:
+        ordering = ["-created_at"]

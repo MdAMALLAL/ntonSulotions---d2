@@ -17,6 +17,7 @@ import json
 import datetime, pytz
 from datetime import timedelta
 
+
 ## models
 from accounts.models import User,Notification
 from clients.models import Client
@@ -187,10 +188,58 @@ class QuestionList(LoginRequiredMixin, generic.ListView):
 
 
 
+
 @login_required
 def add_reponce_to_question(request, pk):
     question = get_object_or_404(Question, pk=pk)
-    if request.method == "POST":
+    if request.POST.get('action') == "post":
+        try:
+            description = request.POST.get('description')
+            status = request.POST.get('status')
+            send_mail = request.POST.get('send_mail', False)
+            reponce = Reponce(
+                user = request.user,
+                description = description,
+                question = question,
+                status = status,
+                send_mail = send_mail ,
+                )
+            reponce.save()
+            question.last_action = timezone.now()
+            question.status = status
+            if not question.first_react_at: question.first_react_at = timezone.now()
+            if status == 'RS':
+                question.resolved_at = timezone.now()
+            if reponce.user.is_staff and not question.charged_by:
+                question.charged_by = request.user
+
+            question.save()
+        except :
+            import traceback
+            tb = traceback.format_exc()
+            # print(tb)
+        else:
+            ref = question.get_ref()
+            if reponce.user.is_staff:
+                question.user.add_notification('{0} {1} {2}'.format(reponce.user,_('acted on ticket'),ref),question.pk)
+            else:
+                question.charged_by.add_notification('{0} {1} {2}'.format(reponce.user,_('acted on ticket'),ref),question.pk)
+            if send_mail == True:
+                d = {}
+
+                d['description'] = description
+
+                subject = _('novelty on ticket {}'.format(ref))
+                text_content = render_to_string('email/email-report.txt',{'context':d})
+                html_content = render_to_string('email/email-report.html',{'context':d})
+                msg = EmailMultiAlternatives(subject, text_content, reponce.user.email, [question.user.email])
+                msg.attach_alternative(html_content, "text/html")
+                try:
+                    msg.send()
+                except Exception as e:
+                    raise
+        return render(request, 'solutions/action.html', {'reponce': reponce})
+    elif request.method == "POST":
         form = ReponceForm(request.POST)
         if form.is_valid():
             try:
@@ -213,14 +262,30 @@ def add_reponce_to_question(request, pk):
                 messages.warning(request,_("Warning, Something went wrong, please try again"))
             else:
                 messages.success(request,_("Answere has been saved."))
+                ref = question.get_ref()
+                if reponce.user.is_staff:
+                    question.user.add_notification('{0} {1} {2}'.format(reponce.user,_('acted on ticket'),ref),question.pk)
+                else:
+                    question.charged_by.add_notification('{0} {1} {2}'.format(reponce.user,_('acted on ticket'),ref),question.pk)
+                if send_mail:
+                    d = {}
 
+                    d['description'] = description
+
+                    subject = _('novelty on ticket {}'.format(ref))
+                    text_content = render_to_string('email/email-report.txt',{'context':d})
+                    html_content = render_to_string('email/email-report.html',{'context':d})
+                    msg = EmailMultiAlternatives(subject, text_content, reponce.user.email, [question.user.email,])
+                    msg.attach_alternative(html_content, "text/html")
+                    try:
+                        msg.send()
+                    except Exception as e:
+                        raise
 
             return redirect('solutions:questiondetail', pk=question.pk)
-
     else:
         form = ReponceForm()
     return render(request, 'solutions/reponce_form.html', {'form': form})
-
 @login_required
 def questioneResolved(request, pk):
     question = get_object_or_404(Question, pk=pk)
@@ -236,6 +301,12 @@ def questioneResolved(request, pk):
             messages.warning(request,_("Warning, Something went wrong, please try again"))
         else:
             messages.success(request,_("ticket has been resolved, thanks for using owr platform."))
+            ref = question.get_ref()
+            if reponce.user.is_staff:
+                question.user.add_notification('Ticket ({0}) {1} {2}'.format(ref, _('marked as resolved by'),reponce.user),question.pk)
+            else:
+                question.charged_by.add_notification('Ticket ({0}) {1} {2}'.format(ref, _('marked as resolved by'),reponce.user),question.pk)
+
 
     return redirect('solutions:questiondetail', pk=question.pk)
 
@@ -249,31 +320,46 @@ def load_chart(request):
     start_date = datetime.date.today() - timedelta(days=20)
     if request.GET.get('start_date'):
         start_date = datetime.datetime.strptime(request.GET.get('start_date', '{}'.format(start_date)), '%Y-%m-%d').date()
-    #timezone.make_aware(start_date)
-
     end_date = datetime.date.today()
     if request.GET.get('end_date'):
         end_date = datetime.datetime.strptime(request.GET.get('end_date', '{}'.format(end_date)), '%Y-%m-%d').date()
     if end_date > datetime.date.today():
         end_date = datetime.date.today()
-        #request.GET['end_date'] = end_date
+    client = request.GET.get('client')
+    if client : client = get_object_or_404(Client, slug=client)
+    user = get_object_or_404(User, username= request.GET.get('user', request.user.username))
+    type = request.GET.get('type')
+    all = request.GET.get('all')
 
-    #timezone.make_aware(end_date)
-
-
-    if request.GET.get('type')=='pie':
-        if request.user.is_staff:
-            dataset = Question.objects \
+    if type =='pie':
+        if all :
+            dataset = Question.objects.all() \
                 .values('status') \
                 .exclude(status='') \
                 .annotate(total=Count('status')) \
                 .order_by('status')
+        elif client:
+            dataset = Question.objects.filter(user__client = client) \
+                .values('status') \
+                .exclude(status='') \
+                .annotate(total=Count('status')) \
+                .order_by('status')
+
         else:
-            dataset = Question.objects.filter(user = request.user) \
-                .values('status') \
-                .exclude(status='') \
-                .annotate(total=Count('status')) \
-                .order_by('status')
+            if user.is_staff:
+                dataset = Question.objects.filter(charged_by = user) \
+                    .values('status') \
+                    .exclude(status='') \
+                    .annotate(total=Count('status')) \
+                    .order_by('status')
+            else:
+                dataset = Question.objects.filter(user = user) \
+                    .values('status') \
+                    .exclude(status='') \
+                    .annotate(total=Count('status')) \
+                    .order_by('status')
+
+
 
         port_display_name = dict()
         for port_tuple in Question.Status:
@@ -282,35 +368,41 @@ def load_chart(request):
         chart = {
             'chart': {'type': 'pie'},
             'backgroundColor': 'transparent',
-            'title': {'text': _("Ticket's Status - Total ({})".format(dataset.count()) )},
+            'title': '',
             'series': [{
                 'name': 'Tickets',
                 'data': list(map(lambda row: {'name': port_display_name[row['status']], 'y': row['total']}, dataset))
             }]
         }
-
-    if request.GET.get('type')=='line':
+    if type == 'line':
         metrics = {
             'total': Count('created_at__date')
         }
-
-        if request.user.is_staff:
-            dataset = Question.objects.all()\
+        if all :
+            dataset = Question.objects.all() \
                 .values('created_at__date')\
                 .annotate(**metrics)\
                 .order_by('created_at__date')
+
+        elif client:
+            dataset = Question.objects.filter(user__client = client) \
+                .values('created_at__date')\
+                .annotate(**metrics)\
+                .order_by('created_at__date')
+
         else:
-            dataset = Question.objects.filter(user = request.user)\
-                .values('created_at__date')\
-                .annotate(**metrics)\
-                .order_by('created_at__date')
+            if user.is_staff:
+                dataset = Question.objects.filter(charged_by = user) \
+                    .values('created_at__date')\
+                    .annotate(**metrics)\
+                    .order_by('created_at__date')
+            else:
+                dataset = Question.objects.filter(user = user) \
+                    .values('created_at__date')\
+                    .annotate(**metrics)\
+                    .order_by('created_at__date')
 
 
-        datasetAction = Reponce.objects.filter(created_at__gte=start_date,\
-                    created_at__lte=end_date)\
-            .values('created_at__date')\
-            .annotate(**metrics)\
-            .order_by('created_at__date')
 
         dates = list()
         action_series_data = list()
@@ -350,7 +442,7 @@ def load_chart(request):
             'xAxis': {'categories': dates,},
             'series': [survived_series, ]
         }
-    if request.GET.get('type')=='colomn':
+    if type == 'colomn':
         #client = request.GET.get('client')
         dataset = Question.objects \
             .values('user__client__name') \
@@ -379,42 +471,6 @@ def load_chart(request):
             'series': [tickets_series_data, ]
         }
 
-    if request.GET.get('type')=='users':
-                #\
-            # dataset = User.objects\
-            #     .filter(is_staff=True)\
-            #     .annotate(total=Count('charged_tickets'))\
-            #     .annotate(status=Count('charged_tickets__status'=='RS'))\
-            #     .annotate(avg = Avg('charged_tickets__time_to_resolv'))
-            dataset = User.objects\
-                .values('username','email')\
-                .filter(is_staff=True)\
-                .annotate(total=Count(F('charged_tickets'),output_field=FloatField()),
-                    resolved=Count('charged_tickets__status', filter=Q(charged_tickets__status='RS')),
-                    avg = Cast('resolved', FloatField()) / Cast('total', FloatField())    * 100,
-                    avgTime = Avg('charged_tickets__time_to_resolv', filter=Q(charged_tickets__status='RS')),# / Count('charged_tickets__status', filter=Q(charged_tickets__status='RS')),
-                    #avgTime = Sum(F('charged_tickets__time_to_resolv')) / Count('charged_tickets__status', filter=Q(charged_tickets__status='RS')),
-                    )
-
-            # avg = dataset
-            print(dataset)
-            # for entry in dataset:
-            #     print(entry.avg)
-
-            #ds = json.dumps(dataset)
-            # data = list(dataset)  # wrap in list(), because QuerySet is not JSON serializable
-            # return JsonResponse({'data': data})
-            from django.core import serializers
-            from django.http import HttpResponse
-
-
-            dataset=''
-            qs_json = serializers.serialize('json', dataset)
-            return HttpResponse(qs_json, content_type='application/json')
-
-
-
-
     return JsonResponse(chart)
 
 @login_required
@@ -422,7 +478,6 @@ def questioneCharged(request, pk):
     question = get_object_or_404(Question, pk=pk)
     try:
         question.charged_by = request.user
-        question.resolved_at = timezone.now()
         if not question.first_react_at: question.first_react_at = timezone.now()
         question.last_action = timezone.now()
         question.save()
@@ -430,6 +485,7 @@ def questioneCharged(request, pk):
         messages.warning(request,_("Warning, Something went wrong, please try again"))
     else:
         messages.success(request,_("ticket has been taked in charge."))
-        question.user.add_notification(_("ticket has been taked in charge."), question.pk)
+        ref = question.get_ref()
+        question.user.add_notification('Ticket ({0}) {1} {2}'.format(ref, _('has been taked in charge by'),reponce.user),question.pk)
 
     return JsonResponse({'ok':'ok'}, status=200)

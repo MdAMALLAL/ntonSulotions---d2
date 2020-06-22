@@ -141,7 +141,7 @@
     <div class="col-md-4">
       <div class="card card-chart">
         <div class="card-header card-header-success">
-          <div id="container" class="ct-chart" data-url="{% url 'solutions:ajax_load_chart' %}?type=pie{% for key, value in request.GET.items %}{% if key != 'page' %}&{{ key }}={{ value }}{% endif %}{% endfor %}"></div>
+          <div id="container" class="ct-chart" data-url="{% url 'solutions:ajax_load_chart' %}?type=pie&all=True"></div>
 
         </div>
         <div class="card-body">
@@ -152,10 +152,10 @@
     <div class="col-md-4">
       <div class="card card-chart">
         <div class="card-header card-header-warning">
-          <div id="container2" class="ct-chart" data-url="{% url 'solutions:ajax_load_chart' %}?type=line{% for key, value in request.GET.items %}{% if key != 'page' %}&{{ key }}={{ value }}{% endif %}{% endfor %}"></div>
+          <div id="container2" class="ct-chart" data-url="{% url 'solutions:ajax_load_chart' %}?type=line&all=True"></div>
         </div>
         <div class="card-body">
-          <h4 class="card-title">{% trans "Tickets and Actions per day" %}</h4>
+          <h4 class="card-title">{% trans "Tickets per day" %}</h4>
         </div>
       </div>
     </div>
@@ -165,7 +165,7 @@
           <div id="containerClient" class="ct-chart" data-url="{% url 'solutions:ajax_load_chart' %}?type=colomn{% for key, value in request.GET.items %}{% if key != 'page' %}&{{ key }}={{ value }}{% endif %}{% endfor %}"></div>
         </div>
         <div class="card-body">
-          <h4 class="card-title">{% trans "Tickets and Actions per day" %}</h4>
+          <h4 class="card-title">{% trans "Tickets  per client" %}</h4>
         </div>
 
       </div>
@@ -183,7 +183,6 @@
               <th>{% trans "Consultat email" %}</th>
               <th>{% trans "Charged tickets" %}</th>
               <th>{% trans "Resolved tickets" %}</th>
-              <th>{% trans "Efficiency" %}</th>
               <th>{% trans "Average" %}</th>
 
 
@@ -196,7 +195,6 @@
                 <td>{{Consultant.email}}</td>
                 <td>{{Consultant.total|default_if_none:'0'}}</td>
                 <td>{{Consultant.resolved|default_if_none:'0'}}</td>
-                <td>{{Consultant.avg|default_if_none:'0'}}%</td>
                 <td>{{Consultant.avgTime|default_if_none:' '}}</td>
 
               </tr>

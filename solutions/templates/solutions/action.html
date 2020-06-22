@@ -1,0 +1,22 @@
+{% load i18n %}
+{% load static %}
+{% if reponce.user.is_staff %}
+  <li style="width:100%">
+        <div class="msj macro">
+          <div class="avatar align-bottom"><img class="rounded-circle " style="width:100%;" src='{% static "img/avatar-admin.png" %}' /></div>
+              <div class="actiontext text-l">
+                  <p>{{ reponce.description|safe|linebreaks }} </p>
+                  <p><small>{% trans "by" %} {{ reponce.user }} {{ reponce.created_at|date:"d/M/Y H:m" }}</small></p>
+              </div>
+          </div>
+  </li>
+{% else %}
+  <li style="width:100%;">
+      <div class="msj-rta macro">
+          <div class="actiontext text-r">
+              <p>{{ reponce.description|safe|linebreaks }}</p>
+              <p><small>{% trans "by" %}  {{ reponce.user }} {{ reponce.created_at|date:"d/M/Y H:m" }}</small></p>
+          </div>
+      <div class="avatar align-bottom" style="padding:0px 0px 0px 10px !important"><img class="rounded-circle" style="width:100%;" src='{% static "img/avatar.png" %}' /></div>
+  </li>
+{% endif %}

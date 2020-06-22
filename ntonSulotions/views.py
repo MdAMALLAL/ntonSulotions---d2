@@ -75,10 +75,7 @@ class HomePage(LoginRequiredMixin, TemplateView):
 
         return context
 
-    # def get(self, request, *args, **kwargs):
-    #     if request.user.is_authenticated:
-    #         return HttpResponseRedirect(reverse("test"))
-    #     return super().get(request, *args, **kwargs)
+
 
 def handler400(request, exception, template_name="400.html"):
     response = render_to_response(template_name)

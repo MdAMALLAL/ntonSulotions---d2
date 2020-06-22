@@ -67,7 +67,7 @@
                         maxlength="40" class="tobeedited form-control-plaintext" title="" id="id_tel"></div>
                     </div>
                   </div>
-
+                  {% if not user == request.user %}
                   <div class="col-md-4">
                     <div class="form-group" style="">
                       <div id="is_staff" class="form-check  collapse show">
@@ -85,7 +85,7 @@
                   <div class="col-md-6">
                         {% bootstrap_field form.client %}
                   </div>
-
+                  {% endif %}
                 </div>
                 <button id="stertedit" type="button" class="btn btn-primary pull-left collapse show">{% trans "Edit" %}</button>
                 <button id="send" type="submit" class="btn btn-primary pull-right collapse hide">{% trans "Update Profile" %}</button>
@@ -118,10 +118,64 @@
             </div>
           </div>
         </div>
+        <div class="row">
+          <div class="col-12">
+            <form>
+              <div class="row">
+                <div class="col">
+                  <input type="text" name="start_date" class="form-control dateField" value='{{request.GET.start_date}}' placeholder='{% trans "Start date" %}'>
+                </div>
+                <div class="col">
+                  <input type="text" name="end_date" class="form-control dateField" value='{{request.GET.end_date}}' placeholder='{% trans "End date" %}'>
+                </div>
+                <div class="col">
+                  <button type="submit" class="btn btn-primary">{% trans "Filter" %}</button>
+                </div>
+              </div>
+            </form>
+          </div>
+          <div class="col-md-5">
+            <div class="card card-chart">
+              <div class="card-header card-header-success">
+                <div id="container" class="ct-chart" data-url="{% url 'solutions:ajax_load_chart' %}?type=pie&user={{user.username}}"></div>
+
+              </div>
+              <div class="card-body">
+                <h4 class="card-title">{% trans "Tickets Status" %}</h4>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-7">
+            <div class="card card-chart">
+              <div class="card-header card-header-warning">
+                <div id="container2" class="ct-chart" data-url="{% url 'solutions:ajax_load_chart' %}?type=line&user={{user.username}}"></div>
+              </div>
+              <div class="card-body">
+                <h4 class="card-title">{% if user.is_staff %}{% trans "Tickets take into account per day" %} {% else %}{% trans "Tickets opned per day" %}{% endif %}</h4>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   </div>
-
+  <script src="https://code.highcharts.com/highcharts.src.js"></script>
+  <script>
+    $.ajax({
+      url: $("#container").attr("data-url"),
+      dataType: 'json',
+      success: function (data) {
+        Highcharts.chart("container", data);
+      }
+    });
+    $.ajax({
+      url: $("#container2").attr("data-url"),
+      dataType: 'json',
+      success: function (data) {
+        Highcharts.chart("container2", data);
+      }
+    });
+    </script>
   <script>
   function show_consutat() {
     var clientId = $("#id_client").children("option:selected").text();

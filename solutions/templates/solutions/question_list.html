@@ -74,9 +74,9 @@
                 return pageNumber + ' rows visible'
               }
             })
-            $(function () {
-              $table.bootstrapTable('hideColumn', 'id')
-            })
+            // $(function () {
+            //   $table.bootstrapTable('hideColumn', 'id')
+            // })
             $(window).resize(function () {
               $table.bootstrapTable('resetView', {
                 height: $(window).height()

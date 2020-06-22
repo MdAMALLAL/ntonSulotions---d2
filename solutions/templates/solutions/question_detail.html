@@ -113,24 +113,73 @@
       </div>
       <div class="tab-pane fade w-100" id="list-profile" role="tabpanel" aria-labelledby="list-profile-list">
         <h4>Action</h4>
-        <form method="post" action="{% url 'solutions:questionereponder' pk=question.pk %}">
+        <form id='action_form' method="post" action="{% url 'solutions:questionereponder' pk=question.pk %}">
           {% csrf_token %}
           <div class="row row-col-1">
-            <div class="col-sm-10">
+            <div class="col-sm-12">
               <div class="wmd-panel">
-                <div id="wmd-button-bar" ></div>
-                {% bootstrap_field form.description  placeholder='' show_label=False layout='horizontal' field_class='form-control-full col-md-9' %}
-                {% bootstrap_field form.status  placeholder='' show_label=False layout='horizontal'  %}
+                <link rel="stylesheet" href="{% static "css/medium-editor.css" %}">
+                <link rel="stylesheet" href="{% static "css/themes/default.css" %}" id="medium-editor-theme">
 
+                <div class="form-group row bmd-form-group border">
+                  <label class="col-md-3 col-form-label sr-only bmd-label-static" for="id_description">Description</label>
+                  <div class="form-control-full col-md-12">
+                    <textarea name="description" class="editable medium-editor-textarea" data-placeholder="Description" placeholder="Description" title="" id="id_description">
+                    </textarea>
+                  </div>
+                </div>
+                {% bootstrap_field form.status  placeholder='' show_label=False layout='horizontal'  %}
+                  <div class="col-md-9">
+                    {% if not request.user.is_staff %} <!-- {% endif %}
+                    <div class="form-group" >
+                      <div class="form-check">
+                        <label class="form-check-label">
+                            <input type="checkbox" name="send_mail"
+                            class="form-check-input " id="id_send_mail" >
+                            {% trans "Send mail" %}
+                            <span class="form-check-sign">
+                                <span class="check"></span>
+                            </span>
+                        </label>
+                      </div>
+                    </div>
+                    {% if not request.user.is_staff %} --> {% endif %}
+                    <button type="submit" class="save btn btn-info pull-right">{% trans "Save" %}.</button>
+                  </div>
               </div>
             </div>
-            <div class="col-sm-2">
-              <button type="submit" class="save btn btn-info">{% trans "Save" %}.</button>
-            </div>
+
           </div>
         </form>
+        <script type="text/javascript">
+          $(document).on('submit', '#action_form', function(e){
+            e.preventDefault();
+            send_mail = 'False';
+            {% if request.user.is_staff %}
+            if($('#id_send_mail'). is(":checked")){
+              send_mail = 'True';
+              }
+            {% endif %}
+            $.ajax({
+              type:'POST',
+              url : '{% url "solutions:questionereponder" pk=question.pk %}',
+              data : {
+                description : $('#id_description').val(),
+                status : $('#id_status').val(),
+                send_mail : send_mail,
+                csrfmiddlewaretoken : $('input[name=csrfmiddlewaretoken]').val(),
+                action : 'post'
+              },
+              success:function(json){
+                document.getElementById("action_form").reset();
+                $('#actionul').prepend(json);
+                $('#noAction').remove();
+              },
+            });
+          });
+        </script>
         <div class="frame">
-          <ul class="actionul">
+          <ul class="actionul" id='actionul'>
             {% for reponce in question.reponces.all %}
               {% if reponce.user.is_staff %}
                 <li style="width:100%">
@@ -151,12 +200,9 @@
                         </div>
                     <div class="avatar align-bottom" style="padding:0px 0px 0px 10px !important"><img class="rounded-circle" style="width:100%;" src='{% static "img/avatar.png" %}' /></div>
                 </li>
-                {% comment %} <div class="col-4">
-                  <td>{% trans "Posted by" %}: <strong> {%if reponce.user.get_full_name %} {{ reponce.user.get_full_name  }} {%else%} {{ reponce.user  }}{%endif%}</strong> ({{reponce.get_status_display}})</td>
-                </div> {% endcomment %}
               {% endif %}
             {% empty %}
-            <p>{% trans "No action" %}.</p>
+            <p id="noAction">{% trans "No action" %}.</p>
             {% endfor %}
           </ul>
         </div>
@@ -179,4 +225,23 @@
       </div>
     </div>
 </div>
+    <script src="{% static "js/medium-editor.js" %}"></script>
+
+    </script>
+          <script>
+            var editor = new MediumEditor('.editable', {
+              buttonLabels: 'fontawesome',
+                  toolbar: {
+                      buttons: ['bold', 'italic',  'justifyCenter',
+                          'anchor', 'underline',  'strikethrough',
+                          'subscript', 'superscript', 'anchor',
+                          'quote', 'orderedlist', 'unorderedlist',
+                          'indent', 'outdent', 'justifyLeft', 'justifyCenter',
+                          'justifyRight', 'justifyFull',
+                          'h1', 'h2', 'h3',  'h4', 'h5', 'h6',
+                      ]
+                  }
+              });
+          </script>
+
 {% endblock %}

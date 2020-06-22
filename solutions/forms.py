@@ -10,7 +10,7 @@ class ReponceForm(forms.ModelForm):
 
     class Meta:
         model = Reponce
-        fields = ( 'description','status')
+        fields = ( 'description','status','send_mail')
 
 class QuestionForm(forms.ModelForm):
 

@@ -22,7 +22,7 @@
     // if we are on windows OS we activate the perfectScrollbar function
     $('.sidebar .sidebar-wrapper, .main-panel, .main').perfectScrollbar();
 
-    $('html').addClass('perfect-scrollbar-on');
+    // $('html').addClass('perfect-scrollbar-on');
   } else {
     $('html').addClass('perfect-scrollbar-off');
   }
@@ -459,7 +459,7 @@ md = {
 
       nav_content = '<ul class="nav navbar-nav nav-mobile-menu">' + nav_content + '</ul>';
 
-      navbar_form = $('nav').find('.navbar-form').get(0).outerHTML;
+      //navbar_form = $('nav').find('.navbar-form').get(0).outerHTML;
 
       $sidebar_nav = $sidebar_wrapper.find(' > .nav');
 

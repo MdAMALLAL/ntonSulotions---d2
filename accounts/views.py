@@ -214,10 +214,10 @@ def notifications_redirectView(request, pk):
 def notifications_markread(request, pk):
     obj = get_object_or_404(Notification, pk=pk)
     obj.viewed()
-    count = user.get_notification_count()
+    count = request.user.get_notification_count()
     return JsonResponse({'notifications_count':count},status=201)
 def notifications_remove(request, pk):
     obj = get_object_or_404(Notification, pk=pk)
     obj.delete()
-    count = user.get_notification_count()
+    count = request.user.get_notification_count()
     return JsonResponse({'notifications_count':count},status=204)
