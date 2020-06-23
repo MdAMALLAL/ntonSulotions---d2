@@ -99,8 +99,7 @@ class Question(models.Model):
             self.time_to_react = self.first_react_at - self.created_at
         if self.resolved_at:
             self.time_to_resolv = self.resolved_at - self.created_at
-        if status != 'RS':
-            pass
+
 
 
 
