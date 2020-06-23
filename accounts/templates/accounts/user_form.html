@@ -64,7 +64,7 @@
                       <div class="form-group bmd-form-group is-filled">
                         <label for="id_tel" class="bmd-label-static">{% trans "Telephone" %}</label>
                         <input type="text" name="tel" value="{{form.instance.tel}}"
-                        maxlength="40" class="tobeedited form-control-plaintext" title="" id="id_tel"></div>
+                        maxlength="40" class="tobeedited form-control-plaintext" title="" id="id_tel" readonly></div>
                     </div>
                   </div>
                   {% if not user == request.user %}
