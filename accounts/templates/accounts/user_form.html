@@ -17,7 +17,7 @@
               <p class="card-category">{% trans "Complete your profile" %}</p>
             </div>
             <div class="card-body">
-              <form action="/en/accounts/profile/ntonadvisory/edit" method="post">
+              <form action="{% url 'accounts:edit' username=user.username %}" method="post">
                 {% csrf_token %}
                 <div class="row">
                   <div class="col-md-6">

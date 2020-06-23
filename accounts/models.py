@@ -87,8 +87,8 @@ class User(AbstractBaseUser , PermissionsMixin):
     def get_consultant(self):
         return User.objects.filter(is_staff = True)
 
-    def add_notification(self, description, url):
-        notification = Notification.objects.create(user=self, description = description, url=url)
+    def add_notification(self, description_en, description_fr, url):
+        notification = Notification.objects.create(user=self,description_en = description_en, description_fr =description_fr, url=url)
         notification.save
 
     def get_notification(self):

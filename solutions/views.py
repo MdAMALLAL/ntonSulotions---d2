@@ -103,7 +103,7 @@ class QuestionCreate(LoginRequiredMixin, generic.CreateView):
             add_notification_to_cosultant(
                 description_en = "{0} {1}".format(self.object.user.username, 'Has opened a new ticket'),
                 description_fr = "{0} {1}".format(self.object.user.username, 'A ouvert un nouveau ticket'),
-                self.object.pk)
+                url = self.object.pk)
 
 
         return super().form_valid(form)
@@ -232,12 +232,12 @@ def add_reponce_to_question(request, pk):
                 question.user.add_notification(
                     description_en = '{0} {1} {2}'.format(reponce.user,'acted on ticket',ref),
                     description_fr = '{0} {1} {2}'.format(reponce.user,'agi on ticket',ref),
-                    question.pk)
+                    url = question.pk)
             else:
                 question.charged_by.add_notification(
                 description_en = '{0} {1} {2}'.format(reponce.user,'acted on ticket',ref),
                 description_fr = '{0} {1} {2}'.format(reponce.user,'agi on ticket',ref),
-                question.pk)
+                url = question.pk)
             if send_mail:
                 #print(send_mail)
                 d = {}
@@ -287,12 +287,12 @@ def add_reponce_to_question(request, pk):
                     question.user.add_notification(
                         description_en = '{0} {1} {2}'.format(reponce.user,'acted on ticket',question.get_ref()),
                         description_fr = '{0} {1} {2}'.format(reponce.user,'agi on ticket',question.get_ref()),
-                        question.pk)
+                        url = question.pk)
                 else:
                     question.charged_by.add_notification(
                         description_en = '{0} {1} {2}'.format(reponce.user,'acted on ticket',question.get_ref()),
                         description_fr = '{0} {1} {2}'.format(reponce.user,'agi on ticket',question.get_ref()),
-                        question.pk)
+                        url = question.pk)
             except Exception as e :
                 logger.error(e)
                 messages.warning(request,_("Warning, Something went wrong, please try again"))
@@ -303,12 +303,12 @@ def add_reponce_to_question(request, pk):
                     question.user.add_notification(
                         description_en = '{0} {1} {2}'.format(reponce.user,'acted on ticket',question.get_ref()),
                         description_fr = '{0} {1} {2}'.format(reponce.user,'agi on ticket',question.get_ref()),
-                        question.pk)
+                        url = question.pk)
                 else:
                     question.charged_by.add_notification(
                         description_en = '{0} {1} {2}'.format(reponce.user,'acted on ticket',question.get_ref()),
                         description_fr = '{0} {1} {2}'.format(reponce.user,'agi on ticket',question.get_ref()),
-                        question.pk)
+                        url = question.pk)
                 if send_mail:
                     d = {}
                     d['description'] = description
@@ -356,12 +356,12 @@ def questioneResolved(request, pk):
                 question.user.add_notification(
                     description_en = 'Ticket ({0}) {1} {2}'.format(ref, _('marked as resolved by'),reponce.user),
                     description_fr = 'Ticket ({0}) {1} {2}'.format(ref, _('marqué comme résolu par'),reponce.user),
-                    question.pk)
+                    url = question.pk)
             else:
                 question.charged_by.add_notification(
                     description_en = 'Ticket ({0}) {1} {2}'.format(ref, _('marked as resolved by'),reponce.user),
                     description_fr = 'Ticket ({0}) {1} {2}'.format(ref, _('marqué comme résolu par'),reponce.user),
-                    question.pk)
+                    url = question.pk)
 
 
     return redirect('solutions:questiondetail', pk=question.pk)
@@ -556,12 +556,12 @@ def questioneCharged(request, pk):
                 question.user.add_notification(
                     description_en = 'Ticket ({0}) {1} {2}'.format(ref, _('has been taked into account by'),reponce.user),
                     description_fr = 'Ticket ({0}) {1} {2}'.format(ref, _('a été pris en charge par'),reponce.user),
-                    question.pk)
+                    url = question.pk)
             else:
                 question.charged_by.add_notification(
                     description_en = 'Ticket ({0}) {1} {2}'.format(ref, _('has been taked into account by'),reponce.user),
                     description_fr = 'Ticket ({0}) {1} {2}'.format(ref, _('a été pris en charge par'),reponce.user),
-                    question.pk)
+                    url = question.pk)
 
         data = {}
         data['html_content'] = render_to_string('solutions/action.html', {'reponce': reponce})
@@ -600,10 +600,10 @@ def questioneCharged(request, pk):
                 question.user.add_notification(
                     description_en = 'Ticket ({0}) {1} {2}'.format(ref, _('has been taked into account by'),reponce.user),
                     description_fr = 'Ticket ({0}) {1} {2}'.format(ref, _('a été pris en charge par'),reponce.user),
-                    question.pk)
+                    url = question.pk)
                 question.charged_by.add_notification(
                     description_en = 'Ticket ({0}) {1} {2}'.format(ref, _('has been taked into account by'),reponce.user),
                     description_fr = 'Ticket ({0}) {1} {2}'.format(ref, _('a été pris en charge par'),reponce.user),
-                    question.pk)
+                    url = question.pk)
 
         return redirect('solutions:questiondetail', pk=question.pk)

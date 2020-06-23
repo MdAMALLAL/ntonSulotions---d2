@@ -125,6 +125,11 @@ class ProfileUpdateView(LoginRequiredMixin, UpdateView):
     user = "user"
     def get_object(self, *args, **kwargs):
         obj = super(ProfileUpdateView, self).get_object(*args, **kwargs)
+        # print(obj.username)
+        # print(self.request.user.username)
+        # print(obj.username != self.request.user.username)
+        # print(self.request.user.is_staff)
+
         if obj.username != self.request.user.username and not self.request.user.is_staff:
             raise PermissionDenied() #or Http404
         return obj
