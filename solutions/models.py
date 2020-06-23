@@ -91,13 +91,11 @@ class Question(models.Model):
     def save(self, *args, **kwargs):
 
         if self.status != 'RS':
-            self.resolved_at = '0000-00-00 00:00:00'
-            self.time_to_resolv = 0
-        if self.viwed_at:
-            self.time_to_view = self.viwed_at - self.created_at
+            self.resolved_at = None
+            self.time_to_view = datetime.timedelta(0)
         if self.first_react_at:
             self.time_to_react = self.first_react_at - self.created_at
-        if not self.resolved_at:
+        if self.resolved_at  != None:
             self.time_to_resolv = self.resolved_at - self.created_at
 
 
