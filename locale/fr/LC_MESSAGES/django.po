@@ -623,7 +623,7 @@ msgstr "Ouvrir ticket"
 
 #: .\solutions\views.py:48
 msgid "Question has been saved."
-msgstr "Question est enregistre."
+msgstr "Ticket est enregistre."
 
 #: .\solutions\views.py:101
 msgid "Has opened a new ticket"

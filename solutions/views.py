@@ -511,34 +511,33 @@ def load_chart(request):
 @login_required
 def questioneCharged(request, pk):
     question = get_object_or_404(Question, pk=pk)
-    try:
-        description = 'Ticket status has been taked into account by {}'.format(request.user)
-        reponce = Reponce(
-            user = request.user,
-            description = description,
-            question = question,
-            status = 'EA',
-            send_mail = False ,
-            )
-        question.status = 'EA'
-        question.charged_by = request.user
-        if not question.first_react_at: question.first_react_at = timezone.now()
-        question.last_action = timezone.now()
-        question.save()
-    except Exception as e:
-        logger.error(e)
-        messages.warning(request,_("Warning, Something went wrong, please try again"))
-    else:
-        messages.success(request,_("ticket has been taked in charge."))
-        ref = question.get_ref()
-        question.user.add_notification('Ticket ({0}) {1} {2}'.format(ref, _('has been taked in charge by'),request.user),question.pk)
-        data = {}
-        data['html_content'] = render_to_string('solutions/action.html', {'reponce': reponce})
+    if request.method == "POST":
+        try:
+            description = 'Ticket status has been taked into account by {}'.format(request.user)
+            reponce = Reponce(
+                user = request.user,
+                description = description,
+                question = question,
+                status = 'EA',
+                send_mail = False ,
+                )
+            reponce.save()
+            question.status = 'EA'
+            question.resolved_at = timezone.now()
+            if not question.first_react_at: question.first_react_at = timezone.now()
+            question.last_action = timezone.now()
 
-        data['last_action'] = str(question.last_action.strftime('%m/%d/%Y %H:%m'))
-        data['time_toreact'] = str(question.get_time_to_react())
-        data['time_toresolv'] = str(question.get_time_to_resolv())
-        data['resolved_at'] = str(question.resolved_at.strftime('%m/%d/%Y %H:%m'))
-        data['status_display'] = str(question.get_status_display())
+            question.save()
+        except Exception as e:
+            logger.error(e)
+            messages.warning(request,_("Warning, Something went wrong, please try again"))
+        else:
+            messages.success(request,_("ticket has been resolved, thanks for using owr platform."))
+            ref = question.get_ref()
+            if reponce.user.is_staff:
+                question.user.add_notification('Ticket ({0}) {1} {2}'.format(ref, _('marked as resolved by'),reponce.user),question.pk)
+            else:
+                question.charged_by.add_notification('Ticket ({0}) {1} {2}'.format(ref, _('marked as resolved by'),reponce.user),question.pk)
 
-    return JsonResponse(data, status=200)
+
+    return redirect('solutions:questiondetail', pk=question.pk)
