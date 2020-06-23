@@ -216,7 +216,7 @@
     $("#stertedit").click(function () {
         $(".form-control-plaintext").addClass('form-control');
         $(".form-control").removeClass('form-control-plaintext');
-
+        $('.form-control').prop('readonly', false);
         $("#stertedit").collapse('hide');
         $("#send").collapse('show');
       });
@@ -224,6 +224,7 @@
   $(document).ready(function(){
     $(".form-control").addClass('form-control-plaintext');
     $(".form-control-plaintext").removeClass('form-control');
+    $('.form-control-plaintext').prop('readonly', true);
     // $(".form-control-plaintext").addAttr('readonly');
 
 

@@ -15,9 +15,43 @@
         <a class="nav-link" id="list-profile-list" data-toggle="list" href="#list-profile" role="tab" aria-controls="profile">{% trans "Ticket's traitment" %}</a>
       </li><li class="nav-item">
         <a class="nav-link" id="list-statistics-list" data-toggle="list" href="#list-statistics" role="tab" aria-controls="profile">{% trans "historic" %}</a>
-      </li><li class="nav-item">
+      </li>
+      <li class="nav-item">
         <a class="nav-link" id="list-messages-list" data-toggle="list" href="#list-messages" role="tab" aria-controls="messages"></a>
       </li>
+      <li class="nav-item"><a class="btn btn-primary" href="{% url 'solutions:questionedit' pk=question.pk %}">{% trans "Edit" %}</a>
+      </li>
+      {% if  question.status != "RS"%}
+      <li class="nav-item">
+        <form class="" action="{% url 'solutions:questioneResolved' pk=question.pk %}" method="post">
+          {% csrf_token %}
+          <button class="btn btn-primary" type="submit" name="button">{% trans "Resolved" %}</button>
+        </form>
+      </li>
+      {% endif %}
+      {% if not question.charged_by and request.user.is_staff %}
+      <li class="nav-item">
+        <a id="charged" class="btn btn-primary" href="javascript:void(0)" >{% trans "Take in charge" %} </a>
+      </li>
+      <script type="text/javascript">
+          $("#charged").click(function () {
+          $.ajax({url: "http://{{request.META.HTTP_HOST}}{% url 'solutions:questioneCharged' pk=question.pk %}",
+          success: function (data) {
+              $("#charged").remove();
+              $('#actionul').prepend(json.html_content);
+              $('#noAction').remove();
+              $('#last_action').html(json.last_action);
+              $('#time_toreact').html(json.time_toreact);
+              $('#time_toresolv').html(json.time_toresolv);
+              $('#resolved_at').html(json.resolved_at);
+              $('#status_display').html(json.status_display);
+
+          }});
+          });
+          </script>
+
+
+          {% endif %}
     </ul>
     </div>
     <div class="tab-content w-100" id="nav-tabContent">
@@ -27,29 +61,7 @@
             <tr class="col-12 bg-light text-center align-self-center">
               <th class="">Id</th>
               <td>{{question.get_ref}}</td>
-              <td><a class="btn btn-primary" href="{% url 'solutions:questionedit' pk=question.pk %}">{% trans "Edit" %}</a></td>
-              {% if  question.status == "OV"%}
-              <td>
-                <form class="" action="{% url 'solutions:questioneResolved' pk=question.pk %}" method="post">
-                  {% csrf_token %}
-                  <button class="btn btn-primary" type="submit" name="button">{% trans "Resolved" %}</button>
-                </form>
-              </td>
-              {% endif %}
-              {% if not question.charged_by and request.user.is_staff %}
-              <td>
-                <a id="charged" class="btn btn-primary" href="javascript:void(0)" >{% trans "Take in charge" %} </a>
-                  <script type="text/javascript">
-                    $("#charged").click(function () {
-                        $.ajax({url: "http://{{request.META.HTTP_HOST}}{% url 'solutions:questioneCharged' pk=question.pk %}",
-                         success: function (data) {
-                              $("charged").remove();
-                        }});
-                    });
-                  </script>
 
-              </td>
-              {% endif %}
             </tr>
             <div class="col-12 row">
               <tr class="col-md-6 col-sm-12 row no-gutters">
@@ -64,26 +76,26 @@
 
             <tr class="col-12 col-sm-12 col-sm-12 row no-gutters">
               <th class="col-2 bg-light">{% trans "Last edit" %}</th>
-              <td class="col bg-white">{{question.last_action|date:"Y-m-d H:m"}}</td>
+              <td id="last_action" class="col bg-white">{{question.last_action|date:"Y-m-d H:m"}}</td>
             </tr>
             <tr class="col-md-6  col-sm-12 row no-gutters">
               <th class="col-4 bg-light">{% trans "Time to react" %}</th>
-              <td class="col-8 bg-white">{{question.get_time_to_react}}</td>
+              <td id="time_toreact" class="col-8 bg-white">{{question.get_time_to_react}}</td>
             </tr>
             <tr class="col-md-6 col-sm-12 row no-gutters">
               <th class="col-4  bg-light">{% trans "Time to resolve" %}</th>
-              <td class="col-8 bg-white">{{question.get_time_to_resolv}}</td>
+              <td id="time_toresolv" class="col-8 bg-white">{{question.get_time_to_resolv}}</td>
             </tr>
             <tr class="col-12 col-sm-12 row no-gutters">
               <th class="col-2 bg-light">{% trans "Resolved at" %}</th>
-              <td class="col  bg-white ">{{question.resolved_at|date:"Y-m-d H:m"}}</td>
+              <td id="resolved_at" class="col  bg-white ">{{question.resolved_at|date:"Y-m-d H:m"}}</td>
             </tr>
             <tr class="col-md-6 col-sm-12 row no-gutters">
               <th class="col-4 bg-light">{% trans "Status" %}</th>
-              <td class="col bg-white">{{question.get_status_display}}</td>
+              <td id='status_display' class="col bg-white">{{question.get_status_display}}</td>
             </tr>
             <tr class="col-md-6 col-sm-12 row no-gutters">
-              <th class="col-4 bg-light">{% trans "Status" %}</th>
+              <th class="col-4 bg-light">{% trans "Priorite" %}</th>
               <td class="col bg-white">{{question.get_priorite_display}}</td>
             </tr>
             <tr class="col-md-12 col-sm-12 row no-gutters">
@@ -164,16 +176,25 @@
               type:'POST',
               url : '{% url "solutions:questionereponder" pk=question.pk %}',
               data : {
-                description : $('#id_description').val(),
-                status : $('#id_status').val(),
+                description : $('#id_description').val().trim(),
+                status : $("#id_status").children("option:selected").val(),
                 send_mail : send_mail,
                 csrfmiddlewaretoken : $('input[name=csrfmiddlewaretoken]').val(),
                 action : 'post'
               },
               success:function(json){
                 document.getElementById("action_form").reset();
-                $('#actionul').prepend(json);
+                console.log(json);
+                $('#actionul').prepend(json.html_content);
                 $('#noAction').remove();
+                $('#last_action').html(json.last_action);
+                $('#time_toreact').html(json.time_toreact);
+                $('#time_toresolv').html(json.time_toresolv);
+                $('#resolved_at').html(json.resolved_at);
+                $('#status_display').html(json.status_display);
+                // $('#actionul').html(json.html_content);
+                // $('#actionul').html(json.html_content);
+                //
               },
             });
           });

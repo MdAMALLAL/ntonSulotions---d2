@@ -24,7 +24,7 @@
                     <div class="form-group bmd-form-group is-filled">
                       <label for="id_username" class="bmd-label-static">{% trans "Display name" %}</label>
                       <input type="text" name="username" value="{{form.instance.username}}"
-                      maxlength="100" class="tobeedited form-control-plaintext" title="" required="" id="id_username">
+                      maxlength="100" class="tobeedited form-control-plaintext " title="" required="" id="id_username" readonly>
                     </div>
                   </div>
                   <div class="col-md-6">
@@ -32,27 +32,27 @@
                       <div class="form-group bmd-form-group is-filled">
                         <label for="id_email" class="bmd-label-static">{% trans "Email address" %}</label>
                         <input type="email" name="email" value="{{form.instance.email}}"
-                        maxlength="254" class="tobeedited form-control-plaintext" title="" required="" id="id_email">
+                        maxlength="254" class="tobeedited form-control-plaintext " title="" required="" id="id_email" readonly>
                       </div>
                     </div>
                   </div>
                 </div>
                 <div class="row">
                   <div class="col-md-6">
-                    <div class="form-group disable" readonly="">
+                    <div class="form-group disable" >
                       <div class="form-group bmd-form-group is-filled">
                         <label for="id_first_name" class="bmd-label-static">{% trans "First name" %}</label>
                         <input type="text" name="first_name" value="{{form.instance.first_name}}"
-                        maxlength="30" class="tobeedited form-control-plaintext" title="" id="id_first_name">
+                        maxlength="30" class="tobeedited form-control-plaintext" title="" id="id_first_name" readonly>
                       </div>
                     </div>
                   </div>
                   <div class="col-md-6">
-                    <div class="form-group " readonly="">
+                    <div class="form-group " >
                       <div class="form-group bmd-form-group is-filled">
                         <label for="id_last_name" class="bmd-label-static">{% trans "Last name" %}</label>
                         <input type="text" name="last_name" value="{{form.instance.last_name}}"
-                        maxlength="30" class="tobeedited form-control-plaintext" title="" id="id_last_name">
+                        maxlength="30" class="tobeedited form-control-plaintext" title="" id="id_last_name" readonly>
                       </div>
                     </div>
                   </div>
@@ -73,7 +73,7 @@
                       <div id="is_staff" class="form-check  collapse show">
                         <label class="form-check-label">
                             <input type="checkbox" name="is_staff" disable=""
-                            class="form-check-input " id="id_is_staff" checked="">
+                            class="form-check-input " id="id_is_staff" checked="" readonly>
                             Consultant
                             <span class="form-check-sign">
                                 <span class="check"></span>
@@ -194,6 +194,7 @@
     $("#stertedit").click(function () {
         $(".tobeedited").removeClass('form-control-plaintext');
         $(".tobeedited").addClass('form-control');
+        $('.tobeedited').prop('readonly', false);
         $("#stertedit").collapse('hide');
         $("#send").collapse('show');
 

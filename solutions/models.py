@@ -90,18 +90,21 @@ class Question(models.Model):
 
     def save(self, *args, **kwargs):
 
+        if self.status != 'RS':
+            self.resolved_at = 0
+            self.time_to_resolv = 0
         if self.viwed_at:
             self.time_to_view = self.viwed_at - self.created_at
         if self.first_react_at:
             self.time_to_react = self.first_react_at - self.created_at
         if self.resolved_at:
             self.time_to_resolv = self.resolved_at - self.created_at
+        if status != 'RS':
+            pass
 
 
 
         super().save(*args, **kwargs)
-
-
 
     def get_ref(self):
         return '{}-{}'.format(self.created_at.year,self.ref)
@@ -115,21 +118,20 @@ class Question(models.Model):
                 return '%02d %s %02d H %02d M' % (days, _('Days'),int((sec/3600)%3600), int((sec/60)%60))
             return '%02d H %02d M' % (int((sec/3600)%3600), int((sec/60)%60))
         return string
-
     def get_time_to_resolv(self):
         string = _("Not resolved yet")
         return self.date_to_string(self.time_to_resolv, string)
-
     def get_time_to_view(self):
         string = _("Not viewed yet")
 
         return self.date_to_string(self.time_to_view, string)
-
     def get_time_to_react(self):
         string = _("Not reacted yet")
-
         return self.date_to_string(self.time_to_react, string)
 
+    def get_resolved_at(self):
+        if self.resolved_at: return self.resolved_at.strftime('%m/%d/%Y %H:%m')
+        else : return  _("Not resolved yet")
 
     Color = {}
     Color['F'] = 'secondary'

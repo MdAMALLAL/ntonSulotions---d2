@@ -1,5 +1,6 @@
 {%extends "base.html"%}
 {% load i18n %}
+{% load timetags %}
 
 {% block static_content %}
 
@@ -78,7 +79,6 @@
       </div>
     </div>
   </div>
-
   <div class="row">
     <div class="col-12">
       <form>
@@ -191,7 +191,7 @@
                 <td>{{Consultant.email}}</td>
                 <td>{{Consultant.total|default_if_none:'0'}}</td>
                 <td>{{Consultant.resolved|default_if_none:'0'}}</td>
-                <td>{{Consultant.avgTime|default_if_none:' '}}</td>
+                <td>{{Consultant.avgTime|print_timestamp:' '}}</td>
 
               </tr>
               {% endfor %}

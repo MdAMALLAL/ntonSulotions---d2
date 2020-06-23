@@ -16,7 +16,10 @@ from django.template import Context
 import json
 import datetime, pytz
 from datetime import timedelta
-
+# import the logging library
+import logging
+# Get an instance of a logger
+logger = logging.getLogger()
 
 ## models
 from accounts.models import User,Notification
@@ -42,7 +45,8 @@ class QuestionCreate(LoginRequiredMixin, generic.CreateView):
             self.object.user = self.request.user
             #
             self.object.save()
-        except IntegrityError:
+        except Exception as e:
+            logger.error(e)
             messages.warning(self.request,_("Warning, Something went wrong, please try again"))
         else:
             messages.success(self.request,_("Question has been saved."))
@@ -54,7 +58,7 @@ class QuestionCreate(LoginRequiredMixin, generic.CreateView):
             subject = self.object.titre
             d = {}
             d['ref'] = self.object.get_ref
-            d['user'] = self.object.titre
+            d['title'] = self.object.titre
             d['user'] = self.object.user.username
             d['client'] = self.object.user.client.name
 
@@ -74,7 +78,7 @@ class QuestionCreate(LoginRequiredMixin, generic.CreateView):
             try:
                 msg.send()
             except Exception as e:
-                raise
+                logger.error(e)
 
             #send_mail(subject, message, from_email, [to])
 
@@ -82,7 +86,7 @@ class QuestionCreate(LoginRequiredMixin, generic.CreateView):
             #  DSI EMAIl
             d = {}
             d['ref'] = self.object.get_ref
-            d['user'] = self.object.titre
+            d['title'] = self.object.titre
             d['user'] = self.object.user.username
             d['client'] = self.object.user.client.name
 
@@ -97,7 +101,7 @@ class QuestionCreate(LoginRequiredMixin, generic.CreateView):
             try:
                 msg.send()
             except Exception as e:
-                raise
+                logger.error(e)
             add_notification_to_cosultant("{0} {1}".format(self.object.user.username, _('Has opened a new ticket')), self.object.pk)
 
             # send_mail(subject, message, 'no_replay@ntonadvisory.com' , [from_email])
@@ -171,6 +175,7 @@ class QuestionList(LoginRequiredMixin, generic.ListView):
     def get_context_data(self, **kwargs):
         context = super(QuestionList, self).get_context_data(**kwargs)
         page = int(self.request.GET.get('page', 1))
+        active = {}
         context['pages'] = [val for val in range(page - 5 , page + 5) if val > 0]
         if self.request.GET.get('q') : context['query'] = '&q='+self.request.GET.get('q')
 
@@ -190,11 +195,15 @@ class QuestionList(LoginRequiredMixin, generic.ListView):
 @login_required
 def add_reponce_to_question(request, pk):
     question = get_object_or_404(Question, pk=pk)
-    if request.POST.get('action') == "post":
+    if request.is_ajax() and request.POST.get('action') == "post":
         try:
             description = request.POST.get('description')
             status = request.POST.get('status')
             send_mail = request.POST.get('send_mail', False)
+
+                # if status == 'FR':
+                #     description = '{0} {1}'.format(_('Ticket status has charged to Closedd by'), request.user)
+
             reponce = Reponce(
                 user = request.user,
                 description = description,
@@ -202,8 +211,9 @@ def add_reponce_to_question(request, pk):
                 status = status,
                 send_mail = send_mail ,
                 )
+            if  reponce.description == "" : reponce.description = 'Ticket status has changed to {0} by {1}'.format(reponce.get_status_display(), request.user)
+
             reponce.save()
-            question.last_action = timezone.now()
             question.status = status
             if not question.first_react_at: question.first_react_at = timezone.now()
             if status == 'RS':
@@ -212,17 +222,17 @@ def add_reponce_to_question(request, pk):
                 question.charged_by = request.user
 
             question.save()
-        except :
-            import traceback
-            tb = traceback.format_exc()
-            # print(tb)
+        except Exception as e:
+            logger.error(e)
         else:
             ref = question.get_ref()
             if reponce.user.is_staff:
                 question.user.add_notification('{0} {1} {2}'.format(reponce.user,_('acted on ticket'),ref),question.pk)
             else:
                 question.charged_by.add_notification('{0} {1} {2}'.format(reponce.user,_('acted on ticket'),ref),question.pk)
-            if send_mail == True:
+            if send_mail:
+                #print(send_mail)
+
                 d = {}
 
                 d['description'] = description
@@ -235,13 +245,29 @@ def add_reponce_to_question(request, pk):
                 try:
                     msg.send()
                 except Exception as e:
-                    raise
-        return render(request, 'solutions/action.html', {'reponce': reponce})
+                    #print(e)
+                    logger.error(e)
+        data = {}
+        data['html_content'] = render_to_string('solutions/action.html', {'reponce': reponce})
+        #from django.core import serializers
+        data['last_action'] = str(question.last_action.strftime('%m/%d/%Y %H:%m'))
+        data['time_toreact'] = str(question.get_time_to_react())
+        data['time_toresolv'] = str(question.get_time_to_resolv())
+        data['resolved_at'] = question.get_resolved_at()
+        data['status_display'] = str(question.get_status_display())
+
+
+
+        #return render(request, 'solutions/action.html', {'reponce': reponce})
+        return JsonResponse(data, safe=False)
+
     elif request.method == "POST":
         form = ReponceForm(request.POST)
         if form.is_valid():
             try:
                 reponce = form.save(commit=False)
+                if  reponce.description == "" : reponce.description = 'Ticket status has charged to {0} by {1}'.format(reponce.get_status_display(), request.user)
+
                 reponce.question = question
                 reponce.user = request.user
                 question.last_action = timezone.now()
@@ -256,7 +282,8 @@ def add_reponce_to_question(request, pk):
                     question.user.add_notification('{0} {1} {2}'.format(reponce.user,_('acted on ticket'),question.ref),question.pk)
                 else:
                     question.charged_by.add_notification('{0} {1} {2}'.format(reponce.user,_('acted on ticket'),question.ref),question.pk)
-            except IntegrityError:
+            except Exception as e :
+                logger.error(e)
                 messages.warning(request,_("Warning, Something went wrong, please try again"))
             else:
                 messages.success(request,_("Answere has been saved."))
@@ -278,7 +305,7 @@ def add_reponce_to_question(request, pk):
                     try:
                         msg.send()
                     except Exception as e:
-                        raise
+                        logger.error(e)
 
             return redirect('solutions:questiondetail', pk=question.pk)
     else:
@@ -289,13 +316,23 @@ def questioneResolved(request, pk):
     question = get_object_or_404(Question, pk=pk)
     if request.method == "POST":
         try:
+            description = 'Ticket status has changed to resolved by {}'.format(request.user)
+            reponce = Reponce(
+                user = request.user,
+                description = description,
+                question = question,
+                status = 'RS',
+                send_mail = False ,
+                )
+            reponce.save()
             question.status = 'RS'
             question.resolved_at = timezone.now()
             if not question.first_react_at: question.first_react_at = timezone.now()
             question.last_action = timezone.now()
 
             question.save()
-        except IntegrityError:
+        except Exception as e:
+            logger.error(e)
             messages.warning(request,_("Warning, Something went wrong, please try again"))
         else:
             messages.success(request,_("ticket has been resolved, thanks for using owr platform."))
@@ -475,15 +512,33 @@ def load_chart(request):
 def questioneCharged(request, pk):
     question = get_object_or_404(Question, pk=pk)
     try:
+        description = 'Ticket status has been taked into account by {}'.format(request.user)
+        reponce = Reponce(
+            user = request.user,
+            description = description,
+            question = question,
+            status = 'EA',
+            send_mail = False ,
+            )
+        question.status = 'EA'
         question.charged_by = request.user
         if not question.first_react_at: question.first_react_at = timezone.now()
         question.last_action = timezone.now()
         question.save()
-    except IntegrityError:
+    except Exception as e:
+        logger.error(e)
         messages.warning(request,_("Warning, Something went wrong, please try again"))
     else:
         messages.success(request,_("ticket has been taked in charge."))
         ref = question.get_ref()
         question.user.add_notification('Ticket ({0}) {1} {2}'.format(ref, _('has been taked in charge by'),request.user),question.pk)
+        data = {}
+        data['html_content'] = render_to_string('solutions/action.html', {'reponce': reponce})
 
-    return JsonResponse({'ok':'ok'}, status=200)
+        data['last_action'] = str(question.last_action.strftime('%m/%d/%Y %H:%m'))
+        data['time_toreact'] = str(question.get_time_to_react())
+        data['time_toresolv'] = str(question.get_time_to_resolv())
+        data['resolved_at'] = str(question.resolved_at.strftime('%m/%d/%Y %H:%m'))
+        data['status_display'] = str(question.get_status_display())
+
+    return JsonResponse(data, status=200)

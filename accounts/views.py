@@ -145,7 +145,7 @@ class ProfileUpdateView(LoginRequiredMixin, UpdateView):
         context['activePage'] = 'accounts'
         if self.request.user.username == self.kwargs.get('username'):
             context['activePage'] = 'profile'
-        print(context['activePage'])
+        #print(context['activePage'])
 
 
         return context

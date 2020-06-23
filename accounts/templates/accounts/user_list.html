@@ -115,7 +115,7 @@
 
               </div>
               <div class="col-md-6">
-                <div class="form-group">
+                <div id="is_staff" class="form-check collapse hide">
                   <div class="form-check">
                     <label class="form-check-label">
                         <input type="checkbox" name="is_staff" class="form-check-input" id="id_is_staff" checked="">
@@ -210,6 +210,22 @@
       })
     })
   })
+
+</script>
+<script>
+function show_consutat() {
+  var clientId = $("#id_client").children("option:selected").text();
+  if (clientId == 'ntonadvisory') {
+        $("#is_staff").collapse('show');
+  }
+  else {
+    $("#is_staff").collapse('hide');
+  }
+}
+
+$("#id_client").change(function () {
+    show_consutat();
+  });
 
 </script>
 

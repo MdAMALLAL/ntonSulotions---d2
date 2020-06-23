@@ -26,24 +26,30 @@ class CategorieResource(resources.ModelResource):
         model = Categorie
         fields = ('id', 'name', 'name_en', 'name_fr',)
 class SousCategorieInline(ImportExportMixin, TranslationTabularInline):
-    model=SousCategorie
+    model = SousCategorie
     resource_class = SousCategorieResource
     extra=3
-
+class SousCategorieAdmin(ImportExportMixin, admin.ModelAdmin):
+    model = SousCategorie
+    resource_class = SousCategorieResource
 class CategorieAdmin(ImportExportMixin, admin.ModelAdmin):
     model = Categorie
     resource_class = CategorieResource
     list_display=['name_en','name_fr']
 
     inlines=[SousCategorieInline]
+class ReponceAdmin(ImportExportMixin, admin.ModelAdmin):
+    model = Reponce
+    list_display=['pk','user','question','status','description']
+    list_editable=['user','status']
+    search_fields = ['description']
+    list_filter = ['created_at','user','question','status']
 
 class CategorieTranslatedAdmin(CategorieAdmin, TranslationAdmin):
     model = Categorie
 
 
-
-
 admin.site.register(Question, QuestionAdmin)
-admin.site.register(Reponce)
-admin.site.register(SousCategorie)
+admin.site.register(Reponce, ReponceAdmin)
+admin.site.register(SousCategorie, SousCategorieAdmin)
 admin.site.register(Categorie, CategorieAdmin)

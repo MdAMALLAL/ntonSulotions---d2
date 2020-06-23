@@ -36,7 +36,7 @@
         <td>{{ question.categorie.name}}</td>
         <td>{{question.get_time_to_resolv}}</td>
         <td>
-          <a rel="tooltip" title="Edit" class="table-action edit" href="{% url 'solutions:questionedit' pk=question.pk %}" title="Edit">
+          <a rel="tooltip" title="Edit" class="table-action edit" href="{% url 'solutions:questiondetail' pk=question.pk %}" title="Edit">
             <i class="fa fa-edit"></i>
           </a>
         </td>

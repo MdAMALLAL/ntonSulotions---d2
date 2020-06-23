@@ -7,11 +7,8 @@ class CategorieTranslationOptions(TranslationOptions):
     required_languages = ('en', 'fr')
 
 
+
+@register(SousCategorie)
 class SousCategorieTranslationOptions(TranslationOptions):
     fields = ('name',)
     required_languages = ('en', 'fr')
-
-
-
-translator.register(SousCategorie, SousCategorieTranslationOptions)
-#translator.register(Categorie, CategorieTranslationOptions)

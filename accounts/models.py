@@ -97,7 +97,7 @@ class User(AbstractBaseUser , PermissionsMixin):
         return querySet
     def get_last_10_notification(self):
         querySet = Notification.objects.filter(user=self).update(new=False)
-        querySet = Notification.objects.filter(user=self)#[0:10]
+        querySet = Notification.objects.filter(user=self)[:10]
         return querySet
 
     def get_new_notification(self):

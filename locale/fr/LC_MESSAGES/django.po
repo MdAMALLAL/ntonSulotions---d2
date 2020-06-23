@@ -250,8 +250,6 @@ msgid "Tickets Status"
 msgstr "Status du Ticket"
 
 #: .\accounts\templates\accounts\user_form.html:154
-#, fuzzy
-#| msgid "Taking into account"
 msgid "Tickets take into account per day"
 msgstr "Tickets prennent en compte par jour"
 
@@ -577,10 +575,8 @@ msgid "Resolved at"
 msgstr "Resolu le"
 
 #: .\solutions\templates\solutions\question_detail.html:139
-#, fuzzy
-#| msgid "DSI Email"
 msgid "Send mail"
-msgstr "notifier par email"
+msgstr "Envoyer par email"
 
 #: .\solutions\templates\solutions\question_detail.html:147
 msgid "Save"
@@ -666,9 +662,8 @@ msgstr "a été pris en charge par"
 
 #: .\templates\400.html:5
 msgid "bad request was sent, please verify url or try again later"
-msgstr ""
-"une mauvaise demande a été envoyée, veuillez vérifier l'URL ou réessayer "
-"plus tard"
+msgstr "une mauvaise demande a été envoyée, veuillez vérifier l'URL ou réessayer plus tard"
+
 
 #: .\templates\403.html:6
 msgid "Forbidden "
@@ -715,7 +710,7 @@ msgid ""
 "results, click 'Confirm import'"
 msgstr ""
 "Vous trouverez ci-dessous un aperçu des données à importer. Si vous êtes satisfait de la"
-"résultats, cliquez sur" Confirmer l'importation "
+"résultats, cliquez sur 'Confirmer l'importation'"
 
 #: .\templates\admin\import_export\import.html:23
 msgid "Confirm import"
@@ -843,15 +838,12 @@ msgid "Consultat email"
 msgstr "Email du Consultat"
 
 #: .\templates\index.html:185
-
 msgid "Charged tickets"
 msgstr "Ticket en charge"
 
 #: .\templates\index.html:186
-#, fuzzy
-#| msgid "Resolved at"
 msgid "Resolved tickets"
-msgstr "Resolu le"
+msgstr "tickets resolu"
 
 #: .\templates\index.html:187
 msgid "Efficiency"
