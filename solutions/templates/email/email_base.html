@@ -1,0 +1,65 @@
+{% load static %}
+{% load i18n %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+ <meta charset="UTF-8">
+ <meta name="viewport" content="width=device-width, initial-scale=1.0">
+ <title>mail DSI</title>
+
+ <style>
+  body {
+   margin: auto;
+   padding: auto;
+   height: auto;
+   max-width: 50rem;
+   font-size: 13px;
+  }
+
+  h1 {
+   font-size: large;
+  }
+  body, td, div, p, a, input {
+      font-family: arial, sans-serif;
+  }
+  p {
+    display: block;
+    margin-block-start: 1em;
+    margin-block-end: 1em;
+    margin-inline-start: 0px;
+    margin-inline-end: 0px;
+  }
+  .email_body {
+
+   /* text-align: center; */
+   background: #ffe;
+   padding: 20px;
+   border: 2px solid steelblue;
+
+  }
+
+  a {
+   padding: 0.5rem;
+   font-size: 20px;
+  }
+ </style>
+</head>
+
+<body>
+ <div class="email_body">
+   {% block email_body %}
+
+   {% endblock %}
+
+  <p class="fin_page">Cordialement</p>
+  <p class="MsoNormal"><span style="color:#1f497d"><a href="http://www.ntonadvisory.com/" target="_blank" <span style="color:#1f497d">www.ntonadvisory.com</span></a><u></u><u></u></span></p>
+  <p class="MsoNormal"><span style="color:#1f497d"><u></u>&nbsp;<u></u></span></p>
+  <p class="MsoNormal"><span style="font-family:&quot;Bell MT&quot;,&quot;serif&quot;;color:#1f497d"><a href="https://www.google.com/maps/search/31,+Rue+Allal+Ben+Abdellah?entry=gmail&amp;source=g">31, Rue Allal Ben Abdellah</a>, Chellah Office Center, N°22, 90000, Tanger<u></u><u></u></span></p>
+  <p class="MsoNormal"><span style="color:#1f497d">33, Rue IBN AL Hakam, Bourgogne, 20050, Casablanca<u></u><u></u></span></p>
+  <img src="http://www.ntonadvisory.com/wp-content/uploads/2015/02/logo-250x100.png" alt="">
+
+
+ </div>
+</body>
+
+</html>

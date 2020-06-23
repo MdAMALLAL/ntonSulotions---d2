@@ -1,43 +1,13 @@
 {% load static %}
 {% load i18n %}
-<!DOCTYPE html>
-<html lang="en">
-<head>
- <meta charset="UTF-8">
- <meta name="viewport" content="width=device-width, initial-scale=1.0">
- <title>mail DSI</title>
+{% load static %}
+{% load i18n %}
+{% extends 'email_base.html' %}
+{% block email_body %}
+  <h1>Nton.com ADVISORY ticketing platform</h1>
 
- <style>
-  body {
-   margin: auto;
-   padding: auto;
-   height: auto;
-   max-width: 40rem;
-  }
+  {{ context.description|safe }}
 
-  h1 {
-   font-size: large;
-  }
-
-  .email_body {
-
-   /* text-align: center; */
-   background: #ffe;
-   padding: 20px;
-   border: 2px solid steelblue;
-
-  }
-
-  a {
-   border: 1px solid rgb(230, 230, 204);
-   padding: 0.5rem;
-   font-size: 20px;
-  }
- </style>
-</head>
-
-<body>
- <div class="email_body">
   <h1>Nton.com ADVISORY ticketing platform</h1>
 
   <p>Votre ticket <strong>{{ context.title }}</strong> est créé saus l'ID: <strong>{{ context.ref }}
@@ -46,12 +16,4 @@
   <p>pour accéder directement a ce ticket cliquez  : <a href="{{ context.ticket_url }}">ici</a></p>
   (( {{ context.ticket_url }} ))
 
-  <p class="fin_page">Cordialement</p>
-
-  <img src="http://www.ntonadvisory.com/wp-content/uploads/2015/02/logo-250x100.png" alt="">
-
-
- </div>
-</body>
-
-</html>
+{% endblock %}
