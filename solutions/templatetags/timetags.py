@@ -6,7 +6,7 @@ register = template.Library()
 def print_timestamp(value, arg):
     try:
         #assume, that timestamp is given in seconds with decimal point
-        if not value == "":
+        if value:
             days = value.days
             sec = value.seconds
 
