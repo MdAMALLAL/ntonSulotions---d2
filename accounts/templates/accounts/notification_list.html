@@ -19,11 +19,6 @@
         <td>{{ notification.date}}</td>
         <td><a <a class="text-dark" href="{% url 'accounts:notifications_redirect' pk=notification.pk %}">{{ notification.description }}</a></td>
         <td>
-          {% if not notification.seen %}
-          <a id="{{notification.pk}}read" rel="tooltip" title="Remove" class="table-action remove" href="javascript:void(0)" title="{% trans "Mark as read" %}" >
-           <i class="fa fa-check-square-o"></i>
-          </a>
-          {% endif %}
           <a id="{{notification.pk}}remove"  rel="tooltip" title="Remove" class="table-action remove" href="javascript:void(0)" title="{% trans "Remove" %}">
            <i class="fa fa-remove"></i>
           </a>

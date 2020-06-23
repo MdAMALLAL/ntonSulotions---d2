@@ -92,7 +92,7 @@ class User(AbstractBaseUser , PermissionsMixin):
         notification.save
 
     def get_notification(self):
-        querySet = Notification.objects.filter(user=self).update(new=False)
+        querySet = Notification.objects.filter(user=self).update(new=False, seen= timezone.now())
         querySet = Notification.objects.filter(user=self)
         return querySet
     def get_last_10_notification(self):
