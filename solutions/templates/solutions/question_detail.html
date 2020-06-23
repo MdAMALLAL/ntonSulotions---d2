@@ -31,20 +31,25 @@
       {% endif %}
       {% if not question.charged_by and request.user.is_staff %}
       <li class="nav-item">
+        {% comment %} <form class="" action="{% url 'solutions:questioneCharged' pk=question.pk %}" method="post"> {% endcomment %}
+          {% csrf_token %}
         <a id="charged" class="btn btn-primary" href="javascript:void(0)" >{% trans "Take in charge" %} </a>
+        {% comment %} </form> {% endcomment %}
       </li>
       <script type="text/javascript">
           $("#charged").click(function () {
-          $.ajax({url: "http://{{request.META.HTTP_HOST}}{% url 'solutions:questioneCharged' pk=question.pk %}",
-          success: function (data) {
-              $("#charged").remove();
-              $('#actionul').prepend(json.html_content);
-              $('#noAction').remove();
-              $('#last_action').html(json.last_action);
-              $('#time_toreact').html(json.time_toreact);
-              $('#time_toresolv').html(json.time_toresolv);
-              $('#resolved_at').html(json.resolved_at);
-              $('#status_display').html(json.status_display);
+          $.ajax({
+            url: "http://{{request.META.HTTP_HOST}}{% url 'solutions:questioneCharged' pk=question.pk %}",
+            success: function (json) {
+              console.log(json);
+                $("#charged").remove();
+                $('#actionul').prepend(json.html_content);
+                $('#noAction').remove();
+                $('#last_action').html(json.last_action);
+                $('#time_toreact').html(json.time_toreact);
+                $('#time_toresolv').html(json.time_toresolv);
+                $('#resolved_at').html(json.resolved_at);
+                $('#status_display').html(json.status_display);
 
           }});
           });
@@ -234,7 +239,7 @@
         <p>{{question.created_at|date:"y-m-d H:m"}} <i class="fa fa-star-of-life"></i> {% trans "Ticket opening" %}</p>
         <p>{{question.viwed_at|date:"y-m-d H:m"}} <i class="fa fa-star-of-life"></i> {% trans "Taking into account" %}</p>
         {% for reponce in question.reponces.all %}
-        <p>{{reponce.created_at|date:"y-m-d H:m"}} <span class="fa {{reponce.status}}"></span> {{reponce.description}}</p>
+        <p>{{reponce.created_at|date:"y-m-d H:m"}} <span class="fa {{reponce.status}}"></span>{% trans "Action by" %} {{reponce.user}}</p>
         {% endfor %}
         <p>{% now "y-m-d H:m"%} <span class="fa fa-caret-down"></span> {% trans "Now" %}</p>
 
