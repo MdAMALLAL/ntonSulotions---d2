@@ -4,7 +4,7 @@ from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import(LoginRequiredMixin, PermissionRequiredMixin  )
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
-from django.core.mail import BadHeaderError, send_mail, EmailMultiAlternatives
+from django.core.mail import BadHeaderError, EmailMultiAlternatives
 from django.http import HttpResponseRedirect, JsonResponse, Http404
 from django.shortcuts import render, get_object_or_404, redirect
 from django.urls import reverse, reverse_lazy
@@ -80,8 +80,6 @@ class QuestionCreate(LoginRequiredMixin, generic.CreateView):
             except Exception as e:
                 logger.error(e)
 
-            #send_mail(subject, message, from_email, [to])
-
             ########################
             #  DSI EMAIl
             d = {}
@@ -108,8 +106,6 @@ class QuestionCreate(LoginRequiredMixin, generic.CreateView):
                 self.object.pk)
 
 
-
-            # send_mail(subject, message, 'no_replay@ntonadvisory.com' , [from_email])
         return super().form_valid(form)
 
     def get_context_data(self, **kwargs):
@@ -205,7 +201,9 @@ def add_reponce_to_question(request, pk):
             description = request.POST.get('description')
             status = request.POST.get('status')
             send_mail = request.POST.get('send_mail', False)
-
+            if status == 'RS':
+                question.resolved_at = timezone.now()
+                send_mail = True
                 # if status == 'FR':
                 #     description = '{0} {1}'.format(_('Ticket status has charged to Closedd by'), request.user)
 
@@ -221,8 +219,7 @@ def add_reponce_to_question(request, pk):
             reponce.save()
             question.status = status
             if not question.first_react_at: question.first_react_at = timezone.now()
-            if status == 'RS':
-                question.resolved_at = timezone.now()
+
             if reponce.user.is_staff and not question.charged_by:
                 question.charged_by = request.user
 
@@ -243,11 +240,8 @@ def add_reponce_to_question(request, pk):
                 question.pk)
             if send_mail:
                 #print(send_mail)
-
                 d = {}
-
                 d['description'] = description
-
                 subject = _('novelty on ticket {}'.format(ref))
                 text_content = render_to_string('email/email-report.txt',{'context':d})
                 html_content = render_to_string('email/email-report.html',{'context':d})
@@ -317,9 +311,7 @@ def add_reponce_to_question(request, pk):
                         question.pk)
                 if send_mail:
                     d = {}
-
                     d['description'] = description
-
                     subject = _('novelty on ticket {}'.format(ref))
                     text_content = render_to_string('email/email-report.txt',{'context':d})
                     html_content = render_to_string('email/email-report.html',{'context':d})
