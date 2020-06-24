@@ -13,9 +13,6 @@ class Client(models.Model):
     contact = models.CharField(blank=True,max_length=100,verbose_name=_('Contact'))
     contact_tel = models.CharField(blank=True,max_length=100,verbose_name=_("Contact's tel"))
     contact_email = models.EmailField(blank=True,verbose_name=_('Contact Email'))
-
-
-
     slug = models.SlugField(allow_unicode=True, unique=True)
 
 
@@ -27,8 +24,7 @@ class Client(models.Model):
         super().save(*args, **kwargs)
 
     def get_absolute_url(self):
-        return reverse_lazy("clients:detail", kwargs={"slug": self.slug})
-
+        return reverse_lazy('clients:detail',  kwargs={"slug": self.slug})
 
 
     class Meta:
