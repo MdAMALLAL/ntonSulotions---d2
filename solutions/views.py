@@ -332,7 +332,9 @@ def add_reponce_to_question(request, pk):
                         msg_to = question.user.email
                     else :
                         msg_to = question.charged_by.email
-                    msg = EmailMultiAlternatives(subject, text_content, msg_from, [msg_to])                    msg.attach_alternative(html_content, "text/html")
+
+                    msg = EmailMultiAlternatives(subject, text_content, msg_from, [msg_to])
+                    msg.attach_alternative(html_content, "text/html")
                     try:
                         msg.send()
                     except Exception as e:
@@ -390,7 +392,8 @@ def questioneResolved(request, pk):
                 msg_to = question.user.email
             else :
                 msg_to = question.charged_by.email
-            msg = EmailMultiAlternatives(subject, text_content, msg_from, [msg_to])            msg.attach_alternative(html_content, "text/html")
+            msg = EmailMultiAlternatives(subject, text_content, msg_from, [msg_to])
+            msg.attach_alternative(html_content, "text/html")
             try:
                 msg.send()
             except Exception as e:
