@@ -83,14 +83,14 @@
             <div class="row">
               <div class="col-12">
                 {% comment %} <input type="submit" class="profile-edit-btn" name="btnAddMore" value="Edit Profile"/> {% endcomment %}
-                <a class="profile-edit-btn btn btn-danger w-100 py-1 my-1"href="{% url 'clients:delete' slug=client.slug %}">{% trans "Delete" %}</a>
-                <a class="profile-edit-btn btn btn-info w-100 py-1 my-1"href="{% url 'accounts:new' %}?client={{client.slug}}">{% trans "Add user" %}</a>
+                <a class="profile-edit-btn btn btn-danger w-100 py-1 my-1"href="{% url 'clients:delete' slug=form.instance.slug %}">{% trans "Delete" %}</a>
+                <a class="profile-edit-btn btn btn-info w-100 py-1 my-1"href="{% url 'accounts:new' %}?client={{form.instance.slug}}">{% trans "Add user" %}</a>
 
               </div>
               <div class="col-12">
                 <div class="card card-chart">
                   <div class="card-header card-header-success">
-                    <div id="client_chart_container" class="ct-chart" data-url="{% url 'solutions:ajax_load_chart' %}?type=pie&client={{client.slug}}"></div>
+                    <div id="client_chart_container" class="ct-chart" data-url="{% url 'solutions:ajax_load_chart' %}?type=pie&client={{form.instance.slug}}"></div>
 
                   </div>
                   <div class="card-body">
