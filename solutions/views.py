@@ -69,6 +69,8 @@ class QuestionCreate(LoginRequiredMixin, generic.CreateView):
             if self.object.user.client:
                 d['client'] = self.object.user.client.name
                 dsi_email = self.object.user.client.email
+            else:
+                dsi_email = 'no_replay@ntonadvisory.com'
             # text_content = plaintext.render(d)
             # html_content = htmly.render(d)
             text_content = render_to_string('email/email_client.txt',{'context':d})
@@ -90,6 +92,8 @@ class QuestionCreate(LoginRequiredMixin, generic.CreateView):
             d['user'] = self.object.user.username
             if self.object.user.client:
                 d['client'] = self.object.user.client.name
+            else:
+                dsi_email = 'no_replay@ntonadvisory.com'
 
 
             d['ticket_url'] = "http://{0}{1}".format(self.request.META['HTTP_HOST'],
