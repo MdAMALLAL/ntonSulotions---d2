@@ -6,12 +6,10 @@
 
   {{ context.description|safe }}
 
-  <h1>Nton.com ADVISORY ticketing platform</h1>
-
   <p>Votre ticket <strong>{{ context.title }}</strong> est créé saus l'ID: <strong>{{ context.ref }}
    </strong></p>
 
   <p>pour accéder directement a ce ticket cliquez  : <a href="{{ context.ticket_url }}">ici</a></p>
-  (( {{ context.ticket_url }} ))
+  (({{ context.ticket_url}} ))
 
 {% endblock %}
