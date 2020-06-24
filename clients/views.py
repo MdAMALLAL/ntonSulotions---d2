@@ -43,6 +43,7 @@ class ClientsCreate(LoginRequiredMixin, IsStaffTestMixin, CreateView):
 class ClientsDetail(LoginRequiredMixin, IsStaffTestMixin, DetailView):
     model = Client
     form_class = ClientForm
+    template_name = 'clients/client_detail.html'
     def form_valid(self, form):
         try:
             self.object = form.save(commit=False)
@@ -89,7 +90,7 @@ class ClientsList(LoginRequiredMixin, IsStaffTestMixin, ListView):
     model = Client
 
     def get_queryset(self):
-        self.paginate_by =  int(self.request.GET.get('paginate_by', 10))
+        # self.paginate_by =  int(self.request.GET.get('paginate_by', 10))
         if self.request.user.is_staff:
             clientlist =  Client.objects.all()
         else:
