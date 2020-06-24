@@ -605,7 +605,7 @@ def questioneCharged(request, pk):
             text_content = render_to_string('email/email-report.txt',{'context':d})
             html_content = render_to_string('email/email-report.html',{'context':d})
             msg_from = reponce.user.email
-            if request.user.is_ajax:
+            if request.user.is_staff:
                 msg_to = question.user.email
             else :
                 msg_to = question.charged_by.email
