@@ -24,12 +24,7 @@ def csv_view(request):
 class ClientsCreate(LoginRequiredMixin, IsStaffTestMixin, CreateView):
     model = Client
     form_class = ClientForm
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context['activePage']= 'clientActive'
-
-        return context
-
+    template_name = 'clients/client_list.html'
     def form_valid(self, form):
         try:
             self.object = form.save(commit=False)

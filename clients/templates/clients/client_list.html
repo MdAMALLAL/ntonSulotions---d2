@@ -71,7 +71,7 @@
             <p class="card-category">{% trans "Complete le profile" %}</p>
           </div>
           <div class="card-body">
-            <form  action="{% url 'clients:new' %}" method="post" >
+            <form  action="{% url 'clients:new' %}" method="POST" >
               {% csrf_token %}
               <div class="row">
                 <div class="col-md-6">
@@ -122,7 +122,7 @@
                 </div>
               </div>
               <button type="submit" class="btn btn-primary pull-right">{{% trans "Update Client" %}</button>
-              
+
             </form>
             </div>
       </div>
