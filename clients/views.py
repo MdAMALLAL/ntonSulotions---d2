@@ -124,7 +124,7 @@ def add_user(request, slug):
             messages.warning(request,_("Warning, Something went wrong, please try again"))
         else:
             messages.success(request,_("ticket has been resolved, thanks for using owr platform."))
-        return redirect('clients:edit', slug= slug)
+        return reverse_lazy("clients:detail", kwargs={"slug": slug})
 
     else:
-        return redirect('clients:edit', slug= slug)
+        return reverse_lazy("clients:detail", kwargs={"slug": slug})
