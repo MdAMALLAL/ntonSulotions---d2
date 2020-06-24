@@ -118,7 +118,9 @@
             <tr class="col-md-12 col-sm-12 row no-gutters">
               <td class="col ">
                 {% if question.image %}
+                <a href="{{question.image.url}}">
                 <img src="{{question.image.url}}" height="50%" width="50%" alt="">
+                </a>
                 {% endif %}
               </td>
             </tr>

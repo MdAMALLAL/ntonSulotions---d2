@@ -136,10 +136,7 @@ class QuestionSingle(LoginRequiredMixin, generic.DetailView):
     def get_object(self):
         obj=super().get_object()
         # Record the last accessed dateobj.last_accessed=timezone.now()obj.save()
-        if self.request.user.is_staff or self.request.user == obj.user:
-            if not obj.viwed_at and self.request.user.is_staff :
-                obj.viwed_at = timezone.now()
-                obj.save()
+        if self.request.user.is_staff :
             return obj
         else:
             raise Http404(_("ticket does not exist"))
@@ -217,6 +214,8 @@ def add_reponce_to_question(request, pk):
             if  reponce.description == "" : reponce.description = 'Ticket status has changed to {0} by {1}'.format(reponce.get_status_display(), request.user)
 
             reponce.save()
+            if not question.viwed_at :
+                question.viwed_at = timezone.now()
             question.status = status
             if not question.first_react_at: question.first_react_at = timezone.now()
 
@@ -278,8 +277,11 @@ def add_reponce_to_question(request, pk):
                 question.last_action = timezone.now()
                 question.status = reponce.status
                 if not question.first_react_at: question.first_react_at = timezone.now()
+                if not question.viwed_at :
+                    question.viwed_at = timezone.now()
                 if reponce.status == 'RS':
                     question.resolved_at = timezone.now()
+                    send_mail = True
 
                 reponce.save()
                 question.save()
@@ -340,6 +342,8 @@ def questioneResolved(request, pk):
                 send_mail = False ,
                 )
             reponce.save()
+            if not question.viwed_at :
+                question.viwed_at = timezone.now()
             question.status = 'RS'
             question.resolved_at = timezone.now()
             if not question.first_react_at: question.first_react_at = timezone.now()
@@ -362,7 +366,17 @@ def questioneResolved(request, pk):
                     description_en = 'Ticket ({0}) {1} {2}'.format(ref, _('marked as resolved by'),reponce.user),
                     description_fr = 'Ticket ({0}) {1} {2}'.format(ref, _('marqué comme résolu par'),reponce.user),
                     url = question.pk)
-
+            d = {}
+            d['description'] = description
+            subject = _('novelty on ticket {}'.format(ref))
+            text_content = render_to_string('email/email-report.txt',{'context':d})
+            html_content = render_to_string('email/email-report.html',{'context':d})
+            msg = EmailMultiAlternatives(subject, text_content, reponce.user.email, [question.user.email,])
+            msg.attach_alternative(html_content, "text/html")
+            try:
+                msg.send()
+            except Exception as e:
+                logger.error(e)
 
     return redirect('solutions:questiondetail', pk=question.pk)
 
@@ -543,6 +557,8 @@ def questioneCharged(request, pk):
                 send_mail = False ,
                 )
             reponce.save()
+            if not question.viwed_at :
+                question.viwed_at = timezone.now()
             question.status = 'EA'
             if not question.first_react_at: question.first_react_at = timezone.now()
             question.last_action = timezone.now()
@@ -585,6 +601,8 @@ def questioneCharged(request, pk):
                 send_mail = False ,
                 )
             reponce.save()
+            if not question.viwed_at :
+                question.viwed_at = timezone.now()
             question.status = 'EA'
             if not question.first_react_at: question.first_react_at = timezone.now()
             question.last_action = timezone.now()

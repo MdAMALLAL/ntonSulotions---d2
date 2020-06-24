@@ -92,7 +92,7 @@ class Question(models.Model):
 
         if self.status != 'RS':
             self.resolved_at = None
-            self.time_to_view = datetime.timedelta(0)
+            self.time_to_resolv = datetime.timedelta(0)
         if self.first_react_at:
             self.time_to_react = self.first_react_at - self.created_at
         if self.resolved_at  != None:
@@ -120,12 +120,10 @@ class Question(models.Model):
         return self.date_to_string(self.time_to_resolv, string)
     def get_time_to_view(self):
         string = _("Not viewed yet")
-
         return self.date_to_string(self.time_to_view, string)
     def get_time_to_react(self):
         string = _("Not reacted yet")
         return self.date_to_string(self.time_to_react, string)
-
     def get_resolved_at(self):
         if self.resolved_at: return self.resolved_at.strftime('%m/%d/%Y %H:%m')
         else : return  _("Not resolved yet")
