@@ -240,7 +240,7 @@
         <h4 class="text-center bg-dark py-2 text-white w-100 rounded">Dates</h4>
         <p>{{question.created_at|date:"y-m-d H:m"}} <i class="fa fa-star-of-life"></i> {% trans "Ticket opening" %}</p>
         <p>{{question.viwed_at|date:"y-m-d H:m"}} <i class="fa fa-star-of-life"></i> {% trans "Taking into account" %}</p>
-        {% for reponce in question.reponces.all %}
+        {% for reponce in question.reponces.all reversed  %}
         <p>{{reponce.created_at|date:"y-m-d H:m"}} <span class="fa {{reponce.status}}"></span>{% trans "Action by" %} {{reponce.user}}</p>
         {% endfor %}
         <p>{% now "y-m-d H:m"%} <span class="fa fa-caret-down"></span> {% trans "Now" %}</p>
