@@ -249,7 +249,12 @@ def add_reponce_to_question(request, pk):
                 subject = _('novelty on ticket {}'.format(ref))
                 text_content = render_to_string('email/email-report.txt',{'context':d})
                 html_content = render_to_string('email/email-report.html',{'context':d})
-                msg = EmailMultiAlternatives(subject, text_content, reponce.user.email, [question.user.email])
+                msg_from = reponce.user.email
+                if request.user.is_ajax:
+                    msg_to = question.user.email
+                else :
+                    msg_to = question.charged_by.email
+                msg = EmailMultiAlternatives(subject, text_content, msg_from, [msg_to])
                 msg.attach_alternative(html_content, "text/html")
                 try:
                     msg.send()
@@ -322,8 +327,12 @@ def add_reponce_to_question(request, pk):
                     subject = _('novelty on ticket {}'.format(ref))
                     text_content = render_to_string('email/email-report.txt',{'context':d})
                     html_content = render_to_string('email/email-report.html',{'context':d})
-                    msg = EmailMultiAlternatives(subject, text_content, reponce.user.email, [question.user.email,])
-                    msg.attach_alternative(html_content, "text/html")
+                    msg_from = reponce.user.email
+                    if request.user.is_ajax:
+                        msg_to = question.user.email
+                    else :
+                        msg_to = question.charged_by.email
+                    msg = EmailMultiAlternatives(subject, text_content, msg_from, [msg_to])                    msg.attach_alternative(html_content, "text/html")
                     try:
                         msg.send()
                     except Exception as e:
@@ -376,8 +385,12 @@ def questioneResolved(request, pk):
             subject = _('novelty on ticket {}'.format(ref))
             text_content = render_to_string('email/email-report.txt',{'context':d})
             html_content = render_to_string('email/email-report.html',{'context':d})
-            msg = EmailMultiAlternatives(subject, text_content, reponce.user.email, [question.user.email,])
-            msg.attach_alternative(html_content, "text/html")
+            msg_from = reponce.user.email
+            if request.user.is_ajax:
+                msg_to = question.user.email
+            else :
+                msg_to = question.charged_by.email
+            msg = EmailMultiAlternatives(subject, text_content, msg_from, [msg_to])            msg.attach_alternative(html_content, "text/html")
             try:
                 msg.send()
             except Exception as e:
@@ -583,6 +596,23 @@ def questioneCharged(request, pk):
                     description_en = 'Ticket ({0}) {1} {2}'.format(ref, _('has been taked into account by'),reponce.user),
                     description_fr = 'Ticket ({0}) {1} {2}'.format(ref, _('a été pris en charge par'),reponce.user),
                     url = question.pk)
+            d = {}
+            d['description'] = description
+            subject = _('novelty on ticket {}'.format(ref))
+            text_content = render_to_string('email/email-report.txt',{'context':d})
+            html_content = render_to_string('email/email-report.html',{'context':d})
+            msg_from = reponce.user.email
+            if request.user.is_ajax:
+                msg_to = question.user.email
+            else :
+                msg_to = question.charged_by.email
+            msg = EmailMultiAlternatives(subject, text_content, msg_from, [msg_to])
+            msg.attach_alternative(html_content, "text/html")
+            try:
+                msg.send()
+            except Exception as e:
+                #print(e)
+                logger.error(e)
 
         data = {}
         data['html_content'] = render_to_string('solutions/action.html', {'reponce': reponce})
