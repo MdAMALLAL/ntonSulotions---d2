@@ -3,6 +3,7 @@ from django.db import IntegrityError
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import(LoginRequiredMixin, PermissionRequiredMixin  )
+from django.core.exceptions import PermissionDenied
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.core.mail import BadHeaderError, EmailMultiAlternatives
 from django.http import HttpResponseRedirect, JsonResponse, Http404
@@ -139,10 +140,11 @@ class QuestionSingle(LoginRequiredMixin, generic.DetailView):
     def get_object(self):
         obj=super().get_object()
         # Record the last accessed dateobj.last_accessed=timezone.now()obj.save()
-        if self.request.user.is_staff :
+        if self.request.user.is_staff or self.request.user == obj.user :
             return obj
         else:
-            raise Http404(_("ticket does not exist"))
+            raise PermissionDenied(
+                "Permission Denied -- that's not your record!")
             return
 
 class QuestionList(LoginRequiredMixin, generic.ListView):
