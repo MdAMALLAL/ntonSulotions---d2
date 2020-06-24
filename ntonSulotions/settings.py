@@ -34,11 +34,6 @@ ALLOWED_HOSTS = ['*']
 DEFAULT_FROM_EMAIL = 'no_replay@ntonadvisory.com'
 EMAIL_BACKEND ='django.core.mail.backends.smtp.EmailBackend'
 
-# EMAIL_HOST = 'mail.ntonadvisory.com'
-# EMAIL_USE_TLS = True
-# EMAIL_PORT = 26
-# EMAIL_HOST_USER = 'no_replay@ntonadvisory.com'
-# EMAIL_HOST_PASSWORD = 'Qx5fOsPRC^(K'
 
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_USE_TLS = True
