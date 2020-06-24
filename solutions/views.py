@@ -198,7 +198,7 @@ class QuestionList(LoginRequiredMixin, generic.ListView):
 @login_required
 def add_reponce_to_question(request, pk):
     question = get_object_or_404(Question, pk=pk)
-    if request.is_ajax() and request.POST.get('action') == "post":
+    if request.is_staff() and request.POST.get('action') == "post":
         try:
             description = request.POST.get('description')
             status = request.POST.get('status')
@@ -250,7 +250,7 @@ def add_reponce_to_question(request, pk):
                 text_content = render_to_string('email/email-report.txt',{'context':d})
                 html_content = render_to_string('email/email-report.html',{'context':d})
                 msg_from = reponce.user.email
-                if request.user.is_ajax:
+                if request.user.is_staff:
                     msg_to = question.user.email
                 else :
                     msg_to = question.charged_by.email
@@ -328,7 +328,7 @@ def add_reponce_to_question(request, pk):
                     text_content = render_to_string('email/email-report.txt',{'context':d})
                     html_content = render_to_string('email/email-report.html',{'context':d})
                     msg_from = reponce.user.email
-                    if request.user.is_ajax:
+                    if request.user.is_staff:
                         msg_to = question.user.email
                     else :
                         msg_to = question.charged_by.email
@@ -388,7 +388,7 @@ def questioneResolved(request, pk):
             text_content = render_to_string('email/email-report.txt',{'context':d})
             html_content = render_to_string('email/email-report.html',{'context':d})
             msg_from = reponce.user.email
-            if request.user.is_ajax:
+            if request.user.is_staff:
                 msg_to = question.user.email
             else :
                 msg_to = question.charged_by.email
