@@ -103,13 +103,14 @@ body > div > div > div.msj-rta.macro{
 :-moz-placeholder { /* Firefox 18- */
     color: #d4d4d4;
 }
+
 .EA:before {
-  content: "\f058"; }
+  content: "\f058" !important; }
 .RS:before {
-  content: "\f560"; }
+  content: "\f560" !important; }
 .RF:before {
-  content: "\f057"; }
+  content: "\f057" !important; }
 .FR:before {
-  content: "\f410"; }
+  content: "\f410" !important; }
 .AN:before {
-  content: "\f05e"; }
+  content: "\f05e" !important; }
