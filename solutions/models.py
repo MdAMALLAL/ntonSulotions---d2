@@ -93,6 +93,8 @@ class Question(models.Model):
         if self.status != 'RS':
             self.resolved_at = None
             self.time_to_resolv = datetime.timedelta(0)
+        if self.viwed_at:
+            self.time_to_view = self.viwed_at - self.created_at
         if self.first_react_at:
             self.time_to_react = self.first_react_at - self.created_at
         if self.resolved_at  != None:
