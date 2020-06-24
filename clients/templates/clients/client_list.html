@@ -44,7 +44,7 @@
                 <td>{{ client.contact}}</td>
                 <td>{{client.users.all.count}}</td>
                 <td>
-                  <a rel="tooltip" title="Edit" class="table-action edit" href="{% url 'clients:edit' slug=client.slug %}" title="Edit">
+                  <a rel="tooltip" title="Edit" class="table-action edit" href="{% url 'clients:detail' slug=client.slug %}" title="Edit">
                     <i class="fa fa-edit"></i>
                   </a>
                   <a rel="tooltip" title="Remove" class="table-action remove" href="{% url 'clients:delete' slug=client.slug %}" title="Remove">

@@ -90,12 +90,8 @@ class QuestionCreate(LoginRequiredMixin, generic.CreateView):
             d['ref'] = self.object.get_ref
             d['title'] = self.object.titre
             d['user'] = self.object.user.username
-            if self.object.user.client:
-                d['client'] = self.object.user.client.name
-            else:
-                dsi_email = 'no_replay@ntonadvisory.com'
 
-
+            dsi_email = 'no_replay@ntonadvisory.com'
             d['ticket_url'] = "http://{0}{1}".format(self.request.META['HTTP_HOST'],
                             reverse("solutions:questiondetail", kwargs={"pk": self.object.pk}))
 
