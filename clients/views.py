@@ -38,7 +38,6 @@ class ClientsCreate(LoginRequiredMixin, IsStaffTestMixin, CreateView):
             messages.warning(self.request,_("Warning, Something went wrong, please try again"))
         else:
             messages.success(self.request,_("Client has been saved."))
-            #success_url=reverse_lazy('clients:detail', slug=self.object.slug)
         return super().form_valid(form)
 
 class ClientsDetail(LoginRequiredMixin, IsStaffTestMixin, DetailView):
@@ -52,7 +51,6 @@ class ClientsDetail(LoginRequiredMixin, IsStaffTestMixin, DetailView):
             messages.warning(self.request,_("Warning, Something went wrong, please try again"))
         else:
             messages.success(self.request,_("Client has been saved."))
-            success_url = reverse_lazy('clients:detail', slug=self.object.slug)
 
         return super().form_valid(form)
     def get_context_data(self, **kwargs):
@@ -77,7 +75,7 @@ class ClientsUpdate(LoginRequiredMixin, IsStaffTestMixin,  UpdateView):
             messages.warning(self.request,_("Warning, Something went wrong, please try again"))
         else:
             messages.success(self.request,_("Client has been saved."))
-            success_url = reverse_lazy('clients:detail', slug=self.object.slug)
+
 
         return super().form_valid(form)
     def get_context_data(self, **kwargs):
@@ -126,7 +124,7 @@ def add_user(request, slug):
             messages.warning(request,_("Warning, Something went wrong, please try again"))
         else:
             messages.success(request,_("ticket has been resolved, thanks for using owr platform."))
-        return redirect('clients:detail', slug=self.object.slug)
+        return redirect('clients:edit', slug= slug)
 
     else:
-        return redirect('clients:detail', slug=self.object.slug)
+        return redirect('clients:edit', slug= slug)

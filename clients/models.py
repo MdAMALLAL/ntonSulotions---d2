@@ -30,5 +30,6 @@ class Client(models.Model):
         return reverse_lazy("clients:detail", kwargs={"slug": self.slug})
 
 
+
     class Meta:
         ordering = ["name"]
