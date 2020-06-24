@@ -65,8 +65,8 @@ class ClientsDetail(LoginRequiredMixin, IsStaffTestMixin, DetailView):
 class ClientsUpdate(LoginRequiredMixin, IsStaffTestMixin,  UpdateView):
     model= Client
     #fields=['name','email','tel','url','address','signed','comment']
-    form_class = ClientForm
     template_name = 'clients/client_detail.html'
+    form_class = ClientForm
     def form_valid(self, form):
         try:
             self.object = form.save(commit=False)
