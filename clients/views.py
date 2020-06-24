@@ -24,7 +24,6 @@ def csv_view(request):
 class ClientsCreate(LoginRequiredMixin, IsStaffTestMixin, CreateView):
     model = Client
     form_class = ClientForm
-    template_name = 'clients/client_list.html'
     def form_valid(self, form):
         try:
             self.object = form.save(commit=False)

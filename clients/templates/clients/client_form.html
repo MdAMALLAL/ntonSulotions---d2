@@ -20,7 +20,12 @@
               <p class="card-category">{% trans "Complete le profile" %}</p>
             </div>
             <div class="card-body">
-              <form action="{% url 'clients:detail' slug=form.instance.slug %}" method="post">
+              {% if form.instance.pk %}
+                <form action="{% url 'clients:detail' slug=form.instance.slug %}" method="post">
+              {% else %}
+              <form action="{% url 'clients:new'  %}" method="post">
+              {% endif %}
+
                 {% csrf_token %}
                 <div class="row">
                   <div class="col-md-6">
