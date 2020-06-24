@@ -60,14 +60,15 @@ class QuestionCreate(LoginRequiredMixin, generic.CreateView):
             d['ref'] = self.object.get_ref
             d['title'] = self.object.titre
             d['user'] = self.object.user.username
-            d['client'] = self.object.user.client.name
-
             d['ticket_url'] = "http://{0}{1}".format(self.request.META['HTTP_HOST'],
                                 reverse("solutions:questiondetail", kwargs={"pk": self.object.pk}))
 
 
             user_email = self.object.user.email
-            dsi_email = self.object.user.client.email
+
+            if self.object.user.client:
+                d['client'] = self.object.user.client.name
+                dsi_email = self.object.user.client.email
             # text_content = plaintext.render(d)
             # html_content = htmly.render(d)
             text_content = render_to_string('email/email_client.txt',{'context':d})
@@ -76,7 +77,8 @@ class QuestionCreate(LoginRequiredMixin, generic.CreateView):
             msg = EmailMultiAlternatives(subject, text_content, user_email, [dsi_email])
             msg.attach_alternative(html_content, "text/html")
             try:
-                msg.send()
+                if self.object.user.client:
+                    msg.send()
             except Exception as e:
                 logger.error(e)
 
@@ -86,7 +88,8 @@ class QuestionCreate(LoginRequiredMixin, generic.CreateView):
             d['ref'] = self.object.get_ref
             d['title'] = self.object.titre
             d['user'] = self.object.user.username
-            d['client'] = self.object.user.client.name
+            if self.object.user.client:
+                d['client'] = self.object.user.client.name
 
 
             d['ticket_url'] = "http://{0}{1}".format(self.request.META['HTTP_HOST'],
