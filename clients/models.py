@@ -2,6 +2,8 @@ from django.db import models
 from django.utils.translation import gettext_lazy as _
 from django.utils.text import slugify
 from django.urls import reverse_lazy
+from django.conf import settings
+User = settings.AUTH_USER_MODEL
 
 # Create your models here.
 class Client(models.Model):
@@ -13,6 +15,7 @@ class Client(models.Model):
     contact = models.CharField(blank=True,max_length=100,verbose_name=_('Contact'))
     contact_tel = models.CharField(blank=True,max_length=100,verbose_name=_("Contact's tel"))
     contact_email = models.EmailField(blank=True,verbose_name=_('Contact Email'))
+    charged_by = models.ForeignKey(User,null=True, related_name="charged_clients",on_delete=models.SET_NULL)
     slug = models.SlugField(allow_unicode=True, unique=True)
 
 

@@ -14,10 +14,10 @@ class SousCategorieResource(resources.ModelResource):
         model = SousCategorie
 
 class QuestionAdmin(ImportExportModelAdmin):
-    #fields=['titre', 'created_at','user','priorite','status']
-    list_display=['titre', 'created_at','user','charged_by','priorite','status']
+    #fields=['objet', 'created_at','user','priorite','status']
+    list_display=['objet', 'created_at','user','charged_by','priorite','status']
     list_editable=['priorite','status']
-    search_fields = ['titre','description']
+    search_fields = ['objet','description']
     list_filter = ['created_at','user','priorite','status']
     resource_class = QuestionResource
 

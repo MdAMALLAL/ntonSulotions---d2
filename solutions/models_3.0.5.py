@@ -43,7 +43,7 @@ class Question (models.Model):
 
     user = models.ForeignKey(User,null=True, related_name="tickets",on_delete=models.SET_NULL)
     created_at = models.DateTimeField(auto_now=True)
-    titre = models.CharField(max_length=200)
+    objet = models.CharField(max_length=200)
     description = models.TextField()
     image = models.ImageField(blank=True,null=True, upload_to='images/')
 
@@ -74,7 +74,7 @@ class Question (models.Model):
             return reverse("solutions:questiondetail", kwargs={"pk": self.pk})
 
     def __str__(self):
-        return self.titre
+        return self.objet
 
     class Meta:
         ordering = ["-created_at"]

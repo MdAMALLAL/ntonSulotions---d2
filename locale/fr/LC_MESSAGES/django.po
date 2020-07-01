@@ -146,7 +146,7 @@ msgstr "Addresse"
 #: .\solutions\templates\solutions\question_detail.html:113
 #: .\solutions\templates\solutions\question_list.html:17
 msgid "Title"
-msgstr "Titre"
+msgstr "objet "
 
 #: .\accounts\templates\accounts\user_detail.html:82
 #: .\clients\templates\clients\client_detail.html:180
@@ -680,7 +680,7 @@ msgstr ""
 
 #: .\templates\403.html:6
 msgid "Forbidden "
-msgstr "Forbidden - Interdite"
+msgstr "Accès Non Autorisé"
 
 #: .\templates\404.html:6
 msgid "page not found"

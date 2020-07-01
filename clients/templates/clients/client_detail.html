@@ -184,7 +184,7 @@
 
                       <tr>
                         <td>{{question.id}}</td>
-                        <td><a  href="{% url 'solutions:questiondetail' pk=question.pk %}">{{ question.titre }} </td>
+                        <td><a  href="{% url 'solutions:questiondetail' pk=question.pk %}">{{ question.objet  }} </td>
                           <td>{{ question.get_status_display}}</td>
                           <td>{{ question.created_at|date:"d/M/Y"}}</td>
                           <td><a href="{% url 'accounts:profile' username=question.user.username %}">{{question.user}}</a></td>

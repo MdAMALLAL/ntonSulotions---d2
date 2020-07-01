@@ -56,10 +56,10 @@ class QuestionCreate(LoginRequiredMixin, generic.CreateView):
             #  USER EMAIl
             plaintext = get_template('email/email.txt')
             htmly     = get_template('email/email.html')
-            subject = self.object.titre
+            subject = self.object.objet
             d = {}
             d['ref'] = self.object.get_ref
-            d['title'] = self.object.titre
+            d['object '] = self.object.objet
             d['user'] = self.object.user.username
             d['ticket_url'] = "http://{0}{1}".format(self.request.META['HTTP_HOST'],
                                 reverse("solutions:questiondetail", kwargs={"pk": self.object.pk}))
@@ -89,7 +89,7 @@ class QuestionCreate(LoginRequiredMixin, generic.CreateView):
             #  DSI EMAIl
             d = {}
             d['ref'] = self.object.get_ref
-            d['title'] = self.object.titre
+            d['object '] = self.object.objet
             d['user'] = self.object.user.username
 
             dsi_email = 'no_replay@ntonadvisory.com'
@@ -119,7 +119,7 @@ class QuestionCreate(LoginRequiredMixin, generic.CreateView):
         return context
 
 class QuestionEdit(LoginRequiredMixin, generic.UpdateView):
-    fields = ("titre", "description","image")
+    fields = ("objet", "description","image")
     model = Question
 
     def get_context_data(self, **kwargs):
@@ -169,7 +169,7 @@ class QuestionList(LoginRequiredMixin, generic.ListView):
             questionlist = questionlist.filter(status = self.request.GET.get('status'))
         if query:
             questionlist = questionlist.filter(
-                            Q(description__icontains=query) | Q(titre__icontains=query)
+                            Q(description__icontains=query) | Q(objet__icontains=query)
                             )
 
         return questionlist
@@ -198,7 +198,7 @@ class QuestionList(LoginRequiredMixin, generic.ListView):
 @login_required
 def add_reponce_to_question(request, pk):
     question = get_object_or_404(Question, pk=pk)
-    if request.is_staff() and request.POST.get('action') == "post":
+    if request.is_ajax() and request.POST.get('action') == "post":
         try:
             description = request.POST.get('description')
             status = request.POST.get('status')
@@ -459,7 +459,7 @@ def load_chart(request):
         chart = {
             'chart': {'type': 'pie'},
             'backgroundColor': 'transparent',
-            'title': '',
+            'object ': '',
             'series': [{
                 'name': 'Tickets',
                 'data': list(map(lambda row: {'name': port_display_name[row['status']], 'y': row['total']}, dataset))
@@ -529,7 +529,7 @@ def load_chart(request):
         chart = {
             'chart': {'type': 'line'},
             'backgroundColor': 'transparent',
-            'title': {'text': ''},
+            'object ': {'text': ''},
             'xAxis': {'categories': dates,},
             'series': [survived_series, ]
         }
@@ -557,7 +557,7 @@ def load_chart(request):
         chart = {
             'chart': {'type': 'column'},
             'backgroundColor': 'transparent',
-            'title': {'text': ''},
+            'object ': {'text': ''},
             'xAxis': {'categories': categories,},
             'series': [tickets_series_data, ]
         }

@@ -28,12 +28,20 @@
       <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
       <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
   <![endif]-->
-  <link rel="stylesheet" href="{%static 'css/master.nton.css'%}?v=1.1.6">
+  <link rel="stylesheet" href="{%static 'css/master.nton.css'%}?v=1.1.7{% now "ymdhms" %}">
   {% comment %} {% now "ymdhms" %} {% endcomment %}
 
 </head>
 
 <body class="">
+  <!-- loader -->
+  <div id="ftco-loader" class="show fullscreen">
+  <svg class="circular" width="48px" height="48px">
+  <circle class="path-bg" cx="24" cy="24" r="22" fill="none" stroke-width="4" stroke="#83CB1E"/>
+  <circle class="path" cx="24" cy="24" r="22" fill="none" stroke-width="4" stroke-miterlimit="10" stroke="#007bff"/>
+  </svg>
+  </div>
+
   <div class="wrapper ">
     <div class="sidebar" data-color="green" data-background-color="white" data-image="">
       <!--
@@ -255,6 +263,16 @@
 
 
   <script>
+
+
+
+  $(document).ajaxStart(function() {
+      $('#ftco-loader').addClass('show');
+    });
+
+  $(document).ajaxComplete(function() {
+      $('#ftco-loader').removeClass('show');
+    });
     $(document).ready(function() {
 
       function get_notification() {
@@ -447,14 +465,9 @@
 
         });
       });
-
+      $('#ftco-loader').removeClass('show');
         get_notification();
-
     });
-
-
-
-
 
   </script>
 

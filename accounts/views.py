@@ -119,7 +119,7 @@ class UserListView(IsStaffTestMixin, ListView):
 
 class ProfileUpdateView(LoginRequiredMixin, UpdateView):
     model=User
-    fields=['username','first_name','last_name','tel','email','client','is_staff','avatar']
+    fields=['username','first_name','last_name','tel','email','client','is_staff','avatar','supervisor']
     slug_field='username'
     slug_url_kwarg='username'
     user = "user"

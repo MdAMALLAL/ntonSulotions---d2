@@ -8,7 +8,7 @@ class UserResource(resources.ModelResource):
         model = User
 
 class UseAdmin(ImportExportModelAdmin):
-    #fields=['titre', 'created_at','user','priorite','status']
+    #fields=['objet', 'created_at','user','priorite','status']
     list_display=['username', 'email','client','is_staff',]
     list_editable=['client','is_staff']
     search_fields = ['username','email']

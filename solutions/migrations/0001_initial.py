@@ -34,7 +34,7 @@ class Migration(migrations.Migration):
                 ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('ref', models.PositiveIntegerField(default=solutions.models.Question.ref, verbose_name='Reference')),
                 ('created_at', models.DateTimeField(auto_now_add=True)),
-                ('titre', models.CharField(max_length=200)),
+                ('objet', models.CharField(max_length=200)),
                 ('image', models.ImageField(blank=True, null=True, upload_to=solutions.models.Question.content_file_name)),
                 ('priorite', models.CharField(choices=[('F', 'Low'), ('M', 'Medium'), ('H', 'Height'), ('U', 'Urgent')], default='F', max_length=1)),
                 ('status', models.CharField(choices=[('EA', 'Waiting'), ('RS', 'Resolved'), ('OV', 'Open'), ('FR', 'Closed'), ('RF', 'Refused'), ('AN', 'Canceled'), ('DS', 'Deactiveted')], default='OV', max_length=2)),

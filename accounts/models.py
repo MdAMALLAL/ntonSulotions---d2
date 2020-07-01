@@ -46,6 +46,7 @@ class User(AbstractBaseUser , PermissionsMixin):
     date_joined = models.DateTimeField(_('date joined'), auto_now_add=True)
     is_active = models.BooleanField(_('active'), default=True)
     is_staff = models.BooleanField(_('Consultant'), default=False)
+    supervisor = models.ForeignKey('self', unique=False,null=True, blank=True, related_name="consultants",on_delete=models.SET_NULL)
     avatar = models.ImageField(upload_to='avatars/', null=True, blank=True)
     client = models.ForeignKey(client.Client, null=True, blank=True, related_name="users",on_delete=models.SET_NULL)
 

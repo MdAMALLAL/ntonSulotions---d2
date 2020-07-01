@@ -68,9 +68,9 @@
                     </div>
                   </div>
                   {% if not user == request.user %}
-                  <div class="col-md-4">
+                  {% comment %} <div class="col-md-4">
                     <div class="form-group" style="">
-                      <div id="is_staff" class="form-check  collapse show">
+                      <div id="is_staff" class="is_staff form-check  collapse hide">
                         <label class="form-check-label">
                             <input type="checkbox" name="is_staff" disable=""
                             class="form-check-input " id="id_is_staff" readonly>
@@ -80,10 +80,15 @@
                             </span>
                         </label>
                       </div>
-                    </div>
+                    </div> {% endcomment %}
+                  <div class="col-md-4">
+                    {% bootstrap_field form.is_staff  %}
                   </div>
                   <div class="col-md-6">
                         {% bootstrap_field form.client %}
+                  </div>
+                  <div class="is_staff col-md-6 collapse hide">
+                    {% bootstrap_field form.supervisor layout='horizontal' %}
                   </div>
                   {% endif %}
                 </div>
@@ -180,10 +185,10 @@
   function show_consutat() {
     var clientId = $("#id_client").children("option:selected").text();
     if (clientId == 'ntonadvisory') {
-          $("#is_staff").collapse('show');
+          $(".is_staff").collapse('show');
     }
     else {
-      $("#is_staff").collapse('hide');
+      $(".is_staff").collapse('hide');
     }
   }
 

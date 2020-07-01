@@ -39,6 +39,7 @@ class Question(models.Model):
         ('M', _('Medium')),
         ('H', _('Height')),
         ('U', _('Urgent')),
+        ('B',_('Bloquant'))
         )
 ###           Status             ###
     Status= (
@@ -51,7 +52,6 @@ class Question(models.Model):
         ('DS', _('Deactiveted')),
         )
 
-
     def content_file_name(instance, filename):
         filename = "%s__%s" % (uuid.uuid4().hex[:6].upper(),filename)
         return os.path.join('images', str(instance.user.id), filename)
@@ -62,18 +62,16 @@ class Question(models.Model):
             return 1
         else:
             return  no + 1
-
-
     user = models.ForeignKey(User,null=True, related_name="tickets",on_delete=models.SET_NULL)
     ref = models.PositiveIntegerField(default=ref, verbose_name='Reference')
     # ref = models.CharField(default=ref, unique=True, editable=False,  max_length=100)
     created_at = models.DateTimeField(auto_now_add=True,editable=False)
-    titre = models.CharField(max_length=200)
-
+    objet = models.CharField(max_length=200)
     image = models.ImageField(blank=True,null=True, upload_to=content_file_name)
-
     priorite=models.CharField(max_length=1,choices=Priorite,default='F',)
     status = models.CharField(max_length=2,choices=Status,default='OV',)
+    status_intern = models.CharField(max_length=2,choices=Status,default='OV',)
+
     categorie = models.ForeignKey(Categorie, on_delete=models.CASCADE, related_name='quesions',)
     souscategorie = models.ForeignKey(SousCategorie, on_delete=models.CASCADE, related_name='quesions',)
 
@@ -146,7 +144,7 @@ class Question(models.Model):
             return reverse_lazy("solutions:questiondetail", kwargs={"pk": self.pk})
 
     def __str__(self):
-        return self.titre
+        return self.objet
 
     class Meta:
         ordering = ["-created_at"]
