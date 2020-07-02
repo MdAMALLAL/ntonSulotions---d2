@@ -10,7 +10,7 @@ class Command(BaseCommand):
 
     def handle(self, *args, **options):
         #init cron
-        cron = CronTab(user='ntonadvisory')
+        cron = CronTab()
 
         #add new cron job
         job = cron.new(command='python3 manage.py report_uncharged_emails >>/tmp/out.txt 2>&1')
