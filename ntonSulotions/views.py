@@ -5,8 +5,9 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from solutions.models import Question
 from accounts.models import User
 from clients.models import Client
-from django.shortcuts import render_to_response
+from django.shortcuts import render_to_response, redirect
 from django.template import RequestContext
+from django.utils import translation
 
 from django.db.models import Count,Q,Avg,Sum,F,FloatField
 from django.db.models.functions import Cast
@@ -75,7 +76,19 @@ class HomePage(LoginRequiredMixin, TemplateView):
 
         return context
 
+def set_language_from_url(request, user_language):
+    print(request.user)
+    user = request.user
+    user.lang = user_language
+    user.save()
+    print(user_language)
+    translation.activate(user.lang)
 
+    request.session[translation.LANGUAGE_SESSION_KEY] = user.lang
+    print(request.session[translation.LANGUAGE_SESSION_KEY])
+
+
+    return redirect(request.GET.get('next', reverse('home')))
 
 def handler400(request, exception, template_name="400.html"):
     response = render_to_response(template_name)

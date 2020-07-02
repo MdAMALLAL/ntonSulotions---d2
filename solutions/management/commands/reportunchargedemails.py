@@ -3,7 +3,7 @@ from django.core.management.base import BaseCommand, CommandError
 from django.template.loader import get_template, render_to_string
 from django.utils import timezone
 from datetime import timedelta
-
+from django.utils import translation
 from solutions.models import Question
 import datetime, pytz
 # import the logging library
@@ -22,11 +22,18 @@ class Command(BaseCommand):
         '''
         Get completed sessions, send invite to vote
         '''
-        uncharged_questions = Question.objects.filter(created_at__gte=(timezone.now()-timedelta(days=2)), charged_by__isnull=True)
+        uncharged_questions = Question.objects.filter(created_at__gte=(timezone.now()-timedelta(days=1)), charged_by__isnull=True)
 
         for question in uncharged_questions:
             plaintext = get_template('email/email.txt')
             htmly     = get_template('email/email.html')
+            if question.user.client:
+                d['client'] = question.user.client.name
+                to_email = question.user.client.charged_by.supervisor.email
+                translation.active(question.user.client.charged_by.supervisor.lang)
+            else:
+                to_email = 'no_replay@ntonadvisory.com'
+
             subject = _('Ticket not yet taken into account')
             d = {}
             d['ref'] = question.get_ref
@@ -38,11 +45,7 @@ class Command(BaseCommand):
 
             user_email = question.user.email
 
-            if question.user.client:
-                d['client'] = question.user.client.name
-                to_email = question.user.client.charged_by.supervisor.email
-            else:
-                to_email = 'no_replay@ntonadvisory.com'
+
             # text_content = plaintext.render(d)
             # html_content = htmly.render(d)
             text_content = render_to_string('email/email_client.txt',{'context':d})

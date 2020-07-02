@@ -145,7 +145,7 @@
 
                 </div>
               </li>
-              <li class="nav-item dropdown">
+              <!-- <li class="nav-item dropdown">
                 <form class="form-inline my-2 ml-1 my-lg-0" action="{% url 'set_language' %}" method="post">
                   {% csrf_token %}
                   <input class="form-control mr-sm-2"  name="next" type="hidden" value="{{ redirect_to }}">
@@ -157,7 +157,27 @@
                   {% endfor %}
                 </select>
               </form>
+
+              </li> -->
+              <li class="nab-item">
+                <div class=" dropdown-submenu">
+                  <a class="nav-link" href="javascript:;" id="navbarDropdownlang" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    {% trans "Language" %}
+
+                  </a>
+                  <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdownlang">
+                    {% get_current_language as LANGUAGE_CODE %}
+                    {% get_available_languages as LANGUAGES %}
+                    {% get_language_info_list for LANGUAGES as languages %}
+                    {% for language in languages %}
+                      <a class="nav-link {% if language.code == LANGUAGE_CODE %} selected disabled{% endif %}"
+                       href='{% url "set_language_from_url" user_language=language.code %}?next={{request.get_full_path_info}}'>{{ language.name_local }}</a>
+                    {% endfor %}
+
+                  </div>
+                </div>
               </li>
+
               <li class="nav-item dropdown">
                 <a class="nav-link" href="javascript:;" id="navbarDropdownProfile" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                   <i class="material-icons">person</i>
@@ -167,8 +187,14 @@
                 </a>
                 <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdownProfile">
                   <a class="dropdown-item" href="{% url 'accounts:myprofile' %}">Profile</a>
-                  {% comment %} <a class="dropdown-item" href="#">{% trans "Settings" %}</a> {% endcomment %}
-                  <div class="dropdown-divider"></div>
+
+
+
+
+
+
+
+
                   <a class="dropdown-item" href="{% url 'accounts:logout' %}">{% trans "Log out" %}</a>
                 </div>
               </li>
@@ -237,11 +263,11 @@
   <!--  Plugin for the Sliders, full documentation here: http://refreshless.com/nouislider/ -->
   <script src="../assets/js/plugins/nouislider.min.js"></script>
   <!-- Include a polyfill for ES6 Promises (optional) for IE11, UC Browser and Android browser support SweetAlert -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/core-js/2.4.1/core.js"></script>
+  <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/core-js/2.4.1/core.js"></script> -->
   <!-- Library for adding dinamically elements -->
   <script src="../assets/js/plugins/arrive.min.js"></script>
   <!--  Google Maps Plugin    -->
-  <script src="https://maps.googleapis.com/maps/api/js?key=YOUR_KEY_HERE"></script>
+  <!-- <script src="https://maps.googleapis.com/maps/api/js?key=YOUR_KEY_HERE"></script> -->
   <!-- Chartist JS -->
   <script src="../assets/js/plugins/chartist.min.js"></script>
   <!--  Notifications Plugin    -->
@@ -259,7 +285,8 @@
   <script src='{% static "js/plugins/perfect-scrollbar.jquery.min.js" %}'></script>
   <script src='{% static "js/material-dashboard.js" %}?v=2.1.5' type="text/javascript"></script>
   <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"  crossorigin="anonymous"></script>
-  <script src="https://unpkg.com/bootstrap-table/dist/bootstrap-table.js"></script>
+  <!-- <script src="https://unpkg.com/bootstrap-table/dist/bootstrap-table.min.js"></script> -->
+  <script src='{% static "js/bootstrap-table.min.js" %}' type="text/javascript"></script>
 
 
   <script>
