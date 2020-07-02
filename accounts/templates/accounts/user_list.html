@@ -68,7 +68,7 @@
   {% comment %}New User tab {% endcomment %}
   <div class="tab-pane fade" id="profile" role="tabpanel" aria-labelledby="profile-tab">
     <div class="row">
-      <div class="col-12 col-md-10 col-md-6">
+      <div class="col-12 col-md-11 col-lg-11">
         <div class="card">
         <div class="card-header card-header-success">
           <h4 class="card-title">{% trans "New user" %}</h4>
@@ -80,12 +80,12 @@
             <div class="row">
               <div class="col-md-6">
                 <div class="form-group">
-                  {% bootstrap_field form.username  placeholder='' %}
+                  {% bootstrap_field form.username addon_before='<span class="input-group-text fa fa-user"></span>' placeholder='' %}
                 </div>
               </div>
               <div class="col-md-6">
                 <div class="form-group">
-                  {% bootstrap_field form.email  placeholder='' %}
+                  {% bootstrap_field form.email  addon_before='<span class="input-group-text fa fa-at"></span>' placeholder='' %}
                 </div>
               </div>
               <div class="col-md-6">
@@ -111,7 +111,7 @@
                 </div>
               </div>
               <div class="col-md-6">
-                {% bootstrap_field form.client layout='horizontal' %}
+                {% bootstrap_field form.client  layout='horizontal' %}
 
               </div>
               <div class="col-md-6">

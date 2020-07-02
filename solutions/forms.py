@@ -15,7 +15,7 @@ class ReponceForm(forms.ModelForm):
 class QuestionForm(forms.ModelForm):
 
     class Meta:
-        fields = ("categorie","souscategorie","objet","priorite","image", "description")
+        fields = ("categorie","souscategorie","objet","priorite","image", "description",'priorite_intern')
         model = Question
 
     def __init__(self, *args, **kwargs):

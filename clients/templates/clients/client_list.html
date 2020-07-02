@@ -75,46 +75,49 @@
               <div class="row">
                 <div class="col-md-6">
                   <div class="form-group">
-                    {% bootstrap_field form.name  placeholder='' %}
+                    {% bootstrap_field form.name  addon_before='<span class="input-group-text fa fa-building"></span>' placeholder='' %}
                   </div>
                 </div>
                 <div class="col-md-6">
                   <div class="form-group">
-                    {% bootstrap_field form.email  placeholder='' %}
+                    {% bootstrap_field form.email addon_before='<span class="input-group-text fa fa-at"></span>' placeholder='' %}
                   </div>
                 </div>
               </div>
               <div class="row">
                 <div class="col-md-6">
                   <div class="form-group">
-                    {% bootstrap_field form.tel  placeholder='' %}
+                    {% bootstrap_field form.tel addon_before='<span class="input-group-text fa fa-phone"></span>' placeholder='' %}
                   </div>
                 </div>
                 <div class="col-md-6">
                   <div class="form-group">
-                    {% bootstrap_field form.url  placeholder='' %}
+                    {% bootstrap_field form.url addon_before='<span class="input-group-text fa fa-internet-explorer"></span>' placeholder='' %}
                   </div>
                 </div>
               </div>
               <div class="row">
                 <div class="col-md-4">
                   <div class="form-group">
-                    {% bootstrap_field form.contact  placeholder='' %}
+                    {% bootstrap_field form.contact addon_before='<span class="input-group-text fa fa-user"></span>' placeholder='' %}
                   </div>
                 </div>
                 <div class="col-md-4">
                   <div class="form-group">
-                    {% bootstrap_field form.contact_tel placeholder=''  %}
+                    {% bootstrap_field form.contact_tel addon_before='<span class="input-group-text fa fa-phone"></span>' placeholder=''  %}
                   </div>
                 </div>
                 <div class="col-md-4">
                   <div class="form-group">
-                    {% bootstrap_field form.contact_email placeholder=''  %}
+                    {% bootstrap_field form.contact_email addon_before='<span class="input-group-text fa fa-at"></span>' placeholder=''  %}
                   </div>
                 </div>
 
               </div>
               <div class="row">
+                <div class="col-md-12">
+                  {% bootstrap_field form.charged_by placeholder=''  %}
+                </div>
                 <div class="col-md-12">
                   {% bootstrap_field form.address placeholder=''  %}
 

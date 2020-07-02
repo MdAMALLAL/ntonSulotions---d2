@@ -27,7 +27,7 @@ class ClientsCreate(LoginRequiredMixin, UserPassesTestMixin,CreateView):
     form_class = ClientForm
     def test_func(self):
         return self.request.user.is_staff
-        
+
     def form_valid(self, form):
         try:
             self.object = form.save(commit=False)
@@ -65,7 +65,6 @@ class ClientsDetail(LoginRequiredMixin,UserPassesTestMixin,DetailView):
 
 class ClientsUpdate(LoginRequiredMixin, UserPassesTestMixin,UpdateView):
     model= Client
-    #fields=['name','email','tel','url','address','signed','comment']
     form_class = ClientForm
     template_name = 'clients/client_detail.html'
 
