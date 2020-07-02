@@ -101,7 +101,7 @@
             </tr>
             <tr class="col-md-6 col-sm-12 row no-gutters">
               <th class="col-4 bg-light">{% trans "Priority" %}</th>
-              <td class="col bg-white">{{question.get_priorite_display}}</td>
+              <td class="col bg-white">{{question.get_priorite_display}} {% if request.user.is_staff %}/{{question.get_priorite_intern_display}}{% endif %}</td>
             </tr>
             <tr class="col-md-12 col-sm-12 row no-gutters">
               <th class="col-2 bg-light">{% trans "Categorie" %}</th>
