@@ -20,8 +20,11 @@
               <form action="{% url 'accounts:edit' username=user.username %}" method="post">
                 {% csrf_token %}
                 <div class="row">
-                  <div class="col-md-6">
-                    <div class="form-group bmd-form-group is-filled">
+                  <div class="col-md-6 form-group">
+                    <div class="input-group bmd-form-group is-filled">
+                      <div class="input-group-prepend">
+                        <span class="input-group-text fa fa-user"></span>
+                      </div>
                       <label for="id_username" class="bmd-label-static">{% trans "Display name" %}</label>
                       <input type="text" name="username" value="{{form.instance.username}}"
                       maxlength="100" class="tobeedited form-control-plaintext " title="" required="" id="id_username" readonly>
@@ -29,8 +32,11 @@
                   </div>
                   <div class="col-md-6">
                     <div class="form-group" >
-                      <div class="form-group bmd-form-group is-filled">
+                      <div class="input-group bmd-form-group is-filled">
                         <label for="id_email" class="bmd-label-static">{% trans "Email address" %}</label>
+                        <div class="input-group-prepend">
+                          <span class="input-group-text fa fa-at"></span>
+                        </div>
                         <input type="email" name="email" value="{{form.instance.email}}"
                         maxlength="254" class="tobeedited form-control-plaintext " title="" required="" id="id_email" readonly>
                       </div>
@@ -40,7 +46,10 @@
                 <div class="row">
                   <div class="col-md-6">
                     <div class="form-group disable" >
-                      <div class="form-group bmd-form-group is-filled">
+                      <div class="input-group bmd-form-group is-filled">
+                        <div class="input-group-prepend">
+                          <span class="input-group-text fa fa-user"></span>
+                        </div>
                         <label for="id_first_name" class="bmd-label-static">{% trans "First name" %}</label>
                         <input type="text" name="first_name" value="{{form.instance.first_name}}"
                         maxlength="30" class="tobeedited form-control-plaintext" title="" id="id_first_name" readonly>
@@ -49,7 +58,10 @@
                   </div>
                   <div class="col-md-6">
                     <div class="form-group " >
-                      <div class="form-group bmd-form-group is-filled">
+                      <div class="input-group bmd-form-group is-filled">
+                        <div class="input-group-prepend">
+                          <span class="input-group-text fa fa-user"></span>
+                        </div>
                         <label for="id_last_name" class="bmd-label-static">{% trans "Last name" %}</label>
                         <input type="text" name="last_name" value="{{form.instance.last_name}}"
                         maxlength="30" class="tobeedited form-control-plaintext" title="" id="id_last_name" readonly>
@@ -61,14 +73,17 @@
 
                   <div class="col-md-6">
                     <div class="form-group">
-                      <div class="form-group bmd-form-group is-filled">
+                      <div class="input-group bmd-form-group is-filled">
+                        <div class="input-group-prepend">
+                          <span class="input-group-text fa fa-phone"></span>
+                        </div>
                         <label for="id_tel" class="bmd-label-static">{% trans "Telephone" %}</label>
                         <input type="text" name="tel" value="{{form.instance.tel}}"
                         maxlength="40" class="tobeedited form-control-plaintext" title="" id="id_tel" readonly></div>
                     </div>
                   </div>
                   {% if not user == request.user %}
-                  {% comment %} <div class="col-md-4">
+                  <div class="col-md-4">
                     <div class="form-group" style="">
                       <div id="is_staff" class="is_staff form-check  collapse hide">
                         <label class="form-check-label">
@@ -80,15 +95,17 @@
                             </span>
                         </label>
                       </div>
-                    </div> {% endcomment %}
-                  <div class="col-md-4">
-                    {% bootstrap_field form.is_staff  %}
+                    </div>
                   </div>
+
+                  {% comment %} <div class="col-md-4">
+                    {% bootstrap_field form.is_staff  %}
+                  </div> {% endcomment %}
                   <div class="col-md-6">
                         {% bootstrap_field form.client %}
                   </div>
                   <div class="is_staff col-md-6 collapse hide">
-                    {% bootstrap_field form.supervisor layout='horizontal' %}
+                    {% bootstrap_field form.supervisor %}
                   </div>
                   {% endif %}
                 </div>

@@ -2,11 +2,13 @@ from django.db import models
 from django.utils import timezone
 from django.urls import reverse, reverse_lazy
 from django.utils.translation import gettext_lazy as _
-from django.conf import settings
+
 from django.db.models import Max
 import os
 import datetime
 import uuid
+
+from django.conf import settings
 User = settings.AUTH_USER_MODEL
 
 
@@ -70,7 +72,7 @@ class Question(models.Model):
     image = models.ImageField(blank=True,null=True, upload_to=content_file_name)
     priorite=models.CharField(max_length=1,choices=Priorite,default='F',)
     status = models.CharField(max_length=2,choices=Status,default='OV',)
-    status_intern = models.CharField(max_length=2,choices=Status,default='OV',)
+    priorite_intern = models.CharField(max_length=2,choices=Priorite,default='OV',)
 
     categorie = models.ForeignKey(Categorie, on_delete=models.CASCADE, related_name='quesions',)
     souscategorie = models.ForeignKey(SousCategorie, on_delete=models.CASCADE, related_name='quesions',)

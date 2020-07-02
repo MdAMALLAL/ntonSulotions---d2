@@ -7,7 +7,7 @@ User = settings.AUTH_USER_MODEL
 
 # Create your models here.
 class Client(models.Model):
-    name = models.CharField(max_length=100,verbose_name=_('Name'))
+    name = models.CharField(max_length=100, unique=True, verbose_name=_('Name'))
     address = models.TextField(blank=True,verbose_name=_('Address'))
     tel = models.CharField(blank=True, max_length=40,verbose_name=_('Telephone'))
     url = models.URLField(blank=True, verbose_name=_('Web site'))
@@ -23,6 +23,7 @@ class Client(models.Model):
         return self.name
 
     def save(self, *args, **kwargs):
+        self.validate_unique()
         self.slug = slugify(self.name)
         super().save(*args, **kwargs)
 

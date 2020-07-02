@@ -29,7 +29,7 @@
         </form>
       </li>
       {% endif %}
-      {% if not question.charged_by and request.user.is_staff %}
+      {% if not question.charged_by == request.user and request.user.is_staff %}
       <li class="nav-item">
         {% comment %} <form class="" action="{% url 'solutions:questioneCharged' pk=question.pk %}" method="post"> {% endcomment %}
           {% csrf_token %}
@@ -100,7 +100,7 @@
               <td id='status_display' class="col bg-white">{{question.get_status_display}}</td>
             </tr>
             <tr class="col-md-6 col-sm-12 row no-gutters">
-              <th class="col-4 bg-light">{% trans "Priorite" %}</th>
+              <th class="col-4 bg-light">{% trans "Priority" %}</th>
               <td class="col bg-white">{{question.get_priorite_display}}</td>
             </tr>
             <tr class="col-md-12 col-sm-12 row no-gutters">

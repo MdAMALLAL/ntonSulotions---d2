@@ -18,6 +18,7 @@
       <th data-field="status" data-sortable="true">{% trans "Status" %}</th>
       <th data-field="published" data-sortable="true">{% trans "Published on" %}</th>
       <th data-field="applicant" data-sortable="true">{% trans "Applicant" %}</th>
+      <th data-field="applicant" data-sortable="true">{% trans "Consultant" %}</th>
       <th data-field="priority" data-sortable="true">{% trans "priority" %}</th>
       <th data-field="categorie" data-sortable="true">{% trans "Categorie" %}</th>
       <th data-field="resolution" data-sortable="true">{% trans "Resolution time" %}</th>
@@ -32,6 +33,7 @@
         <td>{{ question.get_status_display}}</td>
         <td>{{ question.created_at|date:"d/M/Y"}}</td>
         <td>{{question.user}}</td>
+        <td>{{question.charged_by|default_if_none:''}}</td>
         <td>{{ question.get_priorite_display}}</td>
         <td>{{ question.categorie.name}}</td>
         <td>{{question.get_time_to_resolv}}</td>

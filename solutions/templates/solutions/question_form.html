@@ -60,6 +60,13 @@
                         {% bootstrap_field form.objet   placeholder='' %}
                       </div>
                     </div>
+                    {% if request.user.is_staff %}
+                    <div class="col-md-6">
+                      <div class="form-group">
+                        {% bootstrap_field form.priorite_intern   placeholder='' %}
+                      </div>
+                    </div>
+                    {% endif %}
 
                   </div>
                   <div class="row">
@@ -89,7 +96,7 @@
       </div>
 
       <script>
-        
+
         $("#id_categorie").change(function () {
           var url = $("#quesionForm").attr("data-categorie-url");
           var categorieId = $(this).val();

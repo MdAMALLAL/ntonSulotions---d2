@@ -38,7 +38,7 @@ class UserManager(AbstractUserManager):
         return self._create_user(email, password, **extra_fields)
 
 class User(AbstractBaseUser , PermissionsMixin):
-    username = models.CharField(_('Display Name'),unique=True, max_length=100)
+    username = models.CharField(_('Username'),unique=True, max_length=100)
     email = models.EmailField(_('email address'), unique=True)
     first_name = models.CharField(_('first name'), max_length=30, blank=True)
     last_name = models.CharField(_('last name'), max_length=30, blank=True)
@@ -49,6 +49,9 @@ class User(AbstractBaseUser , PermissionsMixin):
     supervisor = models.ForeignKey('self', unique=False,null=True, blank=True, related_name="consultants",on_delete=models.SET_NULL)
     avatar = models.ImageField(upload_to='avatars/', null=True, blank=True)
     client = models.ForeignKey(client.Client, null=True, blank=True, related_name="users",on_delete=models.SET_NULL)
+    lang = models.CharField(max_length=5,blank=True, default='fr')
+    notify_by_email = models.BooleanField(default=True)
+    notify_in_app = models.BooleanField(default=True)
 
     objects = UserManager()
 
@@ -58,6 +61,10 @@ class User(AbstractBaseUser , PermissionsMixin):
     class Meta:
         verbose_name = _('user')
         verbose_name_plural = _('users')
+    def save(self, *args,**kwargs):
+        self.validate_unique()
+        super(User,self).save(*args, **kwargs)
+
 
     def get_full_name(self):
         '''
@@ -77,7 +84,6 @@ class User(AbstractBaseUser , PermissionsMixin):
         Sends an email to this User.
         '''
         send_mail(subject, message, from_email, [self.email], **kwargs)
-
 
     def __str__(self):
         return "@{}".format(self.username)

@@ -10,6 +10,7 @@ from django.http import HttpResponseRedirect, JsonResponse, Http404
 from django.shortcuts import render, get_object_or_404, redirect
 from django.urls import reverse, reverse_lazy
 from django.utils import timezone
+from django.utils import translation
 from django.utils.translation import gettext_lazy as _
 from django.views import generic
 from django.template.loader import get_template, render_to_string
@@ -63,8 +64,6 @@ class QuestionCreate(LoginRequiredMixin, generic.CreateView):
             d['user'] = self.object.user.username
             d['ticket_url'] = "http://{0}{1}".format(self.request.META['HTTP_HOST'],
                                 reverse("solutions:questiondetail", kwargs={"pk": self.object.pk}))
-
-
             user_email = self.object.user.email
 
             if self.object.user.client:
@@ -76,7 +75,6 @@ class QuestionCreate(LoginRequiredMixin, generic.CreateView):
             # html_content = htmly.render(d)
             text_content = render_to_string('email/email_client.txt',{'context':d})
             html_content = render_to_string('email/email_client.html',{'context':d})
-
             msg = EmailMultiAlternatives(subject, text_content, user_email, [dsi_email])
             msg.attach_alternative(html_content, "text/html")
             try:
@@ -87,6 +85,7 @@ class QuestionCreate(LoginRequiredMixin, generic.CreateView):
 
             ########################
             #  DSI EMAIl
+            translation.activate(self.object.user.lang)
             d = {}
             d['ref'] = self.object.get_ref
             d['object '] = self.object.objet
@@ -119,7 +118,7 @@ class QuestionCreate(LoginRequiredMixin, generic.CreateView):
         return context
 
 class QuestionEdit(LoginRequiredMixin, generic.UpdateView):
-    fields = ("objet", "description","image")
+    fields = ("objet", "description","image","priorite_intern")
     model = Question
 
     def get_context_data(self, **kwargs):
@@ -216,7 +215,7 @@ def add_reponce_to_question(request, pk):
                 status = status,
                 send_mail = send_mail ,
                 )
-            if  reponce.description == "" : reponce.description = 'Ticket status has changed to {0} by {1}'.format(reponce.get_status_display(), request.user)
+            if  reponce.description == "" : reponce.description = _('Ticket status has changed to {0} by {1}'.format(reponce.get_status_display(), request.user))
 
             reponce.save()
             if not question.viwed_at :
@@ -246,6 +245,7 @@ def add_reponce_to_question(request, pk):
                 #print(send_mail)
                 d = {}
                 d['description'] = description
+                translation.activate(reponce.user.lang)
                 subject = _('novelty on ticket {}'.format(ref))
                 text_content = render_to_string('email/email-report.txt',{'context':d})
                 html_content = render_to_string('email/email-report.html',{'context':d})
@@ -280,7 +280,7 @@ def add_reponce_to_question(request, pk):
         if form.is_valid():
             try:
                 reponce = form.save(commit=False)
-                if  reponce.description == "" : reponce.description = 'Ticket status has charged to {0} by {1}'.format(reponce.get_status_display(), request.user)
+                if  reponce.description == "" : reponce.description = _('Ticket status has changed to {0} by {1}'.format(reponce.get_status_display(), request.user))
 
                 reponce.question = question
                 reponce.user = request.user
@@ -349,7 +349,7 @@ def questioneResolved(request, pk):
     question = get_object_or_404(Question, pk=pk)
     if request.method == "POST":
         try:
-            description = 'Ticket status has changed to resolved by {}'.format(request.user)
+            description = _('Ticket status has changed to resolved by {}'.format(request.user))
             reponce = Reponce(
                 user = request.user,
                 description = description,
@@ -374,17 +374,18 @@ def questioneResolved(request, pk):
             ref = question.get_ref()
             if reponce.user.is_staff:
                 question.user.add_notification(
-                    description_en = 'Ticket ({0}) {1} {2}'.format(ref, _('marked as resolved by'),reponce.user),
-                    description_fr = 'Ticket ({0}) {1} {2}'.format(ref, _('marqué comme résolu par'),reponce.user),
+                    description_en = 'Ticket ({0}) {1} {2}'.format(ref, 'marked as resolved by',reponce.user),
+                    description_fr = 'Ticket ({0}) {1} {2}'.format(ref, 'marqué comme résolu par',reponce.user),
                     url = question.pk)
             else:
                 question.charged_by.add_notification(
-                    description_en = 'Ticket ({0}) {1} {2}'.format(ref, _('marked as resolved by'),reponce.user),
-                    description_fr = 'Ticket ({0}) {1} {2}'.format(ref, _('marqué comme résolu par'),reponce.user),
+                    description_en = 'Ticket ({0}) {1} {2}'.format(ref, 'marked as resolved by',reponce.user),
+                    description_fr = 'Ticket ({0}) {1} {2}'.format(ref, 'marqué comme résolu par',reponce.user),
                     url = question.pk)
             d = {}
             d['description'] = description
             subject = _('novelty on ticket {}'.format(ref))
+            translation.activate(reponce.user.lang)
             text_content = render_to_string('email/email-report.txt',{'context':d})
             html_content = render_to_string('email/email-report.html',{'context':d})
             msg_from = reponce.user.email
@@ -569,7 +570,7 @@ def questioneCharged(request, pk):
     question = get_object_or_404(Question, pk=pk)
     if request.is_ajax():
         try:
-            description = 'Ticket status has been taked into account by {}'.format(request.user)
+            description = _('Ticket status has been taked into account by {}'.format(request.user))
             reponce = Reponce(
                 user = request.user,
                 description = description,
@@ -630,7 +631,7 @@ def questioneCharged(request, pk):
 
     elif request.method == "POST":
         try:
-            description = 'Ticket status has been taked into account by {}'.format(request.user)
+            description = _('Ticket status has been taked into account by {}'.format(request.user))
             reponce = Reponce(
                 user = request.user,
                 description = description,
