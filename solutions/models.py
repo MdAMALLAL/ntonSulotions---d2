@@ -72,7 +72,7 @@ class Question(models.Model):
     image = models.ImageField(blank=True,null=True, upload_to=content_file_name)
     priorite=models.CharField(max_length=1,choices=Priorite,default='F',)
     status = models.CharField(max_length=2,choices=Status,default='OV',)
-    priorite_intern = models.CharField(max_length=2,choices=Priorite,default='OV',)
+    priorite_intern = models.CharField(max_length=2,choices=Priorite,default='F',blank=True,null=True)
 
     categorie = models.ForeignKey(Categorie, on_delete=models.CASCADE, related_name='quesions',)
     souscategorie = models.ForeignKey(SousCategorie, on_delete=models.CASCADE, related_name='quesions',)

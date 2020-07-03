@@ -66,7 +66,7 @@ class QuestionCreate(LoginRequiredMixin, generic.CreateView):
                                 reverse("solutions:questiondetail", kwargs={"pk": self.object.pk}))
             user_email = self.object.user.email
 
-            if self.object.user.client:
+            if self.object.user.client :
                 d['client'] = self.object.user.client.name
                 dsi_email = self.object.user.client.email
             else:
@@ -78,8 +78,7 @@ class QuestionCreate(LoginRequiredMixin, generic.CreateView):
             msg = EmailMultiAlternatives(subject, text_content, user_email, [dsi_email])
             msg.attach_alternative(html_content, "text/html")
             try:
-                if self.object.user.client:
-                    msg.send()
+                msg.send()
             except Exception as e:
                 logger.error(e)
 
