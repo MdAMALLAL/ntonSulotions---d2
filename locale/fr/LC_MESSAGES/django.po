@@ -491,7 +491,7 @@ msgstr "Pas encore vu"
 
 #: .\solutions\models.py:127
 msgid "Not reacted yet"
-msgstr "créé le"
+msgstr ""
 
 #: .\solutions\models.py:153
 msgid "Ticket"

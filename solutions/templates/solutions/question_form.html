@@ -84,7 +84,7 @@
 
                     </div>
                   </div>
-                  <button type="submit" class="btn btn-primary pull-right">{% trans "Open ticket" %}</button>
+                  <button type="submit" class="btn btn-nton pull-right">{% trans "Open" %}</button>
                   <div class="clearfix"></div>
                 </form>
               </div>
@@ -98,6 +98,7 @@
       <script>
 
         $("#id_categorie").change(function () {
+          loader = true;
           var url = $("#quesionForm").attr("data-categorie-url");
           var categorieId = $(this).val();
           if (categorieId) {
@@ -119,24 +120,6 @@
 
           }
         });
-
-      </script>
-      <script src="{% static "js/medium-editor.js" %}"></script>
-
-      <script>
-        var editor = new MediumEditor('.editable', {
-          buttonLabels: 'fontawesome',
-              toolbar: {
-                  buttons: ['bold', 'italic',  'justifyCenter',
-                      'anchor', 'underline',  'strikethrough',
-                      'subscript', 'superscript', 'anchor',
-                      'quote', 'orderedlist', 'unorderedlist',
-                      'indent', 'outdent', 'justifyLeft', 'justifyCenter',
-                      'justifyRight', 'justifyFull',
-                      'h1', 'h2', 'h3',  'h4', 'h5', 'h6',
-                  ]
-              }
-          });
       </script>
 
 {% endblock %}

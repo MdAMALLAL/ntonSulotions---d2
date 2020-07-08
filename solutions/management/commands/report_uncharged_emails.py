@@ -22,7 +22,7 @@ class Command(BaseCommand):
         '''
         Get completed sessions, send invite to vote
         '''
-        uncharged_questions = Question.objects.filter(created_at__gte=(timezone.now()-timedelta(days=2)), charged_by__isnull=True)
+        uncharged_questions = Question.objects.filter(created_at__gte=(timezone.now()-timedelta(minute=3)), charged_by__isnull=True)
 
         for question in uncharged_questions:
             plaintext = get_template('email/email.txt')

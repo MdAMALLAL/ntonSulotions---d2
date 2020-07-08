@@ -14,7 +14,7 @@
         <div class="profile-head">
           <ul class="nav nav-tabs" id="myTab" role="tablist">
             <li class="nav-item">
-              <a class="nav-link active" id="home-tab" data-toggle="tab" href="#home" role="tab" aria-controls="home" aria-selected="true">About</a>
+              <a class="nav-link active" id="home-tab" data-toggle="tab" href="#home" role="tab" aria-controls="home" aria-selected="true">{% trans "About" %}</a>
             </li>
             <li class="nav-item">
               <a class="nav-link" id="users-tab" data-toggle="tab" href="#list-users" role="tab" aria-controls="list-users" aria-selected="false">{% trans "Users" %}</a>
@@ -22,83 +22,89 @@
             <li class="nav-item">
               <a class="nav-link" id="tickets-tab" data-toggle="tab" href="#list-tickets" role="tab" aria-controls="list-tickets" aria-selected="false">{% trans "Tickets" %}</a>
             </li>
+            <li class="nav-item">
+              <a class="nav-link" id="statistic-tab" data-toggle="tab" href="#statistic" role="tab" aria-controls="statistic" aria-selected="false">{% trans "Statistic" %}</a>
+            </li>
 
           </ul>
         </div>
       </div>
     </div>
-    <div class="row">
-      <div class="col-md-12">
-        <div class="tab-content profile-tab" id="myTabContent">
-          <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
-            <div class="row">
-              <div class="col-md-8">
-                <div class="card">
-                  <div class="card-header card-header-success">
-                    <h4 class="card-title">{{client}}</h4>
-                      <p class="card-category">{% trans "Complete le profile" %}</p>
-                    </div>
-                    <div class="card-body">
-                      <form  method="POST"  enctype="multipart/form-data">
-                        {% csrf_token %}
-                        <div class="row">
-                          <div class="col-md-6">
-                            <div class="form-group">
-                              {% bootstrap_field form.name  placeholder='' %}
-                            </div>
-                          </div>
-                          <div class="col-md-6">
-                            <div class="form-group">
-                              {% bootstrap_field form.email  placeholder='' %}
-                            </div>
-                          </div>
-                        </div>
-                        <div class="row">
-                          <div class="col-md-6">
-                            <div class="form-group">
-                              {% bootstrap_field form.tel  placeholder='' %}
-                            </div>
-                          </div>
-                          <div class="col-md-6">
-                            <div class="form-group">
-                              {% bootstrap_field form.url  placeholder='' %}
-                            </div>
-                          </div>
-                        </div>
-                        <div class="row">
-                          <div class="col-md-4">
-                            <div class="form-group">
-                              {% bootstrap_field form.contact  placeholder='' %}
-                            </div>
-                          </div>
-                          <div class="col-md-4">
-                            <div class="form-group">
-                              {% bootstrap_field form.contact_tel  placeholder='' %}
-                            </div>
-                          </div>
-                          <div class="col-md-4">
-                            <div class="form-group">
-                              {% bootstrap_field form.contact_email  placeholder='' %}
-                            </div>
-                          </div>
-
-                        </div>
-                        <div class="row">
-                          <div class="col-md-12">
-                            {% bootstrap_field form.address  placeholder='' %}
-
-                          </div>
-                        </div>
-
-                          <button id="stertedit" type="button" class="btn btn-primary pull-left collapse show">{% trans "Edit" %}</button>
-                          <button id="send" type="submit" class="btn btn-primary pull-right collapse hide">{% trans "Update Client" %}</button>
-
-                          <div class="clearfix"></div>
-                        </form>
+      <div class="row">
+        <div class="col-md-12">
+          <div class="tab-content profile-tab" id="myTabContent">
+            <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
+              <div class="row">
+                <div class="col-md-9">
+                  <div class="card">
+                    <div class="card-header card-header-success">
+                      <h4 class="card-title">{{client}}</h4>
+                        <p class="card-category">{% trans "Complete le profile" %}</p>
                       </div>
-                </div>
+                      <div class="card-body">
+                        <form  method="POST"  enctype="multipart/form-data">
+                          {% csrf_token %}
+                          <div class="row">
+                            <div class="col-md-6">
+                              <div class="form-group">
+                                {% bootstrap_field form.name  placeholder='' %}
+                              </div>
+                            </div>
+                            <div class="col-md-6">
+                              <div class="form-group">
+                                {% bootstrap_field form.email  placeholder='' %}
+                              </div>
+                            </div>
+                          </div>
+                          <div class="row">
+                            <div class="col-md-6">
+                              <div class="form-group">
+                                {% bootstrap_field form.tel  placeholder='' %}
+                              </div>
+                            </div>
+                            <div class="col-md-6">
+                              <div class="form-group">
+                                {% bootstrap_field form.url  placeholder='' %}
+                              </div>
+                            </div>
+                          </div>
+                          <div class="row">
+                            <div class="col-md-4">
+                              <div class="form-group">
+                                {% bootstrap_field form.contact  placeholder='' %}
+                              </div>
+                            </div>
+                            <div class="col-md-4">
+                              <div class="form-group">
+                                {% bootstrap_field form.contact_tel  placeholder='' %}
+                              </div>
+                            </div>
+                            <div class="col-md-4">
+                              <div class="form-group">
+                                {% bootstrap_field form.contact_email  placeholder='' %}
+                              </div>
+                            </div>
+
+                          </div>
+                          <div class="row">
+                            <div class="col-md-12">
+                              {% bootstrap_field form.charged_by placeholder=''  %}
+                            </div>
+                            <div class="col-md-12">
+                              {% bootstrap_field form.address  placeholder='' %}
+
+                            </div>
+                          </div>
+
+                            <button id="stertedit" type="button" class="btn btn-nton pull-left collapse show">{% trans "Edit" %}</button>
+                            <button id="send" type="submit" class="btn btn-nton pull-right collapse hide">{% trans "Save" %}</button>
+
+                            <div class="clearfix"></div>
+                          </form>
+                        </div>
                   </div>
-                  <div class="col-md-4">
+                </div>
+                  <div class="col-md-3">
                     {% if form.instance.pk%}
                     <div class="row">
                       <div class="col-12">
@@ -107,94 +113,98 @@
                         <a class="profile-edit-btn btn btn-info w-100 py-1 my-1"href="{% url 'accounts:new' %}?client={{client.slug}}">{% trans "Add user" %}</a>
 
                       </div>
-                      <div class="col-12">
-                        <div class="card card-chart">
-                          <div class="card-header card-header-success">
-                            <div id="client_chart_container" class="ct-chart" data-url="{% url 'solutions:ajax_load_chart' %}?type=pie&client={{client.slug}}"></div>
-
-                          </div>
-                          <div class="card-body">
-                            <h4 class="card-title">{% trans "Tickets Status" %}</h4>
-                            {% comment %} <p class="card-category">
-                              <span class="text-success"><i class="fa fa-long-arrow-up"></i> 55% </span> increase in today sales.</p>
-                              {% endcomment %}</div>
-                              {% comment %} <div class="card-footer">
-                                <div class="stats">
-                                  <i class="material-icons">access_time</i> updated 4 minutes ago
-                                </div>
-                              </div> {% endcomment %}
-                            </div>
-                          </div>
-
-                        </div>
-                        {% endif %}
                       </div>
-                    </div>
-          </div>
+                    {% endif %}
+                  </div>
+                </div>
+            </div>
             <div class="tab-pane fade" id="list-users" role="tabpanel" aria-labelledby="users-tab">
-              <div class=" fresh-table toolbar-color-green">
-                <table id="fresh-table" class="table">
-                  <thead>
-                      <th data-field="id"  data-sortable="true">Id</th>
-                      <th data-field="username" data-sortable="true">{% trans "username" %}</th>
-                      <th data-field="email" data-sortable="true">{% trans "Email" %}</th>
-                      <th data-field="client" data-sortable="true">{% trans "Client" %}</th>
-                      <th data-field="conultant" data-sortable="true">{% trans "Staff" %}</th>
-                      <th data-field="last_login" data-sortable="true">{% trans "Last login" %}</th>
-                      <th >Actions</th>
-                      <!-- <th data-field="actions" data-formatter="operateFormatter" data-events="operateEvents">Actions</th> -->
-                  </thead>
-                  <tbody>
-                {% for client_user in client.users.all %}
-                    <tr>
-                      <td>{{client_user.id}}</td>
-                      <td>{{ client_user.username }}</td>
-                      <td>{{ client_user.email}}</td>
-                      <td>{{ client_user.client.name}}</td>
-                      <td>{{ client_user.is_staff}}</td>
-                      <td>{{ client_user.last_login}}</td>
-                      <td>
-                        <a title="Edit" class="table-action edit" href="{% url 'accounts:edit' username=client_user.username %}" >
-                        <i class="fa fa-edit"></i>
-                        </a>
-                      </td>
-                    </tr>
-                  {% endfor %}
-                  </tbody>
-                </table>
+                <div class=" fresh-table toolbar-color-green">
+                  <table id="fresh-table" class="table">
+                    <thead>
+                        <th data-field="id"  data-sortable="true">Id</th>
+                        <th data-field="username" data-sortable="true">{% trans "username" %}</th>
+                        <th data-field="email" data-sortable="true">{% trans "Email" %}</th>
+                        <th data-field="client" data-sortable="true">{% trans "Client" %}</th>
+                        <th data-field="conultant" data-sortable="true">{% trans "Staff" %}</th>
+                        <th data-field="last_login" data-sortable="true">{% trans "Last login" %}</th>
+                        <th >Actions</th>
+                        <!-- <th data-field="actions" data-formatter="operateFormatter" data-events="operateEvents">Actions</th> -->
+                    </thead>
+                    <tbody>
+                  {% for client_user in client.users.all %}
+                      <tr>
+                        <td>{{client_user.id}}</td>
+                        <td>{{ client_user.username }}</td>
+                        <td>{{ client_user.email}}</td>
+                        <td>{{ client_user.client.name}}</td>
+                        <td>{{ client_user.is_staff}}</td>
+                        <td>{{ client_user.last_login}}</td>
+                        <td>
+                          <a title="Edit" class="table-action edit" href="{% url 'accounts:edit' username=client_user.username %}" >
+                          <i class="fa fa-edit"></i>
+                          </a>
+                        </td>
+                      </tr>
+                    {% endfor %}
+                    </tbody>
+                  </table>
+
+                </div>
 
               </div>
+            <div class="tab-pane fade" id="list-tickets" role="tabpanel" aria-labelledby="tickets-tab">
+                      <h4>{% trans "Tickets" %}</h4>
+                      <table class="table">
+                        <thead>
+                          <td class="px-2">Id</td>
+                          <td class="px-2">{% trans "Title" %}</td>
+                          <td class="px-2">{% trans "Status" %}</td>
+                          <td class="px-2">{% trans "Published on" %}</td>
+                          <td class="px-2">{% trans "Applicant" %}</td>
+                          <td class="px-2">{% trans "priority" %}</td>
+                          <td class="px-2">{% trans "Categorie" %}</td>
+                          <td class="px-2">{% trans "Resolution time" %}</td>
+                        </thead>
+                        {% for users in client.users.all %}
+                        {% for question in users.tickets.all %}
 
+                        <tr>
+                          <td>{{question.id}}</td>
+                          <td><a  href="{% url 'solutions:questiondetail' pk=question.pk %}">{{ question.objet  }} </td>
+                            <td>{{ question.get_status_display}}</td>
+                            <td>{{ question.created_at|date:"d/M/Y"}}</td>
+                            <td><a href="{% url 'accounts:profile' username=question.user.username %}">{{question.user}}</a></td>
+                            <td>{{ question.get_priorite_display}}</td>
+                            <td>{{ question.categorie.name}}</td>
+                            <td>{{question.get_time_to_resolv}}</td>
+                          </tr>
+                          {% endfor %}
+                          {% endfor %}
+                        </table>
             </div>
-                  <div class="tab-pane fade" id="list-tickets" role="tabpanel" aria-labelledby="tickets-tab">
-                    <h4>{% trans "Tickets" %}</h4>
-                    <table class="table">
-                      <thead>
-                        <td class="px-2">Id</td>
-                        <td class="px-2">{% trans "Title" %}</td>
-                        <td class="px-2">{% trans "Status" %}</td>
-                        <td class="px-2">{% trans "Published on" %}</td>
-                        <td class="px-2">{% trans "Applicant" %}</td>
-                        <td class="px-2">{% trans "priority" %}</td>
-                        <td class="px-2">{% trans "Categorie" %}</td>
-                        <td class="px-2">{% trans "Resolution time" %}</td>
-                      </thead>
-                      {% for users in client.users.all %}
-                      {% for question in users.tickets.all %}
-
-                      <tr>
-                        <td>{{question.id}}</td>
-                        <td><a  href="{% url 'solutions:questiondetail' pk=question.pk %}">{{ question.objet  }} </td>
-                          <td>{{ question.get_status_display}}</td>
-                          <td>{{ question.created_at|date:"d/M/Y"}}</td>
-                          <td><a href="{% url 'accounts:profile' username=question.user.username %}">{{question.user}}</a></td>
-                          <td>{{ question.get_priorite_display}}</td>
-                          <td>{{ question.categorie.name}}</td>
-                          <td>{{question.get_time_to_resolv}}</td>
-                        </tr>
-                        {% endfor %}
-                        {% endfor %}
-                      </table>
+            <div class="tab-pane fade" id="statistic" role="tabpanel" aria-labelledby="statistic-tab">
+              <div class="row">
+                <div class="col-12 col-md-4 col-lg-4">
+                  <div class="card card-chart">
+                    <div class="card-header card-header-success">
+                      <div id="client_chart_status" class="ct-chart" data-url="{% url 'solutions:ajax_load_chart' %}?type=pie&client={{client.slug}}"></div>
+                    </div>
+                    <div class="card-body">
+                      <h4 class="card-title">{% trans "Tickets Status" %}</h4>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-12 col-md-8 col-lg-8">
+                  <div class="card card-chart">
+                    <div class="card-header card-header-success">
+                      <div id="client_chart_day" class="ct-chart" data-url="{% url 'solutions:ajax_load_chart' %}?type=line&client={{client.slug}}"></div>
+                    </div>
+                    <div class="card-body">
+                      <h4 class="card-title">{% trans "Tickets per day" %}</h4>
+                    </div>
+                  </div>
+                </div>
               </div>
           </div>
         </div>
@@ -203,13 +213,10 @@
   </div>
   <script src="https://code.highcharts.com/highcharts.src.js"></script>
   <script>
-    $.ajax({
-      url: $("#client_chart_container").attr("data-url"),
-      dataType: 'json',
-      success: function (data) {
-        Highcharts.chart("client_chart_container", data);
-      }
-    });
+  chartloader('client_chart_status');
+  chartloader('client_chart_day');
+
+
 
     $("#stertedit").click(function () {
         $(".form-control-plaintext").addClass('form-control');

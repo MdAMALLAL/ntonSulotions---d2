@@ -1,6 +1,8 @@
 {%extends "base.html"%}
 {% load i18n %}
 {% load timetags %}
+{% load static %}
+{% load bootstrap4 %}
 
 {% block static_content %}
 
@@ -12,8 +14,8 @@
           <div class="card-icon">
             <i class="fa fa-ticket-alt"></i>
           </div>
-          <p class="card-category">Tickets</p>
-          <h3 class="card-title">{{tickets_open}}
+          <p class="card-category pr-2">Tickets</p>
+          <h3 class="card-title pr-2">{{tickets_open}}
             <small>{% trans "Open " %}</small>
           </h3>
         </div>
@@ -31,8 +33,8 @@
           <div class="card-icon">
             <i class="fa fa-clipboard-check"></i>
           </div>
-          <p class="card-category">Tickets</p>
-          <h3 class="card-title">{{tickets_resolved}}
+          <p class="card-category pr-2">Tickets</p>
+          <h3 class="card-title pr-2">{{tickets_resolved}}
             <small>{% trans "Resolved " %}</small>
           </h3>
         </div>
@@ -50,8 +52,8 @@
           <div class="card-icon">
             <i class="fa fa-ticket-alt"></i>
           </div>
-          <p class="card-category">Tickets</p>
-          <h3 class="card-title">{{tickets_waiting}}
+          <p class="card-category pr-2">Tickets</p>
+          <h3 class="card-title pr-2">{{tickets_waiting}}
             <small>{% trans "Waiting " %}</small>
           </h3>
         </div>
@@ -69,8 +71,8 @@
           <div class="card-icon">
             <i class="fa fa-window-close"></i>
           </div>
-          <p class="card-category">Tickets</p>
-          <h3 class="card-title">{{tickets_closed}}
+          <p class="card-category pr-2">Tickets</p>
+          <h3 class="card-title pr-2">{{tickets_closed}}
             <small>{% trans "Closed " %}</small>
           </h3>
         </div>
@@ -80,6 +82,125 @@
     </div>
   </div>
   <div class="row">
+    <div class="col-md-10">
+      <div class="card">
+        <div class="card-header card-header-success">
+          <h4 class="card-title">
+            {% if form.instance.pk%}{% trans "Edit ticket" %}
+            {% else %}{% trans "New ticket" %}
+            {% endif %}</h4>
+          <p class="card-category">Tickets</p>
+        </div>
+        <div class="card-body">
+          <form method="POST" action="{% url 'solutions:questioncreate' %}" enctype="multipart/form-data" id="quesionForm" data-categorie-url="{% url 'solutions:ajax_load_categorie' %}" novalidate>
+            {% csrf_token %}
+            <div class="row">
+
+              {% if not form.instance.pk%}
+              <div class="col-md-6">
+                <div class="form-group">
+                  {% bootstrap_field form.categorie  placeholder=''  %}
+
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div id="categoryGrow"class="collapse" >
+                </div>
+                  <div id="souscategorieForm" class="form-group collapse">
+                    <label for="id_souscategorie">Souscategorie</label>
+                    <div >
+                      <select name="souscategorie" class="form-control " title="" required="" id="id_souscategorie">
+                        <option value="" selected="">---------</option>
+                      </select>
+                    </div>
+                  </div>
+              </div>
+              <div class="col-md-6">
+                <div class="form-group">
+                    {% bootstrap_field form.priorite layouy='horizontal'%}
+                </div>
+              </div>
+              <div class="col-md-6">
+                {% bootstrap_field form.image  show_label=False  addon_after='<i class="fa fa-image"></i>' %}
+            </div>
+              {% endif %}
+            </div>
+            <div class="row">
+              <div class="col-md-6">
+                <div class="form-group">
+                  {% bootstrap_field form.objet   placeholder='' %}
+                </div>
+              </div>
+              {% if request.user.is_staff %}
+              <div class="col-md-6">
+                <div class="form-group">
+                  {% bootstrap_field form.priorite_intern   placeholder='' %}
+                </div>
+              </div>
+              {% endif %}
+
+            </div>
+            <div class="row">
+              <div class="col-md-12">
+                <link rel="stylesheet" href="{% static "css/medium-editor.css" %}">
+                <link rel="stylesheet" href="{% static "css/themes/default.css" %}" id="medium-editor-theme">
+
+                <div class="form-group row bmd-form-group border">
+                  <label class="col-md-3 col-form-label sr-only bmd-label-static" for="id_description">Description</label>
+                  <div class="form-control-full col-md-12">
+                    <textarea name="description" class="editable medium-editor-textarea" data-placeholder="Description" placeholder="Description" title="" id="id_description">
+                    </textarea>
+                  </div>
+                </div>
+
+              </div>
+            </div>
+            <button type="submit" class="btn btn-nton pull-right">{% trans "Open" %}</button>
+            <div class="clearfix"></div>
+          </form>
+  <script type="text/javascript">
+    $("#id_categorie").change(function () {
+      loader = true;
+      var url = $("#quesionForm").attr("data-categorie-url");
+      var categorieId = $(this).val();
+      if (categorieId) {
+
+        $.ajax({
+          url: url,
+          data: {
+            'categorie': categorieId
+          },
+          success: function (data) {
+              $("#souscategorieForm").collapse('show');
+              $("#id_souscategorie").html(data);
+           }
+        });
+      }
+      else {
+        $("#souscategorieForm").collapse('hide');
+        $("#categoryGrow").collapse('hide');
+
+      }
+    });
+
+
+    var editor = new MediumEditor('.editable', {
+      buttonLabels: 'fontawesome',
+          toolbar: {
+              buttons: ['bold', 'italic',  'justifyCenter',
+                  'anchor', 'underline',  'strikethrough',
+                  'subscript', 'superscript', 'anchor',
+                  'quote', 'orderedlist', 'unorderedlist',
+                  'indent', 'outdent', 'justifyLeft', 'justifyCenter',
+                  'justifyRight', 'justifyFull',
+                  'h1', 'h2', 'h3',  'h4', 'h5', 'h6',
+              ]
+          }
+      });
+  </script>
+        </div>
+      </div>
+    </div>
     <div class="col-12">
       <form>
         <div class="row">
@@ -90,7 +211,7 @@
             <input type="text" name="end_date" class="form-control dateField" value='{{request.GET.end_date}}' placeholder='{% trans "End date" %}'>
           </div>
           <div class="col">
-            <button type="submit" class="btn btn-primary">{% trans "Filter" %}</button>
+            <button type="submit" class="btn btn-nton">{% trans "Filter" %}</button>
           </div>
         </div>
       </form>
@@ -117,7 +238,8 @@
       </div>
     </div>
   </div>
-  {% elif user.is_superuser %}
+
+  {% elif user.is_staff %}
   <div class="row">
     <div class="col-lg-3 col-md-6 col-sm-6">
       <div class="card card-stats">
@@ -125,8 +247,8 @@
           <div class="card-icon">
             <i class="fa fa-ticket-alt"></i>
           </div>
-          <p class="card-category">Tickets</p>
-          <h3 class="card-title">{{tickets_open}}
+          <p class="card-category pr-2">Tickets</p>
+          <h3 class="card-title pr-2">{{tickets_open}}
             <small>{% trans "Open " %}</small>
           </h3>
         </div>
@@ -144,8 +266,8 @@
           <div class="card-icon">
             <i class="fa fa-clipboard-check"></i>
           </div>
-          <p class="card-category">Tickets</p>
-          <h3 class="card-title">{{tickets_resolved}}
+          <p class="card-category pr-2">Tickets</p>
+          <h3 class="card-title pr-2">{{tickets_resolved}}
             <small>{% trans "Resolved " %}</small>
           </h3>
         </div>
@@ -163,8 +285,8 @@
           <div class="card-icon">
             <i class="fa fa-ticket-alt"></i>
           </div>
-          <p class="card-category">Tickets</p>
-          <h3 class="card-title">{{tickets_waiting}}
+          <p class="card-category pr-2">Tickets</p>
+          <h3 class="card-title pr-2">{{tickets_waiting}}
             <small>{% trans "Waiting " %}</small>
           </h3>
         </div>
@@ -182,68 +304,117 @@
           <div class="card-icon">
             <i class="fa fa-window-close"></i>
           </div>
-          <p class="card-category">Tickets</p>
-          <h3 class="card-title">{{tickets_closed}}
+          <p class="card-category pr-2">Tickets</p>
+          <h3 class="card-title pr-2">{{tickets_closed}}
             <small>{% trans "Closed " %}</small>
           </h3>
         </div>
         <div class="card-footer">
+
         </div>
       </div>
     </div>
   </div>
+        <div class="col-md-12">
+          <div class="card">
+            <div class="card-header card-header-success card-header-icon">
+              <div class="card-icon">
+                <i class="fa fa-building"></i>
+              </div>
+              <h4 class="card-title">Clients</h4>
+            </div>
+            <div class="card-body">
+              <div class="toolbar">
+                <!--        Here you can write extra buttons/actions for the toolbar              -->
+              </div>
+              <div class="material-datatables">
+                <div id="datatables_wrapper" class="dataTables_wrapper dt-bootstrap4">
+                <div class="row">
+                  <div class="col-sm-12">
+                  <table id="datatables" class="table table-striped table-no-bordered table-hover dataTable dtr-inline" style="width: 100%;" role="grid" aria-describedby="datatables_info" width="100%" cellspacing="0">
+                  <thead>
+                    <tr role="row">
+                      <th data-field="name"  class="sorting">{% trans "Name" %}</th>
+                      <th data-field="contact"  class="sorting">{% trans "Contact" %}</th>
+                      <th data-field="users"  class="sorting">{% trans "Users" %}</th>
+                      <th data-field="users" class="disabled-sorting text-right sorting">{% trans "Action" %}</th>
+
+                    </tr>
+                </thead>
+                <tbody>
+
+                  {% for client in client_list %}
+                  <tr role="row">
+                    <td><a class="text-dark" href="{% url 'clients:detail' slug=client.slug %}">{{client.name}}</a></td>
+                    <td>{{ client.contact}}</td>
+                    <td>{{client.users.all.count}}</td>
+                    <td>
+                      <a rel="tooltip" title="Edit" class="table-action edit" href="{% url 'clients:detail' slug=client.slug %}" title="Edit">
+                        <i class="fa fa-edit"></i>
+                      </a>
+                      <a rel="tooltip" title="Remove" class="table-action remove" href="{% url 'clients:delete' slug=client.slug %}" title="Remove">
+                       <i class="fa fa-remove"></i>
+                      </a>
+                    </td>
+                    </tr>
+                    {% endfor %}
+
+                  </tbody>
+                </table>
+              </div>
+            </div>
+
+          </div>
+              </div>
+            </div>
+            <!-- end content-->
+          </div>
+          <!--  end card  -->
+        </div>
+        <script>
+          $(document).ready(function() {
+            $('#datatables').DataTable({
+              "pagingType": "full_numbers",
+              "lengthMenu": [
+                [10, 25, 50, -1],
+                [10, 25, 50, "{% trans "All" %}"]
+              ],
+              responsive: true,
+              language: {
+                "search": "_INPUT_",
+                "emptyTable":     "{% trans "No data available in table" %}",
+                "info":           "{% trans "Showing _START_ to _END_ of _TOTAL_ entries" %}",
+                "infoEmpty":      "{% trans "Showing 0 to 0 of 0 entries" %}",
+                "infoFiltered":   "{% trans "(filtered from _MAX_ total entries)" %}",
+                "infoPostFix":    "",
+                "thousands":      ",",
+                "lengthMenu":     "{% trans "Show _MENU_ entries" %}",
+                "loadingRecords": "{% trans "Loading..." %}",
+                "processing":     "{% trans "Processing..." %}",
+                "search":         "{% trans "Search:" %}",
+                "zeroRecords":    "{% trans "No matching records found" %}",
+                "paginate": {
+                    "first":      "{% trans "First" %}",
+                    "last":       "{% trans "Last" %}",
+                    "next":       "{% trans "Next" %}",
+                    "previous":   "{% trans "Previous" %}",
+                },
+              }
+            });
+
+            var table = $('#datatable').DataTable();
+
+          });
+        </script>
+
+
+    {% endif %}
+  {% if user.is_superuser %}
   <div class="row">
-    <div class="col-12">
-      <form>
-        <div class="row">
-          <div class="col">
-            <input type="text" name="start_date" class="form-control dateField" value='{{request.GET.start_date}}' placeholder='{% trans "Start date" %}'>
-          </div>
-          <div class="col">
-            <input type="text" name="end_date" class="form-control dateField" value='{{request.GET.end_date}}' placeholder='{% trans "End date" %}'>
-          </div>
-          <div class="col">
-            <button type="submit" class="btn btn-primary">{% trans "Filter" %}</button>
-          </div>
-        </div>
-      </form>
-    </div>
-    <div class="col-md-4">
-      <div class="card card-chart">
-        <div class="card-header card-header-success">
-          <div id="container" class="ct-chart" data-url="{% url 'solutions:ajax_load_chart' %}?type=pie&all=True{% for key, value in request.GET.items %}{% if key != 'page' %}&{{ key }}={{ value }}{% endif %}{% endfor %}"></div>
-
-        </div>
-        <div class="card-body">
-          <h4 class="card-title">{% trans "Tickets Status" %}</h4>
-        </div>
-      </div>
-    </div>
-    <div class="col-md-4">
-      <div class="card card-chart">
-        <div class="card-header card-header-success">
-          <div id="container2" class="ct-chart" data-url="{% url 'solutions:ajax_load_chart' %}?type=line&all=True{% for key, value in request.GET.items %}{% if key != 'page' %}&{{ key }}={{ value }}{% endif %}{% endfor %}"></div>
-        </div>
-        <div class="card-body">
-          <h4 class="card-title">{% trans "Tickets per day" %}</h4>
-        </div>
-      </div>
-    </div>
-    <div class="col-md-4">
-      <div class="card card-chart">
-        <div class="card-header card-header-success">
-          <div id="containerClient" class="ct-chart" data-url="{% url 'solutions:ajax_load_chart' %}?type=colomn{% for key, value in request.GET.items %}{% if key != 'page' %}&{{ key }}={{ value }}{% endif %}{% endfor %}"></div>
-        </div>
-        <div class="card-body">
-          <h4 class="card-title">{% trans "Tickets  per client" %}</h4>
-        </div>
-
-      </div>
-    </div>
     <div class="col-lg-12 col-md-12">
       <div class="card">
         <div class="card-header card-header-success">
-          <h4 class="card-title">{% trans "Users statistics" %}</h4>
+          <h4 class="card-title">{% trans "Consultant statistics" %}</h4>
           <p class="card-category">{% trans "users's charged tickets and resolved tickets" %}</p>
         </div>
         <div class="card-body table-responsive">
@@ -276,161 +447,20 @@
       </div>
     </div>
   </div>
-
-  {% elif user.is_staff %}
-  <div class="row">
-    <div class="col-lg-3 col-md-6 col-sm-6">
-      <div class="card card-stats">
-        <div class="card-header card-header-success card-header-icon">
-          <div class="card-icon">
-            <i class="fa fa-ticket-alt"></i>
-          </div>
-          <p class="card-category">Tickets</p>
-          <h3 class="card-title">{{tickets_open}}
-            <small>{% trans "Open " %}</small>
-          </h3>
-        </div>
-        <div class="card-footer">
-          <div class="stats">
-            <i class="material-icons text-danger">warning</i>
-            <a href="{% url 'solutions:questionlist' %}?status=OV">{% trans "Open more tickets" %}</a>
-          </div>
-        </div>
-      </div>
-    </div>
-    <div class="col-lg-3 col-md-6 col-sm-6">
-      <div class="card card-stats">
-        <div class="card-header card-header-success card-header-icon">
-          <div class="card-icon">
-            <i class="fa fa-clipboard-check"></i>
-          </div>
-          <p class="card-category">Tickets</p>
-          <h3 class="card-title">{{tickets_resolved}}
-            <small>{% trans "Resolved " %}</small>
-          </h3>
-        </div>
-        <div class="card-footer">
-          <div class="stats">
-            <i class="material-icons">warning</i>
-            <a href="{% url 'solutions:questionlist' %}?status=RS">{% trans "Explore" %}</a>
-          </div>
-        </div>
-      </div>
-    </div>
-    <div class="col-lg-3 col-md-6 col-sm-6">
-      <div class="card card-stats">
-        <div class="card-header card-header-info card-header-icon">
-          <div class="card-icon">
-            <i class="fa fa-ticket-alt"></i>
-          </div>
-          <p class="card-category">Tickets</p>
-          <h3 class="card-title">{{tickets_waiting}}
-            <small>{% trans "Waiting " %}</small>
-          </h3>
-        </div>
-        <div class="card-footer">
-          <div class="stats">
-            <i class="material-icons text-danger">warning</i>
-            <a href="{% url 'solutions:questionlist' %}?status=EA">{% trans "Explore" %}</a>
-          </div>
-        </div>
-      </div>
-    </div>
-    <div class="col-lg-3 col-md-6 col-sm-6">
-      <div class="card card-stats">
-        <div class="card-header card-header-azure card-header-icon">
-          <div class="card-icon">
-            <i class="fa fa-window-close"></i>
-          </div>
-          <p class="card-category">Tickets</p>
-          <h3 class="card-title">{{tickets_closed}}
-            <small>{% trans "Closed " %}</small>
-          </h3>
-        </div>
-        <div class="card-footer">
-          {% comment %} <div class="stats">
-            <i class="material-icons text-danger">warning</i>
-            <a href="{% url 'solutions:questionlist' %}?status=OV"></a>
-          </div> {% endcomment %}
-        </div>
-      </div>
-    </div>
-  </div>
-  <div class="row">
-    <div class="col-12">
-      <form>
-        <div class="row">
-          <div class="col">
-            <input type="text" name="start_date" class="form-control dateField" value='{{request.GET.start_date}}' placeholder='{% trans "Start date" %}'>
-          </div>
-          <div class="col">
-            <input type="text" name="end_date" class="form-control dateField" value='{{request.GET.end_date}}' placeholder='{% trans "End date" %}'>
-          </div>
-          <div class="col">
-            <button type="submit" class="btn btn-primary">{% trans "Filter" %}</button>
-          </div>
-        </div>
-      </form>
-    </div>
-    <div class="col-md-4">
-      <div class="card card-chart">
-        <div class="card-header card-header-success">
-          <div id="container" class="ct-chart" data-url="{% url 'solutions:ajax_load_chart' %}?type=pie{% for key, value in request.GET.items %}{% if key != 'page' %}&{{ key }}={{ value }}{% endif %}{% endfor %}"></div>
-
-        </div>
-        <div class="card-body">
-          <h4 class="card-title">{% trans "Tickets Status" %}</h4>
-        </div>
-      </div>
-    </div>
-    <div class="col-md-4">
-      <div class="card card-chart">
-        <div class="card-header card-header-success">
-          <div id="container2" class="ct-chart" data-url="{% url 'solutions:ajax_load_chart' %}?type=line{% for key, value in request.GET.items %}{% if key != 'page' %}&{{ key }}={{ value }}{% endif %}{% endfor %}"></div>
-        </div>
-        <div class="card-body">
-          <h4 class="card-title">{% trans "Tickets per day" %}</h4>
-        </div>
-      </div>
-    </div>
-    <div class="col-md-4">
-      <div class="card card-chart">
-        <div class="card-header card-header-success">
-          <div id="containerClient" class="ct-chart" data-url="{% url 'solutions:ajax_load_chart' %}?type=colomn{% for key, value in request.GET.items %}{% if key != 'page' %}&{{ key }}={{ value }}{% endif %}{% endfor %}"></div>
-        </div>
-        <div class="card-body">
-          <h4 class="card-title">{% trans "Tickets per client" %}</h4>
-        </div>
-
-      </div>
-    </div>
-  </div>
-
-
   {% endif %}
+
+
+
   <script src="https://code.highcharts.com/highcharts.src.js"></script>
+
   <script>
-    $.ajax({
-      url: $("#container").attr("data-url"),
-      dataType: 'json',
-      success: function (data) {
-        Highcharts.chart("container", data);
-      }
-    });
-    $.ajax({
-      url: $("#container2").attr("data-url"),
-      dataType: 'json',
-      success: function (data) {
-        Highcharts.chart("container2", data);
-      }
-    });
-    $.ajax({
-      url: $("#containerClient").attr("data-url"),
-      dataType: 'json',
-      success: function (data) {
-        Highcharts.chart("containerClient", data);
-      }
-    });
+      chartloader('container');
+      chartloader('container2');
+      {% if request.user.is_staff %}
+        chartloader('containerClient');
+      {% endif %}
+
+
   </script>
 
 

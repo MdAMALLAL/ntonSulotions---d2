@@ -227,3 +227,62 @@ body > div > div > div.msj-rta.macro{
         stroke-dashoffset: -136px;
     }
 }
+
+
+.sidebar-wrapper .user .user-info > a {
+    display: block;
+    line-height: 18px;
+    font-size: 14px;
+}
+.sidebar-wrapper .user a {
+    color: #3c4858;
+    padding: .5rem 15px;
+    white-space: nowrap;
+}
+.caret, .sidebar a {
+    transition: all .15s ease-in;
+}
+.user .user-info > a > span {
+    display: block;
+    position: relative;
+    opacity: 1;
+}
+
+.sidebar-wrapper .user .user-info > a {
+    line-height: 18px;
+    font-size: 14px;
+}
+.sidebar-wrapper .user a {
+    color: #3c4858;
+    white-space: nowrap;
+}
+
+.sidebar-wrapper .user {
+    margin: 20px auto 0;
+    position: relative;
+}
+.btn-nton{
+  margin-left: 4px;
+  margin-right: 4px;
+  margin: 4px;
+  min-width: max-content;
+  width:  max-content;
+  cursor:pointer;
+  text-transform:capitalize;
+  border:none;
+  padding:6px;
+  border-radius:75%;
+  border-bottom:7px solid #4753f3;
+  font:bold 13px Arial;
+  color:#555;
+  background:#fff;
+  box-shadow:2px 2px 3px #999;
+  border-top:2px solid #59cd27;
+}
+
+.btn-nton:hover{
+  border-bottom:7px solid #4753f3;
+  font:bold 13px Arial;
+  color:#555;
+  background:#59cd27;
+}

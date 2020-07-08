@@ -8,9 +8,10 @@ from clients.models import Client
 from django.shortcuts import render_to_response, redirect
 from django.template import RequestContext
 from django.utils import translation
-
 from django.db.models import Count,Q,Avg,Sum,F,FloatField
 from django.db.models.functions import Cast
+from clients.models import Client
+from solutions.forms import QuestionForm
 
 
 
@@ -39,12 +40,14 @@ class HomePage(LoginRequiredMixin, TemplateView):
     template_name = "index.html"
 
     def get_context_data(self,**kwargs):
-
+        client_list = {}
         context=super().get_context_data(**kwargs)
         if self.request.user.is_staff:
             questionlist =  Question.objects.values('status').filter(charged_by=self.request.user)
+            client_list = Client.objects.all()
         else:
             questionlist =  Question.objects.values('status').filter(user=self.request.user)
+            context['form']= QuestionForm
 
         tickets_open = questionlist.filter(status = 'OV').count()
         tickets_resolved = questionlist.filter(status = 'RS').count()
@@ -57,6 +60,7 @@ class HomePage(LoginRequiredMixin, TemplateView):
         context['tickets_waiting']=tickets_waiting
         context['tickets_closed']=tickets_closed
         context['tickets_canceled']=tickets_canceled
+        context['client_list'] = client_list
 
         context['activePage']= 'dashboard'
         #context['pagecounter']=self.pagecounter

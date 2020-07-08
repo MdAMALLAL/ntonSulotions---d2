@@ -37,7 +37,7 @@
                   <form  method="POST">
                     {% csrf_token %}
                     {% bootstrap_form form layout='horizontal' %}
-                    <button class="btn btn-lg btn-primary btn-block btn-login text-uppercase font-weight-bold mb-2" type="submit">{% trans "Sign in" %}</button>
+                    <button class="btn btn-lg btn-nton btn-block btn-login text-uppercase font-weight-bold mb-2" type="submit">{% trans "Sign in" %}</button>
                     <div class="text-center">
                       <a class="small" href="{%url 'accounts:password-reset'%}">{% trans "Lost password?" %}</a></div>
                   </form>

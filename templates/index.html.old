@@ -1,0 +1,387 @@
+{%extends "base.html"%}
+{% load i18n %}
+{% load timetags %}
+{% load static %}
+
+{% block static_content %}
+
+  {% if not user.is_staff %}
+  <div class="row">
+    <div class="col-lg-3 col-md-6 col-sm-6">
+      <div class="card card-stats">
+        <div class="card-header card-header-success card-header-icon">
+          <div class="card-icon">
+            <i class="fa fa-ticket-alt"></i>
+          </div>
+          <p class="card-category">Tickets</p>
+          <h3 class="card-title">{{tickets_open}}
+            <small>{% trans "Open " %}</small>
+          </h3>
+        </div>
+        <div class="card-footer">
+          <div class="stats">
+            <i class="material-icons text-danger">warning</i>
+            <a href="{% url 'solutions:questionlist' %}?status=OV">{% trans "Open more tickets" %}</a>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-lg-3 col-md-6 col-sm-6">
+      <div class="card card-stats">
+        <div class="card-header card-header-success card-header-icon">
+          <div class="card-icon">
+            <i class="fa fa-clipboard-check"></i>
+          </div>
+          <p class="card-category">Tickets</p>
+          <h3 class="card-title">{{tickets_resolved}}
+            <small>{% trans "Resolved " %}</small>
+          </h3>
+        </div>
+        <div class="card-footer">
+          <div class="stats">
+            <i class="material-icons">warning</i>
+            <a href="{% url 'solutions:questionlist' %}?status=RS">{% trans "Explore" %}</a>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-lg-3 col-md-6 col-sm-6">
+      <div class="card card-stats">
+        <div class="card-header card-header-info card-header-icon">
+          <div class="card-icon">
+            <i class="fa fa-ticket-alt"></i>
+          </div>
+          <p class="card-category">Tickets</p>
+          <h3 class="card-title">{{tickets_waiting}}
+            <small>{% trans "Waiting " %}</small>
+          </h3>
+        </div>
+        <div class="card-footer">
+          <div class="stats">
+            <i class="material-icons text-danger">warning</i>
+            <a href="{% url 'solutions:questionlist' %}?status=EA">{% trans "Explore" %}</a>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-lg-3 col-md-6 col-sm-6">
+      <div class="card card-stats">
+        <div class="card-header card-header-azure card-header-icon">
+          <div class="card-icon">
+            <i class="fa fa-window-close"></i>
+          </div>
+          <p class="card-category">Tickets</p>
+          <h3 class="card-title">{{tickets_closed}}
+            <small>{% trans "Closed " %}</small>
+          </h3>
+        </div>
+        <div class="card-footer">
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-12">
+      <form>
+        <div class="row">
+          <div class="col">
+            <input type="text" name="start_date" class="form-control dateField" value='{{request.GET.start_date}}' placeholder='{% trans "Start date" %}'>
+          </div>
+          <div class="col">
+            <input type="text" name="end_date" class="form-control dateField" value='{{request.GET.end_date}}' placeholder='{% trans "End date" %}'>
+          </div>
+          <div class="col">
+            <button type="submit" class="btn btn-primary">{% trans "Filter" %}</button>
+          </div>
+        </div>
+      </form>
+    </div>
+    <div class="col-md-5">
+      <div class="card card-chart">
+        <div class="card-header card-header-success">
+          <div id="container" class="ct-chart" data-url="{% url 'solutions:ajax_load_chart' %}?type=pie{% for key, value in request.GET.items %}{% if key != 'page' %}&{{ key }}={{ value }}{% endif %}{% endfor %}"></div>
+
+        </div>
+        <div class="card-body">
+          <h4 class="card-title">{% trans "Tickets Status" %}</h4>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-7">
+      <div class="card card-chart">
+        <div class="card-header card-header-success">
+          <div id="container2" class="ct-chart" data-url="{% url 'solutions:ajax_load_chart' %}?type=line{% for key, value in request.GET.items %}{% if key != 'page' %}&{{ key }}={{ value }}{% endif %}{% endfor %}"></div>
+        </div>
+        <div class="card-body">
+          <h4 class="card-title">{% trans "Tickets per day" %}</h4>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  {% elif user.is_staff %}
+  <div class="row">
+    <div class="col-lg-3 col-md-6 col-sm-6">
+      <div class="card card-stats">
+        <div class="card-header card-header-success card-header-icon">
+          <div class="card-icon">
+            <i class="fa fa-ticket-alt"></i>
+          </div>
+          <p class="card-category">Tickets</p>
+          <h3 class="card-title">{{tickets_open}}
+            <small>{% trans "Open " %}</small>
+          </h3>
+        </div>
+        <div class="card-footer">
+          <div class="stats">
+            <i class="material-icons text-danger">warning</i>
+            <a href="{% url 'solutions:questionlist' %}?status=OV">{% trans "Open more tickets" %}</a>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-lg-3 col-md-6 col-sm-6">
+      <div class="card card-stats">
+        <div class="card-header card-header-success card-header-icon">
+          <div class="card-icon">
+            <i class="fa fa-clipboard-check"></i>
+          </div>
+          <p class="card-category">Tickets</p>
+          <h3 class="card-title">{{tickets_resolved}}
+            <small>{% trans "Resolved " %}</small>
+          </h3>
+        </div>
+        <div class="card-footer">
+          <div class="stats">
+            <i class="material-icons">warning</i>
+            <a href="{% url 'solutions:questionlist' %}?status=RS">{% trans "Explore" %}</a>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-lg-3 col-md-6 col-sm-6">
+      <div class="card card-stats">
+        <div class="card-header card-header-info card-header-icon">
+          <div class="card-icon">
+            <i class="fa fa-ticket-alt"></i>
+          </div>
+          <p class="card-category">Tickets</p>
+          <h3 class="card-title">{{tickets_waiting}}
+            <small>{% trans "Waiting " %}</small>
+          </h3>
+        </div>
+        <div class="card-footer">
+          <div class="stats">
+            <i class="material-icons text-danger">warning</i>
+            <a href="{% url 'solutions:questionlist' %}?status=EA">{% trans "Explore" %}</a>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-lg-3 col-md-6 col-sm-6">
+      <div class="card card-stats">
+        <div class="card-header card-header-azure card-header-icon">
+          <div class="card-icon">
+            <i class="fa fa-window-close"></i>
+          </div>
+          <p class="card-category">Tickets</p>
+          <h3 class="card-title">{{tickets_closed}}
+            <small>{% trans "Closed " %}</small>
+          </h3>
+        </div>
+        <div class="card-footer">
+          {% comment %} <div class="stats">
+            <i class="material-icons text-danger">warning</i>
+            <a href="{% url 'solutions:questionlist' %}?status=OV"></a>
+          </div> {% endcomment %}
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-12">
+      <form>
+        <div class="row">
+          <div class="col">
+            <input type="text" name="start_date" class="form-control dateField" value='{{request.GET.start_date}}' placeholder='{% trans "Start date" %}'>
+          </div>
+          <div class="col">
+            <input type="text" name="end_date" class="form-control dateField" value='{{request.GET.end_date}}' placeholder='{% trans "End date" %}'>
+          </div>
+          <div class="col">
+            <button type="submit" class="btn btn-primary">{% trans "Filter" %}</button>
+          </div>
+        </div>
+      </form>
+    </div>
+    <div class="col-md-4">
+      <div class="card card-chart">
+        <div class="card-header card-header-success">
+          <div id="container" class="ct-chart" data-url="{% url 'solutions:ajax_load_chart' %}?type=pie{% for key, value in request.GET.items %}{% if key != 'page' %}&{{ key }}={{ value }}{% endif %}{% endfor %}"></div>
+
+        </div>
+        <div class="card-body">
+          <h4 class="card-title">{% trans "Tickets Status" %}</h4>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-4">
+      <div class="card card-chart">
+        <div class="card-header card-header-success">
+          <div id="container2" class="ct-chart" data-url="{% url 'solutions:ajax_load_chart' %}?type=line{% for key, value in request.GET.items %}{% if key != 'page' %}&{{ key }}={{ value }}{% endif %}{% endfor %}"></div>
+        </div>
+        <div class="card-body">
+          <h4 class="card-title">{% trans "Tickets per day" %}</h4>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-4">
+      <div class="card card-chart">
+        <div class="card-header card-header-success">
+          <div id="containerClient" class="ct-chart" data-url="{% url 'solutions:ajax_load_chart' %}?type=colomn{% for key, value in request.GET.items %}{% if key != 'page' %}&{{ key }}={{ value }}{% endif %}{% endfor %}"></div>
+        </div>
+        <div class="card-body">
+          <h4 class="card-title">{% trans "Tickets per client" %}</h4>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  {% endif %}
+  {% if user.is_superuser %}
+  <div class="row">
+    <div class="col-md-4">
+      <div class="card card-chart">
+        <div class="card-header card-header-icon card-header-danger">
+          {# <div class="card-icon">
+            <i class="material-icons">pie_chart</i>
+          </div> #}
+          <h4 class="card-title">{% trans "Tickets Status" %}</h4>
+        </div>
+        <div class="card-body">
+          <div id="container-chart" class="ct-chart" data-url="{% url 'solutions:ajax_load_chart' %}?type=chartjs&all=True{% for key, value in request.GET.items %}{% if key != 'page' %}&{{ key }}={{ value }}{% endif %}{% endfor %}">
+          </div>
+        <div class="card-footer">
+          <div class="row">
+            <div class="col-md-12">
+              <h6 class="card-category">Legend</h6>
+            </div>
+            <div class="col-md-12">
+              <i class="fa fa-circle text-info"></i> Apple
+              <i class="fa fa-circle text-warning"></i> Samsung
+              <i class="fa fa-circle text-danger"></i> Windows Phone
+            </div>
+          </div>
+        </div>
+      </div>
+    </div><div class="col-md-4">
+      <div class="card card-chart">
+        <div class="card-header card-header-success">
+          <div id="container2" class="ct-chart" data-url="{% url 'solutions:ajax_load_chart' %}?type=line&all=True{% for key, value in request.GET.items %}{% if key != 'page' %}&{{ key }}={{ value }}{% endif %}{% endfor %}"></div>
+        </div>
+        <div class="card-body">
+          <h4 class="card-title">{% trans "Tickets per day" %}</h4>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-4">
+      <div class="card card-chart">
+        <div class="card-header card-header-success">
+          <div id="containerClient" class="ct-chart" data-url="{% url 'solutions:ajax_load_chart' %}?type=colomn{% for key, value in request.GET.items %}{% if key != 'page' %}&{{ key }}={{ value }}{% endif %}{% endfor %}"></div>
+        </div>
+        <div class="card-body">
+          <h4 class="card-title">{% trans "Tickets  per client" %}</h4>
+        </div>
+
+      </div>
+    </div>
+    <div class="col-lg-12 col-md-12">
+      <div class="card">
+        <div class="card-header card-header-success">
+          <h4 class="card-title">{% trans "Users statistics" %}</h4>
+          <p class="card-category">{% trans "users's charged tickets and resolved tickets" %}</p>
+        </div>
+        <div class="card-body table-responsive">
+          <table class="table table-hover">
+            <thead class="text-warning">
+              <th>{% trans "Consultant" %}</th>
+              <th>{% trans "Consultat email" %}</th>
+              <th>{% trans "Charged tickets" %}</th>
+              <th>{% trans "Resolved tickets" %}</th>
+              <th>{% trans "Average" %}</th>
+
+
+            </thead>
+            <tbody>
+
+              {% for Consultant in usersStatics  %}
+              <tr>
+                <td>{{Consultant.username}}</td>
+                <td>{{Consultant.email}}</td>
+                <td>{{Consultant.total|default_if_none:'0'}}</td>
+                <td>{{Consultant.resolved|default_if_none:'0'}}</td>
+                <td>{{Consultant.avgTime|print_timestamp:' '}}</td>
+
+              </tr>
+              {% endfor %}
+
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+  {% endif %}
+
+
+
+  <script src="https://code.highcharts.com/highcharts.src.js"></script>
+  <!-- Chartist JS -->
+  <script src="{% static 'js/plugins/chartist.min.js'%}"></script>
+
+  <script>
+      $.ajax({
+        url: $("#container-chart").attr("data-url"),
+        success: function (data) {
+          console.log(data);
+              var dataPreferences = {
+                  labels: data.labels,
+                  series: data.data
+              };
+
+              var optionsPreferences = {
+                  height: '230px'
+              };
+
+              Chartist.Pie('#container-chart', dataPreferences, optionsPreferences);
+
+          }
+
+    });
+
+    $.ajax({
+      url: $("#container").attr("data-url"),
+      dataType: 'json',
+      success: function (data) {
+        Highcharts.chart("container", data);
+      }
+    });
+    $.ajax({
+      url: $("#container2").attr("data-url"),
+      dataType: 'json',
+      success: function (data) {
+        Highcharts.chart("container2", data);
+      }
+    });
+    $.ajax({
+      url: $("#containerClient").attr("data-url"),
+      dataType: 'json',
+      success: function (data) {
+        Highcharts.chart("containerClient", data);
+      }
+    });
+  </script>
+
+
+{% endblock %}

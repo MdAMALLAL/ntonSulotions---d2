@@ -19,21 +19,21 @@
       <li class="nav-item">
         <a class="nav-link" id="list-messages-list" data-toggle="list" href="#list-messages" role="tab" aria-controls="messages"></a>
       </li>
-      <li class="nav-item"><a class="btn btn-primary" href="{% url 'solutions:questionedit' pk=question.pk %}">{% trans "Edit" %}</a>
+      <li class="nav-item px-1"><a class="btn btn-nton" href="{% url 'solutions:questionedit' pk=question.pk %}">{% trans "Edit" %}</a>
       </li>
       {% if  question.status != "RS"%}
-      <li class="nav-item">
+      <li class="nav-item px-1">
         <form class="" action="{% url 'solutions:questioneResolved' pk=question.pk %}" method="post">
           {% csrf_token %}
-          <button class="btn btn-primary" type="submit" name="button">{% trans "Resolved" %}</button>
+          <button class="btn btn-nton" type="submit" name="button">{% trans "Resolved" %}</button>
         </form>
       </li>
       {% endif %}
       {% if not question.charged_by == request.user and request.user.is_staff %}
-      <li class="nav-item">
+      <li class="nav-item px-1">
         {% comment %} <form class="" action="{% url 'solutions:questioneCharged' pk=question.pk %}" method="post"> {% endcomment %}
           {% csrf_token %}
-        <a id="charged" class="btn btn-primary" href="javascript:void(0)" >{% trans "Take in charge" %} </a>
+        <a id="charged" class="btn btn-nton" href="javascript:void(0)" >{% trans "Take in charge" %} </a>
         {% comment %} </form> {% endcomment %}
       </li>
       <script type="text/javascript">

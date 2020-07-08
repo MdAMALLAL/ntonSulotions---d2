@@ -106,8 +106,8 @@
                   </div>
                   {% endif %}
                 </div>
-                <button id="stertedit" type="button" class="btn btn-primary pull-left collapse show">{% trans "Edit" %}</button>
-                <button id="send" type="submit" class="btn btn-primary pull-right collapse hide">{% trans "Update Profile" %}</button>
+                <button id="stertedit" type="button" class="btn btn-nton pull-left collapse show">{% trans "Edit" %}</button>
+                <button id="send" type="submit" class="btn btn-nton pull-right collapse hide">{% trans "Update Profile" %}</button>
                 <div class="clearfix"></div>
               </form>
             </div>
@@ -122,7 +122,7 @@
             </div>
             <div class="card-body">
               {% if user == request.user %}
-              <a class="profile-edit-btn btn btn-primary w-100 py-1 my-1"href="{% url 'accounts:changepassword'  %}">{% trans "Change password"  %}</a>
+              <a class="profile-edit-btn btn btn-nton w-100 py-1 my-1"href="{% url 'accounts:changepassword'  %}">{% trans "Change password"  %}</a>
               {% endif %}
               {% if request.user.is_staff %}
               <form class="form-inline" action="{% url 'accounts:made-consultant' username=user.username %}" method="post">
@@ -148,7 +148,7 @@
                   <input type="text" name="end_date" class="form-control dateField" value='{{request.GET.end_date}}' placeholder='{% trans "End date" %}'>
                 </div>
                 <div class="col">
-                  <button type="submit" class="btn btn-primary">{% trans "Filter" %}</button>
+                  <button type="submit" class="btn btn-nton">{% trans "Filter" %}</button>
                 </div>
               </div>
             </form>

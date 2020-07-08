@@ -401,168 +401,6 @@ def questioneResolved(request, pk):
 
     return redirect('solutions:questiondetail', pk=question.pk)
 
-def load_categories(request):
-    categorieId = request.GET.get('categorie')
-    souscategorie = SousCategorie.objects.filter(categorie=categorieId).order_by('name')
-    return render(request, 'solutions/categorie_dropdown_list_options.html', {'souscategorie': souscategorie})
-
-def load_chart(request):
-    chart = {}
-    start_date = datetime.date.today() - timedelta(days=20)
-    if request.GET.get('start_date'):
-        start_date = datetime.datetime.strptime(request.GET.get('start_date', '{}'.format(start_date)), '%Y-%m-%d').date()
-    end_date = datetime.date.today()
-    if request.GET.get('end_date'):
-        end_date = datetime.datetime.strptime(request.GET.get('end_date', '{}'.format(end_date)), '%Y-%m-%d').date()
-    if end_date > datetime.date.today():
-        end_date = datetime.date.today()
-    client = request.GET.get('client')
-    if client : client = get_object_or_404(Client, slug=client)
-    user = get_object_or_404(User, username= request.GET.get('user', request.user.username))
-    type = request.GET.get('type')
-    all = request.GET.get('all',False)
-
-    if type =='pie':
-        if all :
-            dataset = Question.objects.all() \
-                .values('status') \
-                .exclude(status='') \
-                .annotate(total=Count('status')) \
-                .order_by('status')
-        elif client:
-            dataset = Question.objects.filter(user__client = client) \
-                .values('status') \
-                .exclude(status='') \
-                .annotate(total=Count('status')) \
-                .order_by('status')
-
-        else:
-            if user.is_staff:
-                dataset = Question.objects.filter(charged_by = user) \
-                    .values('status') \
-                    .exclude(status='') \
-                    .annotate(total=Count('status')) \
-                    .order_by('status')
-            else:
-                dataset = Question.objects.filter(user = user) \
-                    .values('status') \
-                    .exclude(status='') \
-                    .annotate(total=Count('status')) \
-                    .order_by('status')
-
-
-
-        port_display_name = dict()
-        for port_tuple in Question.Status:
-            port_display_name[port_tuple[0]] = port_tuple[1]
-
-        chart = {
-            'chart': {'type': 'pie'},
-            'backgroundColor': 'transparent',
-            'object ': '',
-            'series': [{
-                'name': 'Tickets',
-                'data': list(map(lambda row: {'name': port_display_name[row['status']], 'y': row['total']}, dataset))
-            }]
-        }
-    if type == 'line':
-        metrics = {
-            'total': Count('created_at__date')
-        }
-        if all == True :
-            dataset = Question.objects.all()\
-                .values('created_at__date')\
-                .annotate(**metrics)\
-                .order_by('created_at__date')
-
-        elif client:
-            dataset = Question.objects.filter(user__client = client)\
-                .values('created_at__date')\
-                .annotate(**metrics)\
-                .order_by('created_at__date')
-
-        else:
-            if user.is_staff:
-                dataset = Question.objects.filter(charged_by = user) \
-                    .values('created_at__date')\
-                    .annotate(**metrics)\
-                    .order_by('created_at__date')
-            else:
-                dataset = Question.objects.filter(user = user) \
-                    .values('created_at__date')\
-                    .annotate(**metrics)\
-                    .order_by('created_at__date')
-
-
-
-        dates = list()
-        action_series_data = list()
-        survived_series_data = list()
-
-        dateT = start_date
-        while dateT <= end_date:
-            # print(entry)
-            dates.append('%s' % dateT)
-            # print(entry['created_at__date'])
-            try:
-                survived_series_data.append(dataset.get(created_at__date = dateT).get('total'))
-            except Exception as e:
-                survived_series_data.append(0)
-            try:
-                action_series_data.append(datasetAction.get(created_at__date = dateT).get('total'))
-            except Exception as e:
-                action_series_data.append(0)
-
-            #survived_series_data.append(entry['total'])
-            dateT = dateT + timedelta(days=1)
-
-        action_series = {
-            'name': 'Action',
-            'data': action_series_data,
-            'color': 'green'
-        }
-        survived_series = {
-            'name': 'Tickets',
-            'data': survived_series_data,
-            'color': 'blue'
-        }
-        chart = {
-            'chart': {'type': 'line'},
-            'backgroundColor': 'transparent',
-            'object ': {'text': ''},
-            'xAxis': {'categories': dates,},
-            'series': [survived_series, ]
-        }
-    if type == 'colomn':
-        #client = request.GET.get('client')
-        dataset = Question.objects \
-            .values('user__client__name') \
-            .annotate(total=Count('user__client__name')) \
-            .order_by('user__client__name')
-
-        categories = list()
-        tickets_series = list()
-
-        for entry in dataset:
-            categories.append('%s' % entry['user__client__name'])
-            tickets_series.append(entry['total'])
-
-        tickets_series_data = {
-            'name': 'Tickets',
-            'data': tickets_series,
-            'color': 'green'
-        }
-
-
-        chart = {
-            'chart': {'type': 'column'},
-            'backgroundColor': 'transparent',
-            'object ': {'text': ''},
-            'xAxis': {'categories': categories,},
-            'series': [tickets_series_data, ]
-        }
-
-    return JsonResponse(chart)
 
 @login_required
 def questioneCharged(request, pk):
@@ -663,3 +501,203 @@ def questioneCharged(request, pk):
                     url = question.pk)
 
         return redirect('solutions:questiondetail', pk=question.pk)
+
+def load_categories(request):
+    categorieId = request.GET.get('categorie')
+    souscategorie = SousCategorie.objects.filter(categorie=categorieId).order_by('name')
+    return render(request, 'solutions/categorie_dropdown_list_options.html', {'souscategorie': souscategorie})
+
+def load_chart(request):
+    chart = {}
+    start_date = datetime.date.today() - timedelta(days=20)
+    if request.GET.get('start_date'):
+        start_date = datetime.datetime.strptime(request.GET.get('start_date', '{}'.format(start_date)), '%Y-%m-%d').date()
+    end_date = datetime.date.today()
+    if request.GET.get('end_date'):
+        end_date = datetime.datetime.strptime(request.GET.get('end_date', '{}'.format(end_date)), '%Y-%m-%d').date()
+    if end_date > datetime.date.today():
+        end_date = datetime.date.today()
+    client = request.GET.get('client')
+    if client : client = get_object_or_404(Client, slug=client)
+    user = get_object_or_404(User, username= request.GET.get('user', request.user.username))
+    type = request.GET.get('type')
+    all = request.GET.get('all',False)
+
+    if type =='pie':
+        if all :
+            dataset = Question.objects.all() \
+                .values('status') \
+                .exclude(status='') \
+                .annotate(total=Count('status')) \
+                .order_by('status')
+        elif client:
+            dataset = Question.objects.filter(user__client = client) \
+                .values('status') \
+                .exclude(status='') \
+                .annotate(total=Count('status')) \
+                .order_by('status')
+
+        else:
+            if user.is_staff:
+                dataset = Question.objects.filter(charged_by = user) \
+                    .values('status') \
+                    .exclude(status='') \
+                    .annotate(total=Count('status')) \
+                    .order_by('status')
+            else:
+                dataset = Question.objects.filter(user = user) \
+                    .values('status') \
+                    .exclude(status='') \
+                    .annotate(total=Count('status')) \
+                    .order_by('status')
+
+
+
+        port_display_name = dict()
+        for port_tuple in Question.Status:
+            port_display_name[port_tuple[0]] = port_tuple[1]
+
+        chart = {
+            'chart': {'type': 'pie'},
+            'backgroundColor': 'transparent',
+            'object ': '',
+            'series': [{
+                'name': 'Tickets',
+                'data': list(map(lambda row: {'name': port_display_name[row['status']], 'y': row['total']}, dataset))
+            }]
+        }
+    if type =='chartjs':
+        if all :
+            dataset = Question.objects.all() \
+                .values('status') \
+                .exclude(status='') \
+                .annotate(total=Count('status')) \
+                .order_by('status')
+        elif client:
+            dataset = Question.objects.filter(user__client = client) \
+                .values('status') \
+                .exclude(status='') \
+                .annotate(total=Count('status')) \
+                .order_by('status')
+        else:
+            if user.is_staff:
+                dataset = Question.objects.filter(charged_by = user) \
+                    .values('status') \
+                    .exclude(status='') \
+                    .annotate(total=Count('status')) \
+                    .order_by('status')
+            else:
+                dataset = Question.objects.filter(user = user) \
+                    .values('status') \
+                    .exclude(status='') \
+                    .annotate(total=Count('status')) \
+                    .order_by('status')
+        labels = []
+        data = []
+
+        for entry in dataset:
+            labels.append(Question.Status(entry.get('status')))
+            data.append(entry.get('total'))
+        chart = {
+        'labels': labels,
+        'data': data,
+        }
+
+    if type == 'line':
+        metrics = {
+            'total': Count('created_at__date')
+        }
+        if all == True :
+            dataset = Question.objects.all()\
+                .values('created_at__date')\
+                .annotate(**metrics)\
+                .order_by('created_at__date')
+
+        elif client:
+            dataset = Question.objects.filter(user__client = client)\
+                .values('created_at__date')\
+                .annotate(**metrics)\
+                .order_by('created_at__date')
+
+        else:
+            if user.is_staff:
+                dataset = Question.objects.filter(charged_by = user) \
+                    .values('created_at__date')\
+                    .annotate(**metrics)\
+                    .order_by('created_at__date')
+            else:
+                dataset = Question.objects.filter(user = user) \
+                    .values('created_at__date')\
+                    .annotate(**metrics)\
+                    .order_by('created_at__date')
+
+
+
+        dates = list()
+        action_series_data = list()
+        survived_series_data = list()
+
+        dateT = start_date
+        while dateT <= end_date:
+            # print(entry)
+            dates.append('%s' % dateT)
+            # print(entry['created_at__date'])
+            try:
+                survived_series_data.append(dataset.get(created_at__date = dateT).get('total'))
+            except Exception as e:
+                survived_series_data.append(0)
+            try:
+                action_series_data.append(datasetAction.get(created_at__date = dateT).get('total'))
+            except Exception as e:
+                action_series_data.append(0)
+
+            #survived_series_data.append(entry['total'])
+            dateT = dateT + timedelta(days=1)
+
+        action_series = {
+            'name': 'Action',
+            'data': action_series_data,
+            'color': 'green'
+        }
+        survived_series = {
+            'name': 'Tickets',
+            'data': survived_series_data,
+            'color': 'blue'
+        }
+        chart = {
+            'chart': {'type': 'line'},
+            'backgroundColor': 'transparent',
+            'object ': {'text': ''},
+            'xAxis': {'categories': dates,},
+            'series': [survived_series, ]
+        }
+    if type == 'colomn':
+        #client = request.GET.get('client')
+        dataset = Question.objects \
+            .values('user__client__name') \
+            .annotate(total=Count('user__client__name')) \
+            .order_by('user__client__name')
+
+        categories = list()
+        tickets_series = list()
+
+        for entry in dataset:
+            categories.append('%s' % entry['user__client__name'])
+            tickets_series.append(entry['total'])
+
+        tickets_series_data = {
+            'name': 'Tickets',
+            'data': tickets_series,
+            'color': 'green'
+        }
+
+
+        chart = {
+            'chart': {'type': 'column'},
+            'backgroundColor': 'transparent',
+            'object ': {'text': ''},
+            'xAxis': {'categories': categories,},
+            'series': [tickets_series_data, ]
+        }
+
+    return JsonResponse(chart)

@@ -65,11 +65,13 @@
                 </div>
                 <div class="row">
                   <div class="col-md-12">
+                    {% bootstrap_field form.charged_by placeholder=''  %}
+                  </div>
+                  <div class="col-md-12">
                     {% bootstrap_field form.address  placeholder='' %}
-
                   </div>
                 </div>
-                <button id="send" type="submit" class="btn btn-primary pull-right">{% trans "New Client" %}</button>
+                <button id="send" type="submit" class="btn btn-nton pull-right">{% trans "New Client" %}</button>
 
               </form>
             </div>

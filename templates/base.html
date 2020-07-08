@@ -16,9 +16,9 @@
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/latest/css/font-awesome.min.css">
   <!-- Material Kit CSS -->
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
-  <link href='{% static "css/material-dashboard.css" %}?v2.1.0.5' rel="stylesheet" />
+  <link href='{% static "css/material-dashboard.css" %}?v2.1.0.7' rel="stylesheet" />
   {# Load CSS and JavaScript #}
-  <script src="https://code.jquery.com/jquery-3.5.1.min.js" integrity="sha256-9/aliU8dGd2tb6OSsuzixeV4y/faTqgFtohetphbbj0=" crossorigin="anonymous"></script>
+  <script type="text/javascript" src="https://code.jquery.com/jquery-3.5.1.min.js" integrity="sha256-9/aliU8dGd2tb6OSsuzixeV4y/faTqgFtohetphbbj0=" crossorigin="anonymous"></script>
   <link rel="stylesheet" href="{% static 'css/all.css'%}">
   <link rel="icon" href="{% static 'favicon.ico' %}">
   <link rel="stylesheet" href="{% static 'css/offcanvas.css'%}">
@@ -30,6 +30,10 @@
   <![endif]-->
   <link rel="stylesheet" href="{%static 'css/master.nton.css'%}?v=1.1.7{% now "ymdhms" %}">
   {% comment %} {% now "ymdhms" %} {% endcomment %}
+  <script src="{% static "js/medium-editor.js" %}"></script>
+  <script type="text/javascript"  src="{% static 'js/nton.master.js'%}?v=0.0.4{% now "ymdhms" %}" type="text/javascript"></script>
+
+
 
 </head>
 
@@ -85,15 +89,6 @@
               {% comment %} <i class="material-icons">library_books</i> {% endcomment %}
               <i class="fa fa-users"></i>
               <p>{% trans "Users" %}</p>
-            </a>
-          </li>
-          {% endif %}
-          {% if request.user.is_superuser %}
-          <li class="nav-item bg-danger">
-            <a class="nav-link" href="{% url 'admin:index' %}">
-              {% comment %} <i class="material-icons">library_books</i> {% endcomment %}
-              <i class="fa fa-lock"></i>
-              <p>{% trans "Admin" %}</p>
             </a>
           </li>
           {% endif %}
@@ -250,8 +245,7 @@
   <script src="../assets/js/plugins/bootstrap-selectpicker.js"></script>
   <!--  Plugin for the DateTimePicker, full documentation here: https://eonasdan.github.io/bootstrap-datetimepicker/ -->
   <script src="../assets/js/plugins/bootstrap-datetimepicker.min.js"></script>
-  <!--  DataTables.net Plugin, full documentation here: https://datatables.net/  -->
-  <script src="../assets/js/plugins/jquery.dataTables.min.js"></script>
+
   <!--	Plugin for Tags, full documentation here: https://github.com/bootstrap-tagsinput/bootstrap-tagsinputs  -->
   <script src="../assets/js/plugins/bootstrap-tagsinput.js"></script>
   <!-- Plugin for Fileupload, full documentation here: http://www.jasny.net/bootstrap/javascript/#fileinput -->
@@ -268,235 +262,70 @@
   <script src="../assets/js/plugins/arrive.min.js"></script>
   <!--  Google Maps Plugin    -->
   <!-- <script src="https://maps.googleapis.com/maps/api/js?key=YOUR_KEY_HERE"></script> -->
-  <!-- Chartist JS -->
-  <script src="../assets/js/plugins/chartist.min.js"></script>
+
   <!--  Notifications Plugin    -->
   <script src="../assets/js/plugins/bootstrap-notify.js"></script>
   <!-- Control Center for Material Dashboard: parallax effects, scripts for the example pages etc --> {% endcomment %}
 
-  <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"  crossorigin="anonymous"></script>
-  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"  crossorigin="anonymous"></script>
+  <script type="text/javascript"  src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"  crossorigin="anonymous"></script>
+  <script type="text/javascript"  src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"  crossorigin="anonymous"></script>
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
-  <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
-  <script src="{% static 'js/nton.master.js'%}?v=0.0.2" type="text/javascript"></script>
+  <script type="text/javascript"  src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+  <!--  DataTables.net Plugin, full documentation here: https://datatables.net/  -->
+  <script type="text/javascript"  src=" {% static 'js/plugins/jquery.dataTables.min.js' %}"></script>
 
     <!-- Control Center for Material Dashboard: parallax effects, scripts for the example pages etc -->
-  <script src='{% static "js/core/bootstrap-material-design.min.js" %}?v=0.0.2'></script>
-  <script src='{% static "js/plugins/perfect-scrollbar.jquery.min.js" %}'></script>
-  <script src='{% static "js/material-dashboard.js" %}?v=2.1.5' type="text/javascript"></script>
-  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"  crossorigin="anonymous"></script>
+  <script type="text/javascript"  src='{% static "js/core/bootstrap-material-design.min.js" %}?v=0.0.2'></script>
+  <script type="text/javascript"  src='{% static "js/plugins/perfect-scrollbar.jquery.min.js" %}'></script>
+  <script type="text/javascript"  src='{% static "js/material-dashboard.js" %}?v=2.1.5' type="text/javascript"></script>
+  <script type="text/javascript" src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"  crossorigin="anonymous"></script>
   <!-- <script src="https://unpkg.com/bootstrap-table/dist/bootstrap-table.min.js"></script> -->
-  <script src='{% static "js/bootstrap-table.min.js" %}' type="text/javascript"></script>
+  <script type="text/javascript"  src='{% static "js/bootstrap-table.min.js" %}' type="text/javascript"></script>
+
+<script type="text/javascript">
+var loader = true;
 
 
-  <script>
+$(document).ajaxStart(function() {
+  if (loader) {
+    $('#ftco-loader').addClass('show');
+    }
+  });
+
+$(document).ajaxComplete(function() {
+    $('#ftco-loader').removeClass('show');
+  loader = true;
+  });
 
 
+  $(document).ready(function() {
 
-  $(document).ajaxStart(function() {
-      $('#ftco-loader').addClass('show');
-    });
+    function get_notification() {
+        var url = "{% url 'accounts:load_notification' %}";
+        loader = false;
+        $.ajax({
+          url: url,
 
-  $(document).ajaxComplete(function() {
-      $('#ftco-loader').removeClass('show');
-    });
-    $(document).ready(function() {
-
-      function get_notification() {
-          var url = "http://{{request.META.HTTP_HOST}}{% url 'accounts:load_notification' %}";
-          $.ajax({
-            url: url,
-
-            success: function (data) {
-              $("#notification_count").html(data.notifications_count);
-              notification_body = "";
-              for (notification in data.notifications) {
-                notification_body += '<a class="dropdown-item" href="' + data.notifications[notification].link + '">'+ data.notifications[notification].description +'</a>';
-              };
-              notification_body += '<a class="dropdown-item" href="{% url 'accounts:notifications' %}">{% trans "View all" %}</a>';
-                $("#notification_dropdown").html(notification_body);
-             }
-          });
-
-        setTimeout(
-            function(){
-                get_notification()
-            }, 50000);
-          };
-
-      $().ready(function() {
-        $sidebar = $('.sidebar');
-        $('.sidebar .sidebar-wrapper, .main-panel').perfectScrollbar();
-        $sidebar_img_container = $sidebar.find('.sidebar-background');
-
-        $full_page = $('.full-page');
-
-        $sidebar_responsive = $('body > .navbar-collapse');
-
-        window_width = $(window).width();
-
-        fixed_plugin_open = $('.sidebar .sidebar-wrapper .nav li.active a p').html();
-
-        if (window_width > 767 && fixed_plugin_open == 'Dashboard') {
-          if ($('.fixed-plugin .dropdown').hasClass('show-dropdown')) {
-            $('.fixed-plugin .dropdown').addClass('open');
-          }
-
-        }
-
-        $('.fixed-plugin a').click(function(event) {
-          // Alex if we click on switch, stop propagation of the event, so the dropdown will not be hide, otherwise we set the  section active
-          if ($(this).hasClass('switch-trigger')) {
-            if (event.stopPropagation) {
-              event.stopPropagation();
-            } else if (window.event) {
-              window.event.cancelBubble = true;
-            }
-          }
+          success: function (data) {
+            $("#notification_count").html(data.notifications_count);
+            notification_body = "";
+            for (notification in data.notifications) {
+              notification_body += '<a class="dropdown-item" href="' + data.notifications[notification].link + '">'+ data.notifications[notification].description +'</a>';
+            };
+            notification_body += '<a class="dropdown-item" href="{% url 'accounts:notifications' %}">{% trans "View all" %}</a>';
+              $("#notification_dropdown").html(notification_body);
+           }
         });
 
-        $('.fixed-plugin .active-color span').click(function() {
-          $full_page_background = $('.full-page-background');
-
-          $(this).siblings().removeClass('active');
-          $(this).addClass('active');
-
-          var new_color = $(this).data('color');
-
-          if ($sidebar.length != 0) {
-            $sidebar.attr('data-color', new_color);
-          }
-
-          if ($full_page.length != 0) {
-            $full_page.attr('filter-color', new_color);
-          }
-
-          if ($sidebar_responsive.length != 0) {
-            $sidebar_responsive.attr('data-color', new_color);
-          }
-        });
-
-        $('.fixed-plugin .background-color .badge').click(function() {
-          $(this).siblings().removeClass('active');
-          $(this).addClass('active');
-
-          var new_color = $(this).data('background-color');
-
-          if ($sidebar.length != 0) {
-            $sidebar.attr('data-background-color', new_color);
-          }
-        });
-
-        $('.fixed-plugin .img-holder').click(function() {
-          $full_page_background = $('.full-page-background');
-
-          $(this).parent('li').siblings().removeClass('active');
-          $(this).parent('li').addClass('active');
-
-
-          var new_image = $(this).find("img").attr('src');
-
-          if ($sidebar_img_container.length != 0 && $('.switch-sidebar-image input:checked').length != 0) {
-            $sidebar_img_container.fadeOut('fast', function() {
-              $sidebar_img_container.css('background-image', 'url("' + new_image + '")');
-              $sidebar_img_container.fadeIn('fast');
-            });
-          }
-
-          if ($full_page_background.length != 0 && $('.switch-sidebar-image input:checked').length != 0) {
-            var new_image_full_page = $('.fixed-plugin li.active .img-holder').find('img').data('src');
-
-            $full_page_background.fadeOut('fast', function() {
-              $full_page_background.css('background-image', 'url("' + new_image_full_page + '")');
-              $full_page_background.fadeIn('fast');
-            });
-          }
-
-          if ($('.switch-sidebar-image input:checked').length == 0) {
-            var new_image = $('.fixed-plugin li.active .img-holder').find("img").attr('src');
-            var new_image_full_page = $('.fixed-plugin li.active .img-holder').find('img').data('src');
-
-            $sidebar_img_container.css('background-image', 'url("' + new_image + '")');
-            $full_page_background.css('background-image', 'url("' + new_image_full_page + '")');
-          }
-
-          if ($sidebar_responsive.length != 0) {
-            $sidebar_responsive.css('background-image', 'url("' + new_image + '")');
-          }
-        });
-
-        $('.switch-sidebar-image input').change(function() {
-          $full_page_background = $('.full-page-background');
-
-          $input = $(this);
-
-          if ($input.is(':checked')) {
-            if ($sidebar_img_container.length != 0) {
-              $sidebar_img_container.fadeIn('fast');
-              $sidebar.attr('data-image', '#');
-            }
-
-            if ($full_page_background.length != 0) {
-              $full_page_background.fadeIn('fast');
-              $full_page.attr('data-image', '#');
-            }
-
-            background_image = true;
-          } else {
-            if ($sidebar_img_container.length != 0) {
-              $sidebar.removeAttr('data-image');
-              $sidebar_img_container.fadeOut('fast');
-            }
-
-            if ($full_page_background.length != 0) {
-              $full_page.removeAttr('data-image', '#');
-              $full_page_background.fadeOut('fast');
-            }
-
-            background_image = false;
-          }
-        });
-
-        $('.switch-sidebar-mini input').change(function() {
-          $body = $('body');
-
-          $input = $(this);
-
-          if (md.misc.sidebar_mini_active == true) {
-            $('body').removeClass('sidebar-mini');
-            md.misc.sidebar_mini_active = false;
-
-            $('.sidebar .sidebar-wrapper, .main-panel').perfectScrollbar();
-
-          } else {
-            $('.sidebar .sidebar-wrapper, .main-panel').perfectScrollbar();
-
-            // $('.sidebar .sidebar-wrapper, .main-panel').perfectScrollbar('destroy');
-
-            setTimeout(function() {
-              $('body').addClass('sidebar-mini');
-
-              md.misc.sidebar_mini_active = true;
-            }, 300);
-          }
-
-          // we simulate the window Resize so the charts will get updated in realtime.
-          var simulateWindowResize = setInterval(function() {
-            window.dispatchEvent(new Event('resize'));
-          }, 180);
-
-          // we stop the simulation of Window Resize after the animations are completed
-          setTimeout(function() {
-            clearInterval(simulateWindowResize);
-          }, 1000);
-
-        });
+      setTimeout(
+          function(){
+              get_notification()
+          }, 50000);
+        };
+      get_notification();
       });
-      $('#ftco-loader').removeClass('show');
-        get_notification();
-    });
+</script>
 
-  </script>
 
 
 </body>
