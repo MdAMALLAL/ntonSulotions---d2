@@ -71,7 +71,7 @@ function chartloader(e) {
     dataType: 'json',
     success: function (data) {
       var chart = Highcharts.chart(e, data);
-      chart.setSize(null);
+      // chart.setSize(null);
     }
   });
 };
