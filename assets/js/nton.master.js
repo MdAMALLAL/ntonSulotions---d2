@@ -63,3 +63,54 @@ $(function () {
         return;
       }
 });
+
+function chartloader(e) {
+  div = document.getElementById(e);
+  $.ajax({
+    url: div.getAttribute('data-url'),
+    dataType: 'json',
+    success: function (data) {
+      var chart = Highcharts.chart(e, data);
+      chart.setSize(null);
+    }
+  });
+};
+
+  $("#id_categorie").change(function () {
+    loader = true;
+    var url = $("#quesionForm").attr("data-categorie-url");
+    var categorieId = $(this).val();
+    if (categorieId) {
+
+      $.ajax({
+        url: url,
+        data: {
+          'categorie': categorieId
+        },
+        success: function (data) {
+            $("#souscategorieForm").collapse('show');
+            $("#id_souscategorie").html(data);
+         }
+      });
+    }
+    else {
+      $("#souscategorieForm").collapse('hide');
+      $("#categoryGrow").collapse('hide');
+
+    }
+  });
+
+
+  var editor = new MediumEditor('.editable', {
+    buttonLabels: 'fontawesome',
+        toolbar: {
+            buttons: ['bold', 'italic',  'justifyCenter',
+                'anchor', 'underline',  'strikethrough',
+                'subscript', 'superscript', 'anchor',
+                'quote', 'orderedlist', 'unorderedlist',
+                'indent', 'outdent', 'justifyLeft', 'justifyCenter',
+                'justifyRight', 'justifyFull',
+                'h1', 'h2', 'h3',  'h4', 'h5', 'h6',
+            ]
+        }
+    });
