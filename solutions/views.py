@@ -566,42 +566,6 @@ def load_chart(request):
                 'data': list(map(lambda row: {'name': port_display_name[row['status']], 'y': row['total']}, dataset))
             }]
         }
-    if type =='chartjs':
-        if all :
-            dataset = Question.objects.all() \
-                .values('status') \
-                .exclude(status='') \
-                .annotate(total=Count('status')) \
-                .order_by('status')
-        elif client:
-            dataset = Question.objects.filter(user__client = client) \
-                .values('status') \
-                .exclude(status='') \
-                .annotate(total=Count('status')) \
-                .order_by('status')
-        else:
-            if user.is_staff:
-                dataset = Question.objects.filter(charged_by = user) \
-                    .values('status') \
-                    .exclude(status='') \
-                    .annotate(total=Count('status')) \
-                    .order_by('status')
-            else:
-                dataset = Question.objects.filter(user = user) \
-                    .values('status') \
-                    .exclude(status='') \
-                    .annotate(total=Count('status')) \
-                    .order_by('status')
-        labels = []
-        data = []
-
-        for entry in dataset:
-            labels.append(Question.Status(entry.get('status')))
-            data.append(entry.get('total'))
-        chart = {
-        'labels': labels,
-        'data': data,
-        }
 
     if type == 'line':
         metrics = {
