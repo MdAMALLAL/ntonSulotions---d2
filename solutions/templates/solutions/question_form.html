@@ -36,7 +36,7 @@
                         </div>
                       </div>
                         <div id="souscategorieForm" class="form-group collapse">
-                          <label for="id_souscategorie">Souscategorie</label>
+                          <label for="id_souscategorie">{% trans "Sub-category" %}</label>
                           <div >
                             <select name="souscategorie" class="form-control " title="" required="" id="id_souscategorie">
                               <option value="" selected="">---------</option>
@@ -50,7 +50,7 @@
                       </div>
                     </div>
                     <div class="col-md-6">
-                      {% bootstrap_field form.image  show_label=False  addon_after='<i class="fa fa-image"></i>' %}
+                      {% bootstrap_field form.image  show_label=False  addon_after='<i class="far fa-image"></i>' %}
                   </div>
                     {% endif %}
                   </div>

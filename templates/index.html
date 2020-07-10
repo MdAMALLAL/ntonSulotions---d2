@@ -16,7 +16,7 @@
           </div>
           <p class="card-category pr-2">Tickets</p>
           <h3 class="card-title pr-2">{{tickets_open}}
-            <small>{% trans "Open " %}</small>
+            <small>{% trans "Unlock " %}</small>
           </h3>
         </div>
         <div class="card-footer">
@@ -107,7 +107,7 @@
                 <div id="categoryGrow"class="collapse" >
                 </div>
                   <div id="souscategorieForm" class="form-group collapse">
-                    <label for="id_souscategorie">Souscategorie</label>
+                    <label for="id_souscategorie">{% trans "Sub-category" %}</label>
                     <div >
                       <select name="souscategorie" class="form-control " title="" required="" id="id_souscategorie">
                         <option value="" selected="">---------</option>
@@ -155,7 +155,7 @@
 
               </div>
             </div>
-            <button type="submit" class="btn btn-nton pull-right">{% trans "Open" %}</button>
+            <button type="submit" class="btn btn-nton pull-right">{% trans "Unlock " %}</button>
             <div class="clearfix"></div>
           </form>
   <script type="text/javascript">

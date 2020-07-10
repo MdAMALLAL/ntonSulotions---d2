@@ -43,59 +43,70 @@
                       </div>
                       <div class="card-body">
                         <form  method="POST"  enctype="multipart/form-data">
-                          {% csrf_token %}
-                          <div class="row">
-                            <div class="col-md-6">
-                              <div class="form-group">
-                                {% bootstrap_field form.name  placeholder='' %}
+                            {% csrf_token %}
+                            <div class="row">
+                              <div class="col-md-6">
+                                <div class="form-group">
+                                  {% bootstrap_field form.name addon_before='<span class="input-group-text fa fa-briefcase "></span>' placeholder='' %}
+                                </div>
+                              </div>
+                              <div class="col-md-6">
+                                <div class="form-group">
+                                  {% bootstrap_field form.email addon_before='<span class="input-group-text fa fa-envelope "></span>'  placeholder='' %}
+                                </div>
                               </div>
                             </div>
-                            <div class="col-md-6">
-                              <div class="form-group">
-                                {% bootstrap_field form.email  placeholder='' %}
+                            <div class="row">
+                              <div class="col-md-6">
+                                <div class="form-group">
+                                  {% bootstrap_field form.tel  addon_before='<span class="input-group-text fa fa-phone"></span>' placeholder='' %}
+                                </div>
+                              </div>
+                              <div class="col-md-6">
+                                <div class="form-group">
+                                  <div class="form-group">
+                                    <div class="form-group bmd-form-group is-filled">
+                                      <label for="id_url" class="bmd-label-static">{% trans "Site Internet" %}</label>
+                                      <div class="input-group">
+                                        <div class="input-group-prepend">
+                                        <span class="input-group-text">
+                                          <i class="fa"><img height='16' src='{% static "img/net.svg" %}'  alt="..."></i>
+                                        </span>
+                                        </div>
+                                        <input type="text" name="url" placeholder="http://" maxlength="200" class="form-control" title="" id="id_url">
+                                      </div>
+                                    </div>
+                                  </div>
+                                </div>
                               </div>
                             </div>
-                          </div>
-                          <div class="row">
-                            <div class="col-md-6">
-                              <div class="form-group">
-                                {% bootstrap_field form.tel  placeholder='' %}
+                            <div class="row">
+                              <div class="col-md-4">
+                                <div class="form-group">
+                                  {% bootstrap_field form.contact addon_before='<span class="input-group-text fa fa-user"></span>' placeholder='' %}
+                                </div>
                               </div>
-                            </div>
-                            <div class="col-md-6">
-                              <div class="form-group">
-                                {% bootstrap_field form.url  placeholder='' %}
+                              <div class="col-md-4">
+                                <div class="form-group">
+                                  {% bootstrap_field form.contact_tel addon_before='<span class="input-group-text fa fa-mobile "></span>' placeholder=''  %}
+                                </div>
                               </div>
-                            </div>
-                          </div>
-                          <div class="row">
-                            <div class="col-md-4">
-                              <div class="form-group">
-                                {% bootstrap_field form.contact  placeholder='' %}
+                              <div class="col-md-4">
+                                <div class="form-group">
+                                  {% bootstrap_field form.contact_email addon_before='<span class="input-group-text fa fa-envelope-open-text"></span>' placeholder=''  %}
+                                </div>
                               </div>
-                            </div>
-                            <div class="col-md-4">
-                              <div class="form-group">
-                                {% bootstrap_field form.contact_tel  placeholder='' %}
-                              </div>
-                            </div>
-                            <div class="col-md-4">
-                              <div class="form-group">
-                                {% bootstrap_field form.contact_email  placeholder='' %}
-                              </div>
-                            </div>
 
-                          </div>
-                          <div class="row">
-                            <div class="col-md-12">
-                              {% bootstrap_field form.charged_by placeholder=''  %}
                             </div>
-                            <div class="col-md-12">
-                              {% bootstrap_field form.address  placeholder='' %}
+                            <div class="row">
+                              <div class="col-md-12">
+                                {% bootstrap_field form.charged_by placeholder=''  %}
+                              </div>
+                              <div class="col-md-12">
+                                {% bootstrap_field form.address addon_before='<i class="fas fa-location-arrow"></i>' placeholder=''  %}
 
+                              </div>
                             </div>
-                          </div>
-
                             <button id="stertedit" type="button" class="btn btn-nton pull-left collapse show">{% trans "Edit" %}</button>
                             <button id="send" type="submit" class="btn btn-nton pull-right collapse hide">{% trans "Save" %}</button>
 

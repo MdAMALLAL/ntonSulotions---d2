@@ -18,8 +18,8 @@ class Categorie(models.Model):
     """Django data model Categorie"""
     name = models.CharField(blank=True, max_length=100)
     class Meta:
-        verbose_name = 'Categorie'
-        verbose_name_plural = 'Categories'
+        verbose_name = 'Category'
+        verbose_name_plural = 'Categorys'
     def __str__(self):
         return str(self.name)
 
@@ -28,8 +28,8 @@ class SousCategorie(models.Model):
     name = models.CharField(blank=True, max_length=100)
     categorie = models.ForeignKey('Categorie', on_delete=models.CASCADE, related_name='SousCategories',)
     class Meta:
-        verbose_name = 'SousCategorie'
-        verbose_name_plural = 'SousCategories'
+        verbose_name = 'Sub-category'
+        verbose_name_plural = 'Sub-categorys'
     def __str__(self):
         return str(self.categorie.name + '/'+self.name)
 
@@ -72,10 +72,10 @@ class Question(models.Model):
     image = models.ImageField(blank=True,null=True, upload_to=content_file_name)
     priorite=models.CharField(max_length=1,choices=Priorite,default='F',)
     status = models.CharField(max_length=2,choices=Status,default='OV',)
-    priorite_intern = models.CharField(max_length=2,choices=Priorite,default='F',blank=True,null=True)
+    priorite_intern = models.CharField(max_length=2, verbose_name=_('Internal priority'), choices=Priorite,default='F',blank=True,null=True)
 
-    categorie = models.ForeignKey(Categorie, on_delete=models.CASCADE, related_name='quesions',)
-    souscategorie = models.ForeignKey(SousCategorie, on_delete=models.CASCADE, related_name='quesions',)
+    categorie = models.ForeignKey(Categorie,verbose_name=_('Category'), on_delete=models.CASCADE, related_name='quesions',)
+    souscategorie = models.ForeignKey(SousCategorie, verbose_name=_('Sub-category'), on_delete=models.CASCADE, related_name='quesions',)
 
     description = models.TextField(blank=True,verbose_name=_('comment'))
     viwed_at = models.DateTimeField(blank=True,null=True)
