@@ -8,6 +8,7 @@ from django.utils.translation import ugettext_lazy as _
 from django.utils import timezone
 
 from clients import models as client
+from solutions.models import Question
 
 class UserManager(AbstractUserManager):
     use_in_migrations = True
@@ -112,6 +113,9 @@ class User(AbstractBaseUser , PermissionsMixin):
 
     def get_notification_count(self):
         return Notification.objects.filter(user=self, seen__isnull=True).count()
+    def get_opened_ticket(self):
+        return Question.objects.filter(user__client__charged_by__username = self.username, status='OV')
+
 
 class Notification(models.Model):
     user = models.ForeignKey(User, related_name='notifications', on_delete=models.CASCADE)

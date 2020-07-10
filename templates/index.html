@@ -240,172 +240,160 @@
   </div>
 
   {% elif user.is_staff %}
-  <div class="row">
-    <div class="col-lg-3 col-md-6 col-sm-6">
-      <div class="card card-stats">
-        <div class="card-header card-header-success card-header-icon">
-          <div class="card-icon">
-            <i class="fa fa-ticket-alt"></i>
-          </div>
-          <p class="card-category pr-2">Tickets</p>
-          <h3 class="card-title pr-2">{{tickets_open}}
-            <small>{% trans "Open " %}</small>
-          </h3>
+  <div class="col-md-12">
+    <div class="card">
+      <div class="card-header card-header-success card-header-icon">
+        <div class="card-icon">
+          <i class="fa fa-building"></i>
         </div>
-        <div class="card-footer">
-          <div class="stats">
-            <i class="material-icons text-danger">warning</i>
-            <a href="{% url 'solutions:questionlist' %}?status=OV">{% trans "Open more tickets" %}</a>
-          </div>
-        </div>
+        <h4 class="card-title">Clients</h4>
       </div>
-    </div>
-    <div class="col-lg-3 col-md-6 col-sm-6">
-      <div class="card card-stats">
-        <div class="card-header card-header-success card-header-icon">
-          <div class="card-icon">
-            <i class="fa fa-clipboard-check"></i>
-          </div>
-          <p class="card-category pr-2">Tickets</p>
-          <h3 class="card-title pr-2">{{tickets_resolved}}
-            <small>{% trans "Resolved " %}</small>
-          </h3>
+      <div class="card-body">
+        <div class="toolbar">
+          <!--        Here you can write extra buttons/actions for the toolbar              -->
         </div>
-        <div class="card-footer">
-          <div class="stats">
-            <i class="material-icons">warning</i>
-            <a href="{% url 'solutions:questionlist' %}?status=RS">{% trans "Explore" %}</a>
-          </div>
-        </div>
-      </div>
-    </div>
-    <div class="col-lg-3 col-md-6 col-sm-6">
-      <div class="card card-stats">
-        <div class="card-header card-header-info card-header-icon">
-          <div class="card-icon">
-            <i class="fa fa-ticket-alt"></i>
-          </div>
-          <p class="card-category pr-2">Tickets</p>
-          <h3 class="card-title pr-2">{{tickets_waiting}}
-            <small>{% trans "Waiting " %}</small>
-          </h3>
-        </div>
-        <div class="card-footer">
-          <div class="stats">
-            <i class="material-icons text-danger">warning</i>
-            <a href="{% url 'solutions:questionlist' %}?status=EA">{% trans "Explore" %}</a>
-          </div>
-        </div>
-      </div>
-    </div>
-    <div class="col-lg-3 col-md-6 col-sm-6">
-      <div class="card card-stats">
-        <div class="card-header card-header-azure card-header-icon">
-          <div class="card-icon">
-            <i class="fa fa-window-close"></i>
-          </div>
-          <p class="card-category pr-2">Tickets</p>
-          <h3 class="card-title pr-2">{{tickets_closed}}
-            <small>{% trans "Closed " %}</small>
-          </h3>
-        </div>
-        <div class="card-footer">
+        <div class="material-datatables">
+          <div id="datatables_wrapper" class="dataTables_wrapper dt-bootstrap4">
+            <div class="row">
+              <div class="col-sm-12">
+                <table id="datatables" class="table table-striped table-no-bordered table-hover dataTable dtr-inline" style="width: 100%;" role="grid" aria-describedby="datatables_info" width="100%" cellspacing="0">
+            <thead>
+              <tr role="row">
+                <th data-field="name"  class="sorting">{% trans "Name" %}</th>
+                <th data-field="contact"  class="sorting">{% trans "Contact" %}</th>
+                <th data-field="users"  class="sorting">{% trans "Users" %}</th>
+                <th data-field="users" class="disabled-sorting text-right sorting">{% trans "Action" %}</th>
 
+              </tr>
+          </thead>
+          <tbody>
+
+            {% for client in client_list %}
+            <tr role="row">
+              <td><a class="text-dark" href="{% url 'clients:detail' slug=client.slug %}">{{client.name}}</a></td>
+              <td>{{ client.contact}}</td>
+              <td>{{client.users.all.count}}</td>
+              <td>
+                <a rel="tooltip" title="Edit" class="table-action edit" href="{% url 'clients:detail' slug=client.slug %}" title="Edit">
+                  <i class="fa fa-edit"></i>
+                </a>
+                <a rel="tooltip" title="Remove" class="table-action remove" href="{% url 'clients:delete' slug=client.slug %}" title="Remove">
+                 <i class="fa fa-remove"></i>
+                </a>
+              </td>
+              </tr>
+              {% endfor %}
+
+            </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
+      <!-- end content-->
     </div>
-  </div>
-        <div class="col-md-12">
-          <div class="card">
-            <div class="card-header card-header-success card-header-icon">
-              <div class="card-icon">
-                <i class="fa fa-building"></i>
-              </div>
-              <h4 class="card-title">Clients</h4>
-            </div>
-            <div class="card-body">
-              <div class="toolbar">
-                <!--        Here you can write extra buttons/actions for the toolbar              -->
-              </div>
-              <div class="material-datatables">
-                <div id="datatables_wrapper" class="dataTables_wrapper dt-bootstrap4">
-                <div class="row">
-                  <div class="col-sm-12">
-                  <table id="datatables" class="table table-striped table-no-bordered table-hover dataTable dtr-inline" style="width: 100%;" role="grid" aria-describedby="datatables_info" width="100%" cellspacing="0">
+    <!--  end card  -->
+    <div class="card">
+      <div class="card-header card-header-success card-header-icon">
+        <div class="card-icon">
+          <i class="fa fa-building"></i>
+        </div>
+        <h4 class="card-title">{% trans "ticket has to be taken into account immediately" %}</h4>
+      </div>
+      <div class="card-body">
+        <div class="toolbar">
+          <!--        Here you can write extra buttons/actions for the toolbar              -->
+        </div>
+        <div class="material-datatables">
+          <div id="datatables_wrapper" class="dataTables_wrapper dt-bootstrap4">
+            <div class="row">
+              <div class="col-sm-12">
+                <table id="question_table" class="table table-striped table-no-bordered table-hover dataTable dtr-inline" style="width: 100%;" role="grid" aria-describedby="datatables_info" width="100%" cellspacing="0">
                   <thead>
                     <tr role="row">
-                      <th data-field="name"  class="sorting">{% trans "Name" %}</th>
-                      <th data-field="contact"  class="sorting">{% trans "Contact" %}</th>
-                      <th data-field="users"  class="sorting">{% trans "Users" %}</th>
-                      <th data-field="users" class="disabled-sorting text-right sorting">{% trans "Action" %}</th>
-
+                    <th data-field="Ref" class="sorting">Ref</th>
+                    <th data-field="title" class="sorting">{% trans "Title" %}</th>
+                    <th data-field="status" class="sorting">{% trans "Status" %}</th>
+                    <th data-field="published" class="sorting">{% trans "Published on" %}</th>
+                    <th data-field="applicant" class="sorting">{% trans "Applicant" %}</th>
+                    <th data-field="priority" class="sorting">{% trans "priority" %}</th>
+                    <th data-field="categorie" class="sorting">{% trans "Categorie" %}</th>
+                    <th data-field="actions" >Actions</th>
                     </tr>
-                </thead>
-                <tbody>
+                  </thead>
 
-                  {% for client in client_list %}
-                  <tr role="row">
-                    <td><a class="text-dark" href="{% url 'clients:detail' slug=client.slug %}">{{client.name}}</a></td>
-                    <td>{{ client.contact}}</td>
-                    <td>{{client.users.all.count}}</td>
-                    <td>
-                      <a rel="tooltip" title="Edit" class="table-action edit" href="{% url 'clients:detail' slug=client.slug %}" title="Edit">
-                        <i class="fa fa-edit"></i>
-                      </a>
-                      <a rel="tooltip" title="Remove" class="table-action remove" href="{% url 'clients:delete' slug=client.slug %}" title="Remove">
-                       <i class="fa fa-remove"></i>
-                      </a>
-                    </td>
+                  <tbody>
+                    {% for question in request.user.get_opened_ticket %}
+                    <a class="text-dark" href="{% url 'solutions:questiondetail' pk=question.pk %}">
+                    <tr role="row">
+                      <td>{{question.get_ref}}</td>
+                      <td>{{ question.objet  }}</td>
+                      <td>{{ question.get_status_display}}</td>
+                      <td>{{ question.created_at|date:"d/M/Y"}}</td>
+                      <td>{{question.user}}</td>
+                      <td>{{ question.get_priorite_display}}</td>
+                      <td>{{ question.categorie.name}}</td>
+                      <td>
+                        <a rel="tooltip" title="Edit" class="table-action edit" href="{% url 'solutions:questiondetail' pk=question.pk %}" title="Edit">
+                          <i class="fa fa-edit"></i>
+                        </a>
+                        <a rel="tooltip" title="Edit" class="table-action edit" href="{% url 'solutions:questioneCharged' pk=question.pk %}" title="Edit">
+                          <i class="fa fa-ok"></i>
+                        </a>
+                      </td>
                     </tr>
+                    </a>
                     {% endfor %}
-
                   </tbody>
                 </table>
               </div>
             </div>
-
           </div>
-              </div>
-            </div>
-            <!-- end content-->
-          </div>
-          <!--  end card  -->
         </div>
-        <script>
-          $(document).ready(function() {
-            $('#datatables').DataTable({
-              "pagingType": "full_numbers",
-              "lengthMenu": [
-                [10, 25, 50, -1],
-                [10, 25, 50, "{% trans "All" %}"]
-              ],
-              responsive: true,
-              language: {
-                "search": "_INPUT_",
-                "emptyTable":     "{% trans "No data available in table" %}",
-                "info":           "{% trans "Showing _START_ to _END_ of _TOTAL_ entries" %}",
-                "infoEmpty":      "{% trans "Showing 0 to 0 of 0 entries" %}",
-                "infoFiltered":   "{% trans "(filtered from _MAX_ total entries)" %}",
-                "infoPostFix":    "",
-                "thousands":      ",",
-                "lengthMenu":     "{% trans "Show _MENU_ entries" %}",
-                "loadingRecords": "{% trans "Loading..." %}",
-                "processing":     "{% trans "Processing..." %}",
-                "search":         "{% trans "Search:" %}",
-                "zeroRecords":    "{% trans "No matching records found" %}",
-                "paginate": {
-                    "first":      "{% trans "First" %}",
-                    "last":       "{% trans "Last" %}",
-                    "next":       "{% trans "Next" %}",
-                    "previous":   "{% trans "Previous" %}",
-                },
-              }
-            });
+      </div>
+      <!-- end content-->
+    </div>
+    <!--  end card  -->
+  </div>
+  <script>
+    $(document).ready(function() {
+      config = {
+        "pagingType": "full_numbers",
+        "lengthMenu": [
+          [10, 25, 50, -1],
+          [10, 25, 50, "{% trans "All" %}"]
+        ],
+        responsive: true,
+        language: {
+          "search": "_INPUT_",
+          "emptyTable":     "{% trans "No data available in table" %}",
+          "info":           "{% trans "Showing _START_ to _END_ of _TOTAL_ entries" %}",
+          "infoEmpty":      "{% trans "Showing 0 to 0 of 0 entries" %}",
+          "infoFiltered":   "{% trans "(filtered from _MAX_ total entries)" %}",
+          "infoPostFix":    "",
+          "thousands":      ",",
+          "lengthMenu":     "{% trans "Show _MENU_ entries" %}",
+          "loadingRecords": "{% trans "Loading..." %}",
+          "processing":     "{% trans "Processing..." %}",
+          "search":         "{% trans "Search:" %}",
+          "zeroRecords":    "{% trans "No matching records found" %}",
+          "paginate": {
+              "first":      "{% trans "First" %}",
+              "last":       "{% trans "Last" %}",
+              "next":       "{% trans "Next" %}",
+              "previous":   "{% trans "Previous" %}",
+          },
+        }
+      };
+      $('#datatables').DataTable(config);
+      $('#question_table').DataTable(config);
 
-            var table = $('#datatable').DataTable();
 
-          });
-        </script>
+      var table = $('.datatable').DataTable();
+
+    });
+  </script>
 
 
     {% endif %}
