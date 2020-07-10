@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-07-10 17:46+0100\n"
+"POT-Creation-Date: 2020-07-10 19:20+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -467,10 +467,9 @@ msgid "Resolved"
 msgstr "Resolu"
 
 #: .\solutions\models.py:50 .\solutions\models_3.0.5.py:36
-#: .\solutions\templates\solutions\question_form.html:87
 #: .\templates\index.html:158
 msgid "Open"
-msgstr "Ouvrir"
+msgstr "Ouvert"
 
 #: .\solutions\models.py:51 .\solutions\models.py:160
 #: .\solutions\models_3.0.5.py:37
@@ -658,6 +657,10 @@ msgstr "Modifier ticket"
 #: .\templates\base.old.html:66 .\templates\index.html:90
 msgid "New ticket"
 msgstr "Nouveau ticket"
+
+#: .\solutions\templates\solutions\question_form.html:87
+msgid "Unlock"
+msgstr "Ouvrir"
 
 #: .\solutions\views.py:54
 msgid "Question has been saved."
