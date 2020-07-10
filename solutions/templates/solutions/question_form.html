@@ -120,6 +120,19 @@
 
           }
         });
+        var editor = new MediumEditor('.editable', {
+          buttonLabels: 'fontawesome',
+              toolbar: {
+                  buttons: ['bold', 'italic',  'justifyCenter',
+                      'anchor', 'underline',  'strikethrough',
+                      'subscript', 'superscript', 'anchor',
+                      'quote', 'orderedlist', 'unorderedlist',
+                      'indent', 'outdent', 'justifyLeft', 'justifyCenter',
+                      'justifyRight', 'justifyFull',
+                      'h1', 'h2', 'h3',  'h4', 'h5', 'h6',
+                  ]
+              }
+          });
       </script>
 
 {% endblock %}
