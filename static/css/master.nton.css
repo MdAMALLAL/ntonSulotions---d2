@@ -262,22 +262,30 @@ body > div > div > div.msj-rta.macro{
     position: relative;
 }
 .btn-nton{
-  margin-left: 4px;
-  margin-right: 4px;
-  margin: 4px;
-  min-width: max-content;
-  width:  max-content;
-  cursor:pointer;
-  text-transform:capitalize;
-  border:none;
-  padding:6px;
-  border-radius:75%;
-  border-bottom:7px solid #4753f3;
-  font:bold 13px Arial;
-  color:#555;
-  background:#fff;
-  box-shadow:2px 2px 3px #999;
-  border-top:2px solid #59cd27;
+  -webkit-box-direction: normal;
+  background: transparent;
+  border: 0;
+  box-sizing: border-box;
+  font-family: inherit;
+  overflow: hidden;
+  outline-width: 2px;
+  position: relative;
+  transition-duration: 167ms;
+  transition-property: background-color,box-shadow,color,-webkit-box-shadow;
+  transition-timing-function: cubic-bezier(0, 0, 0.2, 1);
+  vertical-align: middle;
+  text-decoration: none;
+  display: flex;
+  -webkit-box-align: center;
+  align-items: center;
+  height: auto;
+  width: auto;
+  box-shadow: none;
+  border-radius: 28px;
+  padding: 8px 20px;
+  background-color: #2977c9;
+  color: #fff;
+  font-weight: normal;
 }
 
 .btn-nton:hover{
