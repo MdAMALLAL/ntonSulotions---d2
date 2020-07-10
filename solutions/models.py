@@ -41,7 +41,7 @@ class Question(models.Model):
         ('M', _('Medium')),
         ('H', _('Height')),
         ('U', _('Urgent')),
-        ('B',_('Bloquant'))
+        ('B',_('Blocking'))
         )
 ###           Status             ###
     Status= (

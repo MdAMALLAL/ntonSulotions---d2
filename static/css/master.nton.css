@@ -289,8 +289,6 @@ body > div > div > div.msj-rta.macro{
 }
 
 .btn-nton:hover{
-  border-bottom:7px solid #4753f3;
-  font:bold 13px Arial;
-  color:#555;
-  background:#59cd27;
+  opacity: 1;
+  background-color: #2977c9;
 }

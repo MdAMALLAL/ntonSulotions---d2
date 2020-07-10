@@ -262,7 +262,7 @@
                 <th data-field="name"  class="sorting">{% trans "Name" %}</th>
                 <th data-field="contact"  class="sorting">{% trans "Contact" %}</th>
                 <th data-field="users"  class="sorting">{% trans "Users" %}</th>
-                <th data-field="users" class="disabled-sorting text-right sorting">{% trans "Action" %}</th>
+                <th data-field="users" class="disabled-sorting">{% trans "Action" %}</th>
 
               </tr>
           </thead>
@@ -274,10 +274,10 @@
               <td>{{ client.contact}}</td>
               <td>{{client.users.all.count}}</td>
               <td>
-                <a rel="tooltip" title="Edit" class="table-action edit" href="{% url 'clients:detail' slug=client.slug %}" title="Edit">
+                <a rel="tooltip"class="px-2  table-action edit" href="{% url 'clients:detail' slug=client.slug %}" title="{% trans "Edit" %}">
                   <i class="fa fa-edit"></i>
                 </a>
-                <a rel="tooltip" title="Remove" class="table-action remove" href="{% url 'clients:delete' slug=client.slug %}" title="Remove">
+                <a rel="tooltip" class="px-2  table-action remove" href="{% url 'clients:delete' slug=client.slug %}" title="{% trans "Remove" %}">
                  <i class="fa fa-remove"></i>
                 </a>
               </td>
@@ -299,7 +299,7 @@
         <div class="card-icon">
           <i class="fa fa-building"></i>
         </div>
-        <h4 class="card-title">{% trans "ticket has to be taken into account immediately" %}</h4>
+        <h4 class="card-title">{% trans "Tickets has to be taken into account immediately" %}</h4>
       </div>
       <div class="card-body">
         <div class="toolbar">
@@ -319,7 +319,7 @@
                     <th data-field="applicant" class="sorting">{% trans "Applicant" %}</th>
                     <th data-field="priority" class="sorting">{% trans "priority" %}</th>
                     <th data-field="categorie" class="sorting">{% trans "Categorie" %}</th>
-                    <th data-field="actions" >Actions</th>
+                    <th class="disabled-sorting">Actions</th>
                     </tr>
                   </thead>
 
@@ -335,11 +335,11 @@
                       <td>{{ question.get_priorite_display}}</td>
                       <td>{{ question.categorie.name}}</td>
                       <td>
-                        <a rel="tooltip" title="Edit" class="table-action edit" href="{% url 'solutions:questiondetail' pk=question.pk %}" title="Edit">
+                        <a rel="tooltip" class="px-2 table-action edit" href="{% url 'solutions:questiondetail' pk=question.pk %}" title="{% trans "Edit" %}">
                           <i class="fa fa-edit"></i>
                         </a>
-                        <a rel="tooltip" title="Edit" class="table-action edit" href="{% url 'solutions:questioneCharged' pk=question.pk %}" title="Edit">
-                          <i class="fa fa-ok"></i>
+                        <a rel="tooltip" class=" px-2 table-action edit" href="{% url 'solutions:questioneCharged' pk=question.pk %}" title="{% trans "Take in charge" %}">
+                          <i class="fa fa-clipboard-check"></i>
                         </a>
                       </td>
                     </tr>
