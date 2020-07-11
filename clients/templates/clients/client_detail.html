@@ -177,8 +177,7 @@
                           <td class="px-2">{% trans "Categorie" %}</td>
                           <td class="px-2">{% trans "Resolution time" %}</td>
                         </thead>
-                        {% for users in client.users.all %}
-                        {% for question in users.tickets.all %}
+                        {% for question in client.tickets.all %}
 
                         <tr>
                           <td>{{question.id}}</td>
@@ -190,7 +189,6 @@
                             <td>{{ question.categorie.name}}</td>
                             <td>{{question.get_time_to_resolv}}</td>
                           </tr>
-                          {% endfor %}
                           {% endfor %}
                         </table>
             </div>

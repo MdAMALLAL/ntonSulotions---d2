@@ -3,6 +3,8 @@ from django.utils.translation import gettext_lazy as _
 from django.utils.text import slugify
 from django.urls import reverse_lazy
 from django.conf import settings
+from solutions.models import Question
+
 User = settings.AUTH_USER_MODEL
 
 # Create your models here.
@@ -33,3 +35,5 @@ class Client(models.Model):
 
     class Meta:
         ordering = ["name"]
+    def tickets(self):
+        return Question.objects.filter(user__client__slug = self.slug)

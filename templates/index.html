@@ -261,8 +261,7 @@
               <tr role="row">
                 <th data-field="name"  class="sorting">{% trans "Name" %}</th>
                 <th data-field="contact"  class="sorting">{% trans "Contact" %}</th>
-                <th data-field="users"  class="sorting">{% trans "Users" %}</th>
-                <th data-field="users" class="disabled-sorting">{% trans "Action" %}</th>
+                <th data-field="tickets"  class="sorting">{% trans "Tickets" %}</th>
 
               </tr>
           </thead>
@@ -272,16 +271,9 @@
             <tr role="row">
               <td><a class="text-dark" href="{% url 'clients:detail' slug=client.slug %}">{{client.name}}</a></td>
               <td>{{ client.contact}}</td>
-              <td>{{client.users.all.count}}</td>
-              <td>
-                <a rel="tooltip"class="px-2  table-action edit" href="{% url 'clients:detail' slug=client.slug %}" title="{% trans "Edit" %}">
-                  <i class="fa fa-edit"></i>
-                </a>
-                <a rel="tooltip" class="px-2  table-action remove" href="{% url 'clients:delete' slug=client.slug %}" title="{% trans "Remove" %}">
-                 <i class="fa fa-remove"></i>
-                </a>
-              </td>
-              </tr>
+              <td>{{client.tickets.count}}</td>
+              <td><a class=" btn btn-nton text-center" href="{% url 'clients:detail' slug=client.slug %}">{% trans "Detail" %}</a></td>
+            </tr>
               {% endfor %}
 
             </tbody>
