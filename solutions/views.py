@@ -525,13 +525,15 @@ def load_chart(request):
 
     if type =='pie':
         if all :
-            dataset = Question.objects.all() \
+            dataset = Question.objects.filter(created_at__range = (datetime.datetime.combine(start_date, datetime.time.min),
+                                                                    datetime.datetime.combine(end_date, datetime.time.max))) \
                 .values('status') \
                 .exclude(status='') \
                 .annotate(total=Count('status')) \
                 .order_by('status')
         elif client:
-            dataset = Question.objects.filter(user__client = client) \
+            dataset = Question.objects.filter(user__client = client, created_at__range = (datetime.datetime.combine(start_date, datetime.time.min),
+                                                                    datetime.datetime.combine(end_date, datetime.time.max))) \
                 .values('status') \
                 .exclude(status='') \
                 .annotate(total=Count('status')) \
@@ -539,13 +541,15 @@ def load_chart(request):
 
         else:
             if user.is_staff:
-                dataset = Question.objects.filter(charged_by = user) \
+                dataset = Question.objects.filter(charged_by = user, created_at__range = (datetime.datetime.combine(start_date, datetime.time.min),
+                                                                        datetime.datetime.combine(end_date, datetime.time.max))) \
                     .values('status') \
                     .exclude(status='') \
                     .annotate(total=Count('status')) \
                     .order_by('status')
             else:
-                dataset = Question.objects.filter(user = user) \
+                dataset = Question.objects.filter(user = user, created_at__range = (datetime.datetime.combine(start_date, datetime.time.min),
+                                                                        datetime.datetime.combine(end_date, datetime.time.max))) \
                     .values('status') \
                     .exclude(status='') \
                     .annotate(total=Count('status')) \
