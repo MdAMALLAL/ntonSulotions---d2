@@ -87,7 +87,7 @@ class User(AbstractBaseUser , PermissionsMixin):
         send_mail(subject, message, from_email, [self.email], **kwargs)
 
     def __str__(self):
-        return "@{}".format(self.username)
+        return "{}".format(self.username)
 
     def get_absolute_url(self):
         return reverse_lazy("accounts:edit", kwargs={"username": self.username})

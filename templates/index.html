@@ -272,7 +272,7 @@
               <td><a class="text-dark" href="{% url 'clients:detail' slug=client.slug %}">{{client.name}}</a></td>
               <td>{{ client.contact}}</td>
               <td>{{client.tickets.count}}</td>
-              <td><a class=" btn btn-nton text-center" href="{% url 'clients:detail' slug=client.slug %}">{% trans "Detail" %}</a></td>
+              <td class="d-flex align-items-center"><a class=" btn btn-outline-success align-self-center text-center" href="{% url 'clients:detail' slug=client.slug %}">{% trans "Detail" %}</a></td>
             </tr>
               {% endfor %}
 
@@ -311,7 +311,7 @@
                     <th data-field="applicant" class="sorting">{% trans "Applicant" %}</th>
                     <th data-field="priority" class="sorting">{% trans "priority" %}</th>
                     <th data-field="categorie" class="sorting">{% trans "Categorie" %}</th>
-                    <th class="disabled-sorting">Actions</th>
+                    <th class="disabled-sorting"></th>
                     </tr>
                   </thead>
 
@@ -327,12 +327,10 @@
                       <td>{{ question.get_priorite_display}}</td>
                       <td>{{ question.categorie.name}}</td>
                       <td>
-                        <a rel="tooltip" class="px-2 table-action edit" href="{% url 'solutions:questiondetail' pk=question.pk %}" title="{% trans "Edit" %}">
-                          <i class="fa fa-edit"></i>
+                        <a rel="tooltip" class="px-2  btn btn-outline-success" href="{% url 'solutions:questiondetail' pk=question.pk %}" title="{% trans "Detail" %}">
+                          {% trans "Detail" %}
                         </a>
-                        <a rel="tooltip" class=" px-2 table-action edit" href="{% url 'solutions:questioneCharged' pk=question.pk %}" title="{% trans "Take in charge" %}">
-                          <i class="fa fa-clipboard-check"></i>
-                        </a>
+
                       </td>
                     </tr>
                     </a>
@@ -404,7 +402,6 @@
               <th>{% trans "Consultat email" %}</th>
               <th>{% trans "Charged tickets" %}</th>
               <th>{% trans "Resolved tickets" %}</th>
-              <th>{% trans "Average" %}</th>
 
 
             </thead>
@@ -416,7 +413,6 @@
                 <td>{{Consultant.email}}</td>
                 <td>{{Consultant.total|default_if_none:'0'}}</td>
                 <td>{{Consultant.resolved|default_if_none:'0'}}</td>
-                <td>{{Consultant.avgTime|print_timestamp:' '}}</td>
 
               </tr>
               {% endfor %}
