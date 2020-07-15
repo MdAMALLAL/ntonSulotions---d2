@@ -248,7 +248,7 @@ msgstr "Filtre"
 #: .\clients\templates\clients\client_detail.html:206
 #: .\templates\index.html:226
 msgid "Tickets Status"
-msgstr "Statut du Ticket"
+msgstr "Statut des Tickets"
 
 #: .\accounts\templates\accounts\user_form.html:173
 msgid "Tickets take into account per day"
@@ -682,7 +682,7 @@ msgstr "Ticket est enregistre."
 #: .\solutions\views.py:217 .\solutions\views.py:282
 #, python-brace-format
 msgid "Ticket status has changed to {0} by {1}"
-msgstr "Statut du ticket a changé de {0} par {1}"
+msgstr "Statut du ticket est passé à {0} par {1}"
 
 #: .\solutions\views.py:248 .\solutions\views.py:326 .\solutions\views.py:386
 #: .\solutions\views.py:442

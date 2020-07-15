@@ -560,6 +560,9 @@ def load_chart(request):
         chart = {
             'chart': {'type': 'pie'},
             'backgroundColor': 'transparent',
+             'title': {
+            'text': ''
+                    },
             'object ': '',
             'series': [{
                 'name': 'Tickets',
@@ -631,6 +634,9 @@ def load_chart(request):
         chart = {
             'chart': {'type': 'line'},
             'backgroundColor': 'transparent',
+            'title': {
+           'text': ''
+                   },
             'object ': {'text': ''},
             'xAxis': {'categories': dates,},
             'series': [survived_series, ]
@@ -659,6 +665,9 @@ def load_chart(request):
         chart = {
             'chart': {'type': 'column'},
             'backgroundColor': 'transparent',
+            'title': {
+           'text': ''
+                   },
             'object ': {'text': ''},
             'xAxis': {'categories': categories,},
             'series': [tickets_series_data, ]
