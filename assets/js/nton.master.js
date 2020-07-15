@@ -24,8 +24,7 @@
 $(function () {
   try {
     flatpickr(".dateTimeField",
-      {defaultDate: $(".dateTimeField").val(),
-      enableTime: true,
+      {enableTime: true,
       allowInput: true,
       time_24hr: true,
       dateFormat: "Y-m-d H:m",
@@ -40,8 +39,7 @@ $(function () {
 $(function () {
 try {
   flatpickr(".dateField",
-    {defaultDate: $(".dateField").val(),
-    allowInput: true,
+    {allowInput: true,
     dateFormat: "Y-m-d",
     });
 }
