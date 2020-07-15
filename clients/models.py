@@ -37,3 +37,13 @@ class Client(models.Model):
         ordering = ["name"]
     def tickets(self):
         return Question.objects.filter(user__client__slug = self.slug)
+    def tickets_open(self):
+        return Question.objects.filter(user__client__slug = self.slug, status='OV')
+    def tickets_waiting(self):
+        return Question.objects.filter(user__client__slug = self.slug, status='EA')
+    def tickets_resolved(self):
+        return Question.objects.filter(user__client__slug = self.slug, status='RS')
+    def tickets_Closed(self):
+        return Question.objects.filter(user__client__slug = self.slug, status='FR')
+    def tickets_Refused(self):
+        return Question.objects.filter(user__client__slug = self.slug, status='RF')

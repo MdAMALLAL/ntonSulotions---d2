@@ -130,15 +130,15 @@
                 </div>
             </div>
             <div class="tab-pane fade" id="list-users" role="tabpanel" aria-labelledby="users-tab">
-                <div class=" fresh-table toolbar-color-green">
-                  <table id="fresh-table" class="table">
+                <div class=" toolbar-color-green">
+                  <table id="user-table" class="table table-striped table-no-bordered table-hover dataTable dtr-inline" style="width: 100%;" role="grid" aria-describedby="datatables_info" width="100%" cellspacing="0">
                     <thead>
-                        <th data-field="id"  data-sortable="true">Id</th>
-                        <th data-field="username" data-sortable="true">{% trans "username" %}</th>
-                        <th data-field="email" data-sortable="true">{% trans "Email" %}</th>
-                        <th data-field="client" data-sortable="true">{% trans "Client" %}</th>
-                        <th data-field="conultant" data-sortable="true">{% trans "Staff" %}</th>
-                        <th data-field="last_login" data-sortable="true">{% trans "Last login" %}</th>
+                        <th class="sorting" data-field="id"  >Id</th>
+                        <th class="sorting" data-field="username">{% trans "username" %}</th>
+                        <th class="sorting" data-field="email">{% trans "Email" %}</th>
+                        <th class="sorting" data-field="client">{% trans "Client" %}</th>
+                        <th class="sorting" data-field="conultant">{% trans "Staff" %}</th>
+                        <th class="sorting" data-field="last_login" >{% trans "Last login" %}</th>
                         <th >Actions</th>
                         <!-- <th data-field="actions" data-formatter="operateFormatter" data-events="operateEvents">Actions</th> -->
                     </thead>
@@ -164,18 +164,18 @@
                 </div>
 
               </div>
-            <div class="tab-pane fade" id="list-tickets" role="tabpanel" aria-labelledby="tickets-tab">
+            <div class="tab-pane fade dataTables_wrapper dt-bootstrap4" id="list-tickets" role="tabpanel" aria-labelledby="tickets-tab">
                       <h4>{% trans "Tickets" %}</h4>
-                      <table class="table">
+                      <table id="ticket_table" class="table table-striped table-no-bordered table-hover dataTable dtr-inline" style="width: 100%;" role="grid" aria-describedby="datatables_info" width="100%" cellspacing="0">
                         <thead>
-                          <td class="px-2">Id</td>
-                          <td class="px-2">{% trans "Title" %}</td>
-                          <td class="px-2">{% trans "Status" %}</td>
-                          <td class="px-2">{% trans "Published on" %}</td>
-                          <td class="px-2">{% trans "Applicant" %}</td>
-                          <td class="px-2">{% trans "priority" %}</td>
-                          <td class="px-2">{% trans "Categorie" %}</td>
-                          <td class="px-2">{% trans "Resolution time" %}</td>
+                          <td class="sorting">Id</td>
+                          <td class="sorting">{% trans "Title" %}</td>
+                          <td class="sorting">{% trans "Status" %}</td>
+                          <td class="sorting">{% trans "Published on" %}</td>
+                          <td class="sorting">{% trans "Applicant" %}</td>
+                          <td class="sorting">{% trans "priority" %}</td>
+                          <td class="sorting">{% trans "Categorie" %}</td>
+                          <td class="sorting">{% trans "Resolution time" %}</td>
                         </thead>
                         {% for question in client.tickets.all %}
 
@@ -194,7 +194,45 @@
             </div>
             <div class="tab-pane fade" id="statistic" role="tabpanel" aria-labelledby="statistic-tab">
               <div class="row">
-                <div class="col-12 col-md-4 col-lg-4">
+                <div class="col-12 col-md-6 col-lg-6">
+                  <div class="card">
+                    <div class="card-header card-header-success">
+                      <h4 class="card-title">{% trans "Tickets Status" %}</h4>
+                    </div>
+                    <div class="card-body table-responsive">
+                      <table class="table table-hover">
+                                                <tbody>
+                          <tr>
+                            <td>{% trans "Total" %}</td>
+                            <td>{{client.tickets.all.count}}</td>
+                          </tr>
+                          <tr>
+                            <td>{% trans "Open" %}</td>
+                            <td>{{client.tickets_open.all.count}}</td>
+                          </tr>
+                          <tr>
+                            <td>{% trans "Waiting" %}</td>
+                            <td>{{client.tickets_waiting.all.count}}</td>
+                          </tr>
+                          <tr>
+                            <td>{% trans "Resolved" %}</td>
+                            <td>{{client.tickets_resolved.all.count}}</td>
+                          </tr>
+                          <tr>
+                            <td>{% trans "Closed" %}</td>
+                            <td>{{client.tickets_Closed.all.count}}</td>
+                          </tr>
+                          <tr>
+                            <td>{% trans "Refused" %}</td>
+                            <td>{{client.tickets_Refused.all.count}}</td>
+                          </tr>
+
+                        </tbody>
+                      </table>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-12 col-md-6 col-lg-6">
                   <div class="card card-chart">
                     <div class="card-header card-header-success">
                       <div id="client_chart_status" class="ct-chart" data-url="{% url 'solutions:ajax_load_chart' %}?type=pie&client={{client.slug}}"></div>
@@ -204,7 +242,7 @@
                     </div>
                   </div>
                 </div>
-                <div class="col-12 col-md-8 col-lg-8">
+                <div class="col-12">
                   <div class="card card-chart">
                     <div class="card-header card-header-success">
                       <div id="client_chart_day" class="ct-chart" data-url="{% url 'solutions:ajax_load_chart' %}?type=line&client={{client.slug}}"></div>
@@ -245,75 +283,42 @@
     });
   </script>
   <script>
-    var $table = $('#fresh-table')
-
-    window.operateEvents = {
-      // 'click .like': function (e, value, row, index) {
-      //   alert('You click like icon, row: ' + JSON.stringify(row))
-      //   console.log(value, row, index)
-      // },
-      // 'click .edit': function (e, value, row, index) {
-      //   // alert('You click edit icon, row: ' + JSON.stringify(row))
-      //   console.log(row.id)
-      //   window.location.href = "{{ request.path }}profile/" + row.username;
-      // },
-      'click .remove': function (e, value, row, index) {
-        $table.bootstrapTable('remove', {
-          field: 'id',
-          values: [row.id]
-        })
-      }
-    }
-
-    function operateFormatter(value, row, index) {
-      return [
-        // '<a rel="tooltip" title="Like" class="table-action like" href="javascript:void(0)" title="Like">',
-        //   '<i class="fa fa-heart"></i>',
-        // '</a>',
-        // '<a rel="tooltip" title="Edit" class="table-action edit" href="javascript:void(0)" title="Edit">',
-        //   '<i class="fa fa-edit"></i>',
-        // '</a>',
-        '<a rel="tooltip" title="Remove" class="table-action remove" href="javascript:void(0)" title="Remove">',
-          '<i class="fa fa-remove"></i>',
-        '</a>'
-      ].join('')
-    }
-
-    $(function () {
-      $table.bootstrapTable({
-        classes: 'table table-hover table-striped',
-        toolbar: '.toolbar',
-
-        search: true,
-        showRefresh: true,
-        showToggle: true,
-        showColumns: true,
-        pagination: true,
-        striped: true,
-        sortable: true,
-        height: $(window).height(),
-        pageSize: 25,
-        pageList: [25, 50, 100],
-
-        formatShowingRows: function (pageFrom, pageTo, totalRows) {
-          return ''
-        },
-        formatRecordsPerPage: function (pageNumber) {
-          return pageNumber + ' rows visible'
+    $(document).ready(function() {
+      config = {
+        "pagingType": "full_numbers",
+        "lengthMenu": [
+          [10, 25, 50, -1],
+          [10, 25, 50, "{% trans "All" %}"]
+        ],
+        responsive: true,
+        language: {
+          "search": "_INPUT_",
+          "emptyTable":     "{% trans "No data available in table" %}",
+          "info":           "{% trans "Showing _START_ to _END_ of _TOTAL_ entries" %}",
+          "infoEmpty":      "{% trans "Showing 0 to 0 of 0 entries" %}",
+          "infoFiltered":   "{% trans "(filtered from _MAX_ total entries)" %}",
+          "infoPostFix":    "",
+          "thousands":      ",",
+          "lengthMenu":     "{% trans "Show _MENU_ entries" %}",
+          "loadingRecords": "{% trans "Loading..." %}",
+          "processing":     "{% trans "Processing..." %}",
+          "search":         "{% trans "Search:" %}",
+          "zeroRecords":    "{% trans "No matching records found" %}",
+          "paginate": {
+              "first":      "{% trans "First" %}",
+              "last":       "{% trans "Last" %}",
+              "next":       "{% trans "Next" %}",
+              "previous":   "{% trans "Previous" %}",
+          },
         }
-      })
-      // $(function () {
-      //   $table.bootstrapTable('hideColumn', 'id')
-      // })
+      };
+      $('#user-table').DataTable(config);
+      $('#ticket_table').DataTable(config);
 
 
-      $(window).resize(function () {
-        $table.bootstrapTable('resetView', {
-          height: $(window).height()
-        })
-      })
-    })
+      var table = $('.datatable').DataTable();
 
+    });
   </script>
 
 

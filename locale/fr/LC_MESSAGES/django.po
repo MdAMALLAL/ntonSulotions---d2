@@ -826,8 +826,8 @@ msgid "Dashboard"
 msgstr "Tableau de bord"
 
 #: .\templates\base.html:106
-msgid "HELP DESK: technical support"
-msgstr "Bureau d’aide : support technique"
+msgid "Technical support"
+msgstr "Support technique"
 
 #: .\templates\base.html:164
 msgid "Language"
