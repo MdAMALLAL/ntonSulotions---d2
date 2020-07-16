@@ -27,9 +27,6 @@
 
     <tbody>
       {% for question in question_list %}
-      <script type="text/javascript">
-        console.log("{{question.user.username}}  {{ question.charged_by|default_if_none:''}} ");
-      </script>
       <tr>
         <td><a class="text-dark" href="{% url 'solutions:questiondetail' pk=question.pk %}">{{question.get_ref}}</a></td>
         <td>{{ question.objet  }}</td>
