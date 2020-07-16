@@ -288,7 +288,11 @@ body > div > div > div.msj-rta.macro{
   font-weight: normal;
 }
 
-.btn-nton:hover{
+.btn-nton:hover, .btn-primary:hover{
   opacity: 1;
   background-color: #2977c9;
+}
+.btn-primary{
+  background-color: #2977c9 !important;
+  color: #fff;
 }
