@@ -109,6 +109,7 @@ DATABASES = {
         'USER': 'ntonadvisory_db',
         'PASSWORD': '96b$@]j~B$Ks',
         'HOST': 'localhost',
+        'CONN_MAX_AGE': '60'
         'OPTIONS': {
         'init_command': 'SET default_storage_engine=INNODB',
         'sql_mode': 'STRICT_TRANS_TABLES',
