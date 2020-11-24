@@ -128,7 +128,7 @@ class ProfileUpdateView(LoginRequiredMixin, UpdateView):
 
         if obj.username != self.request.user.username and not self.request.user.is_staff:
             raise PermissionDenied() #or Http404
-        if not self.request.user.is_staff and obj.username == self.request.user.username and not obj.supervisor.username == self.request.user.username:
+        if not self.request.user.is_staff and obj.username == self.request.user.username :
             self.fields=['username','first_name','last_name','tel','email']
             self.template_name='accounts/user_edit_form.html'
         return obj
