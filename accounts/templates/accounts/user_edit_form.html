@@ -1,0 +1,205 @@
+{% extends "base.html" %}
+{% load bootstrap4 %}
+{% load static %}
+{% load i18n %}
+{% block body_block %}
+  <div class="content">
+    <div class="container-fluid">
+      <div class="row">
+        <div class="col-md-8">
+          <div class="card">
+            <div class="card-header card-header-success">
+              <h4 class="card-title">{% trans "Edit Profile" %}</h4>
+              <p class="card-category">{% trans "Complete your profile" %}</p>
+            </div>
+            <div class="card-body">
+              <form action="{% url 'accounts:edit' username=user.username %}" method="post">
+                {% csrf_token %}
+                <div class="row">
+                  <div class="col-md-6 form-group">
+                    <div class="input-group bmd-form-group is-filled">
+                      <div class="input-group-prepend">
+                        <span class="input-group-text fa fa-user"></span>
+                      </div>
+                      <label for="id_username" class="bmd-label-static">{% trans "Display name" %}</label>
+                      <input type="text" name="username" value="{{form.instance.username}}"
+                      maxlength="100" class="tobeedited form-control-plaintext " title="" required="" id="id_username" readonly>
+                    </div>
+                  </div>
+                  <div class="col-md-6">
+                    <div class="form-group" >
+                      <div class="input-group bmd-form-group is-filled">
+                        <label for="id_email" class="bmd-label-static">{% trans "Email address" %}</label>
+                        <div class="input-group-prepend">
+                          <span class="input-group-text fa fa-at"></span>
+                        </div>
+                        <input type="email" name="email" value="{{form.instance.email}}"
+                        maxlength="254" class="tobeedited form-control-plaintext " title="" required="" id="id_email" readonly>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col-md-6">
+                    <div class="form-group disable" >
+                      <div class="input-group bmd-form-group is-filled">
+                        <!-- <div class="input-group-prepend">
+                          <span class="input-group-text fa fa-user"></span>
+                        </div> -->
+                        <label for="id_first_name" class="bmd-label-static">{% trans "First name" %}</label>
+                        <input type="text" name="first_name" value="{{form.instance.first_name}}"
+                        maxlength="30" class="tobeedited form-control-plaintext" title="" id="id_first_name" readonly>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-md-6">
+                    <div class="form-group " >
+                      <div class="input-group bmd-form-group is-filled">
+                        <!-- <div class="input-group-prepend">
+                          <span class="input-group-text fa fa-user"></span>
+                        </div> -->
+                        <label for="id_last_name" class="bmd-label-static">{% trans "Last name" %}</label>
+                        <input type="text" name="last_name" value="{{form.instance.last_name}}"
+                        maxlength="30" class="tobeedited form-control-plaintext" title="" id="id_last_name" readonly>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="row">
+
+                  <div class="col-md-6">
+                    <div class="form-group">
+                      <div class="input-group bmd-form-group is-filled">
+                        <div class="input-group-prepend">
+                          <span class="input-group-text fa fa-phone"></span>
+                        </div>
+                        <label for="id_tel" class="bmd-label-static">{% trans "Telephone" %}</label>
+                        <input type="text" name="tel" value="{{form.instance.tel}}"
+                        maxlength="40" class="tobeedited form-control-plaintext" title="" id="id_tel" readonly></div>
+                    </div>
+                  </div>
+
+                </div>
+                <button id="stertedit" type="button" class="btn btn-nton pull-left collapse show">{% trans "Edit" %}</button>
+                <button id="send" type="submit" class="btn btn-nton pull-right collapse hide">{% trans "Update Profile" %}</button>
+                <div class="clearfix"></div>
+              </form>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="card card-profile">
+            <div class="card-avatar">
+              <a href="javascript:;">
+                <img class="img-fluid" src='{% if user.avatar %}{{user.avatar.url}}{% else %}{% static "img/avatar.png" %}{% endif %}' />
+              </a>
+            </div>
+            <div class="card-body">
+              {% if user == request.user %}
+              <a class="profile-edit-btn btn btn-nton w-100 py-1 my-1"href="{% url 'accounts:changepassword'  %}">{% trans "Change password"  %}</a>
+              {% endif %}
+              {% if request.user.is_staff %}
+              <form class="form-inline" action="{% url 'accounts:made-consultant' username=user.username %}" method="post">
+                {% csrf_token %}
+                {% if user.is_staff %}
+                <button class="profile-edit-btn  btn btn-danger w-100 py-1 my-1" id="tagle-consultant" type="submit" name="button">{% trans "Remove from consultant list"  %}</button>
+                {% else %}
+                <button class="profile-edit-btn btn btn-warning w-100 py-1 my-1" id="tagle-consultant" type="submit" name="button">{% trans "Add to consultant list"  %}</button>
+                {% endif %}
+              </form>
+              {% endif %}
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-12">
+            <form>
+              <div class="row">
+                <div class="col">
+                  <input type="text" name="start_date" class="form-control dateField" value='{{request.GET.start_date}}' placeholder='{% trans "Start date" %}'>
+                </div>
+                <div class="col">
+                  <input type="text" name="end_date" class="form-control dateField" value='{{request.GET.end_date}}' placeholder='{% trans "End date" %}'>
+                </div>
+                <div class="col">
+                  <button type="submit" class="btn btn-nton">{% trans "Filter" %}</button>
+                </div>
+              </div>
+            </form>
+          </div>
+          <div class="col-md-5">
+            <div class="card card-chart">
+              <div class="card-header card-header-success">
+                <div id="container" class="ct-chart" data-url="{% url 'solutions:ajax_load_chart' %}?type=pie&user={{user.username}}"></div>
+
+              </div>
+              <div class="card-body">
+                <h4 class="card-title">{% trans "Tickets Status" %}</h4>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-7">
+            <div class="card card-chart">
+              <div class="card-header card-header-warning">
+                <div id="container2" class="ct-chart" data-url="{% url 'solutions:ajax_load_chart' %}?type=line&user={{user.username}}"></div>
+              </div>
+              <div class="card-body">
+                <h4 class="card-title">{% if user.is_staff %}{% trans "Tickets take into account per day" %} {% else %}{% trans "Tickets opned per day" %}{% endif %}</h4>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <script src="https://code.highcharts.com/highcharts.src.js"></script>
+  <script>
+    $.ajax({
+      url: $("#container").attr("data-url"),
+      dataType: 'json',
+      success: function (data) {
+        Highcharts.chart("container", data);
+      }
+    });
+    $.ajax({
+      url: $("#container2").attr("data-url"),
+      dataType: 'json',
+      success: function (data) {
+        Highcharts.chart("container2", data);
+      }
+    });
+    </script>
+  <script>
+  function show_consutat() {
+    var clientId = $("#id_client").children("option:selected").text();
+    if (clientId == 'ntonadvisory') {
+          $(".is_staff").collapse('show');
+    }
+    else {
+      $(".is_staff").collapse('hide');
+    }
+  }
+
+  $("#id_client").change(function () {
+      show_consutat();
+    });
+
+    $("#id_client").change(function () {
+        show_consutat();
+      });
+
+    $("#stertedit").click(function () {
+        $(".tobeedited").removeClass('form-control-plaintext');
+        $(".tobeedited").addClass('form-control');
+        $('.tobeedited').prop('readonly', false);
+        $("#stertedit").collapse('hide');
+        $("#send").collapse('show');
+
+
+      });
+
+  $(document).ready(function(){
+      show_consutat();
+    });
+  </script>
+{% endblock %}

@@ -21,3 +21,10 @@ class UserCreateForm(UserCreationForm):
                 pass
         self.fields['supervisor'].queryset = User.objects.filter(is_staff = True)
         #self.fields['is_staff'].initial = False
+
+
+class UserUpdateForm(UserCreationForm):
+
+    class Meta:
+        fields = ( 'first_name','last_name','tel')
+        model = User

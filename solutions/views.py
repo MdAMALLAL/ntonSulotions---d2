@@ -236,10 +236,11 @@ def add_reponce_to_question(request, pk):
                     description_fr = '{0} {1} {2}'.format(reponce.user,'agi on ticket',ref),
                     url = question.pk)
             else:
-                question.charged_by.add_notification(
-                description_en = '{0} {1} {2}'.format(reponce.user,'acted on ticket',ref),
-                description_fr = '{0} {1} {2}'.format(reponce.user,'agi on ticket',ref),
-                url = question.pk)
+                if question.charged_by:
+                    question.charged_by.add_notification(
+                        description_en = '{0} {1} {2}'.format(reponce.user,'acted on ticket',ref),
+                        description_fr = '{0} {1} {2}'.format(reponce.user,'agi on ticket',ref),
+                        url = question.pk)
             if send_mail:
                 #print(send_mail)
                 d = {}
@@ -252,10 +253,12 @@ def add_reponce_to_question(request, pk):
                 if request.user.is_staff:
                     msg_to = question.user.email
                 else :
-                    msg_to = question.charged_by.email
-                msg = EmailMultiAlternatives(subject, text_content, msg_from, [msg_to])
-                msg.attach_alternative(html_content, "text/html")
+                    if question.charged_by:
+                        msg_to = question.charged_by.email
+
                 try:
+                    msg = EmailMultiAlternatives(subject, text_content, msg_from, [msg_to])
+                    msg.attach_alternative(html_content, "text/html")
                     msg.send()
                 except Exception as e:
                     #print(e)
@@ -300,10 +303,11 @@ def add_reponce_to_question(request, pk):
                         description_fr = '{0} {1} {2}'.format(reponce.user,'agi on ticket',question.get_ref()),
                         url = question.pk)
                 else:
-                    question.charged_by.add_notification(
-                        description_en = '{0} {1} {2}'.format(reponce.user,'acted on ticket',question.get_ref()),
-                        description_fr = '{0} {1} {2}'.format(reponce.user,'agi on ticket',question.get_ref()),
-                        url = question.pk)
+                    if question.charged_by:
+                        question.charged_by.add_notification(
+                            description_en = '{0} {1} {2}'.format(reponce.user,'acted on ticket',question.get_ref()),
+                            description_fr = '{0} {1} {2}'.format(reponce.user,'agi on ticket',question.get_ref()),
+                            url = question.pk)
             except Exception as e :
                 logger.error(e)
                 messages.warning(request,_("Warning, Something went wrong, please try again"))
@@ -316,10 +320,11 @@ def add_reponce_to_question(request, pk):
                         description_fr = '{0} {1} {2}'.format(reponce.user,'agi on ticket',question.get_ref()),
                         url = question.pk)
                 else:
-                    question.charged_by.add_notification(
-                        description_en = '{0} {1} {2}'.format(reponce.user,'acted on ticket',question.get_ref()),
-                        description_fr = '{0} {1} {2}'.format(reponce.user,'agi on ticket',question.get_ref()),
-                        url = question.pk)
+                    if question.charged_by:
+                        question.charged_by.add_notification(
+                            description_en = '{0} {1} {2}'.format(reponce.user,'acted on ticket',question.get_ref()),
+                            description_fr = '{0} {1} {2}'.format(reponce.user,'agi on ticket',question.get_ref()),
+                            url = question.pk)
                 if send_mail:
                     d = {}
                     d['description'] = description
@@ -330,11 +335,13 @@ def add_reponce_to_question(request, pk):
                     if request.user.is_staff:
                         msg_to = question.user.email
                     else :
-                        msg_to = question.charged_by.email
+                        if question.charged_by:
+                            msg_to = question.charged_by.email
 
-                    msg = EmailMultiAlternatives(subject, text_content, msg_from, [msg_to])
-                    msg.attach_alternative(html_content, "text/html")
+
                     try:
+                        msg = EmailMultiAlternatives(subject, text_content, msg_from, [msg_to])
+                        msg.attach_alternative(html_content, "text/html")
                         msg.send()
                     except Exception as e:
                         logger.error(e)
@@ -377,10 +384,11 @@ def questioneResolved(request, pk):
                     description_fr = 'Ticket ({0}) {1} {2}'.format(ref, 'marqué comme résolu par',reponce.user),
                     url = question.pk)
             else:
-                question.charged_by.add_notification(
-                    description_en = 'Ticket ({0}) {1} {2}'.format(ref, 'marked as resolved by',reponce.user),
-                    description_fr = 'Ticket ({0}) {1} {2}'.format(ref, 'marqué comme résolu par',reponce.user),
-                    url = question.pk)
+                if question.charged_by:
+                    question.charged_by.add_notification(
+                        description_en = 'Ticket ({0}) {1} {2}'.format(ref, 'marked as resolved by',reponce.user),
+                        description_fr = 'Ticket ({0}) {1} {2}'.format(ref, 'marqué comme résolu par',reponce.user),
+                        url = question.pk)
             d = {}
             d['description'] = description
             subject = _('novelty on ticket {}'.format(ref))
@@ -391,10 +399,12 @@ def questioneResolved(request, pk):
             if request.user.is_staff:
                 msg_to = question.user.email
             else :
-                msg_to = question.charged_by.email
-            msg = EmailMultiAlternatives(subject, text_content, msg_from, [msg_to])
-            msg.attach_alternative(html_content, "text/html")
+                if question.charged_by:
+                    msg_to = question.charged_by.email
+
             try:
+                msg = EmailMultiAlternatives(subject, text_content, msg_from, [msg_to])
+                msg.attach_alternative(html_content, "text/html")
                 msg.send()
             except Exception as e:
                 logger.error(e)
@@ -433,10 +443,11 @@ def questioneCharged(request, pk):
                     description_fr = 'Ticket ({0}) {1} {2}'.format(ref, _('a été pris en charge par'),reponce.user),
                     url = question.pk)
             else:
-                question.charged_by.add_notification(
-                    description_en = 'Ticket ({0}) {1} {2}'.format(ref, _('has been taked into account by'),reponce.user),
-                    description_fr = 'Ticket ({0}) {1} {2}'.format(ref, _('a été pris en charge par'),reponce.user),
-                    url = question.pk)
+                if question.charged_by:
+                    question.charged_by.add_notification(
+                        description_en = 'Ticket ({0}) {1} {2}'.format(ref, _('has been taked into account by'),reponce.user),
+                        description_fr = 'Ticket ({0}) {1} {2}'.format(ref, _('a été pris en charge par'),reponce.user),
+                        url = question.pk)
             d = {}
             d['description'] = description
             subject = _('novelty on ticket {}'.format(ref))
@@ -446,10 +457,12 @@ def questioneCharged(request, pk):
             if request.user.is_staff:
                 msg_to = question.user.email
             else :
-                msg_to = question.charged_by.email
-            msg = EmailMultiAlternatives(subject, text_content, msg_from, [msg_to])
-            msg.attach_alternative(html_content, "text/html")
+                if question.charged_by:
+                    msg_to = question.charged_by.email
+
             try:
+                msg = EmailMultiAlternatives(subject, text_content, msg_from, [msg_to])
+                msg.attach_alternative(html_content, "text/html")
                 msg.send()
             except Exception as e:
                 #print(e)
@@ -495,10 +508,11 @@ def questioneCharged(request, pk):
                     description_en = 'Ticket ({0}) {1} {2}'.format(ref, _('has been taked into account by'),reponce.user),
                     description_fr = 'Ticket ({0}) {1} {2}'.format(ref, _('a été pris en charge par'),reponce.user),
                     url = question.pk)
-                question.charged_by.add_notification(
-                    description_en = 'Ticket ({0}) {1} {2}'.format(ref, _('has been taked into account by'),reponce.user),
-                    description_fr = 'Ticket ({0}) {1} {2}'.format(ref, _('a été pris en charge par'),reponce.user),
-                    url = question.pk)
+                if question.charged_by:
+                    question.charged_by.add_notification(
+                        description_en = 'Ticket ({0}) {1} {2}'.format(ref, _('has been taked into account by'),reponce.user),
+                        description_fr = 'Ticket ({0}) {1} {2}'.format(ref, _('a été pris en charge par'),reponce.user),
+                        url = question.pk)
 
         return redirect('solutions:questiondetail', pk=question.pk)
 

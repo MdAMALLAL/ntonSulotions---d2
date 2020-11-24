@@ -125,13 +125,12 @@ class ProfileUpdateView(LoginRequiredMixin, UpdateView):
     user = "user"
     def get_object(self, *args, **kwargs):
         obj = super(ProfileUpdateView, self).get_object(*args, **kwargs)
-        # print(obj.username)
-        # print(self.request.user.username)
-        # print(obj.username != self.request.user.username)
-        # print(self.request.user.is_staff)
 
         if obj.username != self.request.user.username and not self.request.user.is_staff:
             raise PermissionDenied() #or Http404
+        if not self.request.user.is_staff or obj.username == self.request.user.username :
+            self.fields=['username','first_name','last_name','tel','email']
+            self.template_name='accounts/user_edit_form.html'
         return obj
 
     def form_valid(self, form):
@@ -152,11 +151,7 @@ class ProfileUpdateView(LoginRequiredMixin, UpdateView):
             context['activePage'] = 'profile'
         #print(context['activePage'])
 
-
         return context
-
-
-
     success_url = '/'
 
 @login_required

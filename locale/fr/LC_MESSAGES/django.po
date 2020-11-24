@@ -447,7 +447,7 @@ msgstr "Moyenne"
 
 #: .\solutions\models.py:42 .\solutions\models_3.0.5.py:28
 msgid "Height"
-msgstr "Houte"
+msgstr "Haute"
 
 #: .\solutions\models.py:43 .\solutions\models_3.0.5.py:29
 msgid "Urgent"
