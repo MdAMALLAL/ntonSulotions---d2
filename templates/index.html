@@ -97,7 +97,7 @@
         </div>
       </form>
     </div>
-    <div class="col-md-5">
+    <!-- <div class="col-md-5">
       <div class="card card-chart">
         <div class="card-header card-header-success">
           <div id="container" class="ct-chart" data-url="{% url 'solutions:ajax_load_chart' %}?type=pie{% for key, value in request.GET.items %}{% if key != 'page' %}&{{ key }}={{ value }}{% endif %}{% endfor %}"></div>
@@ -117,7 +117,7 @@
           <h4 class="card-title">{% trans "Tickets per day" %}</h4>
         </div>
       </div>
-    </div>
+    </div> -->
   </div>
 
   {% elif user.is_staff %}

@@ -41,7 +41,6 @@
           $.ajax({
             url: "http://{{request.META.HTTP_HOST}}{% url 'solutions:questioneCharged' pk=question.pk %}",
             success: function (json) {
-              console.log(json);
                 $("#charged").remove();
                 $('#actionul').prepend(json.html_content);
                 $('#noAction').remove();
@@ -101,7 +100,7 @@
             </tr>
             <tr class="col-md-6 col-sm-12 row no-gutters">
               <th class="col-4 bg-light">{% trans "Priority" %}</th>
-              <td class="col bg-white">{{question.get_priorite_display}} {% if request.user.is_staff %}/{{question.get_priorite_intern_display}}{% endif %}</td>
+              <td class="col bg-white">{{question.get_priorite_display}}</td>
             </tr>
             <tr class="col-md-12 col-sm-12 row no-gutters">
               <th class="col-2 bg-light">{% trans "Categorie" %}</th>

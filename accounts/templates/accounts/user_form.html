@@ -88,7 +88,7 @@
                       <div id="is_staff" class="is_staff form-check  collapse hide">
                         <label class="form-check-label">
                             <input type="checkbox" name="is_staff" disable=""
-                            class="form-check-input "   id="id_is_staff" readonly>
+                            class="form-check-input" checked  id="id_is_staff" readonly>
                             Consultant
                             <span class="form-check-sign">
                                 <span class="check"></span>
@@ -153,7 +153,7 @@
               </div>
             </form>
           </div>
-          <div class="col-md-5">
+          <!-- <div class="col-md-5">
             <div class="card card-chart">
               <div class="card-header card-header-success">
                 <div id="container" class="ct-chart" data-url="{% url 'solutions:ajax_load_chart' %}?type=pie&user={{user.username}}"></div>
@@ -173,7 +173,7 @@
                 <h4 class="card-title">{% if user.is_staff %}{% trans "Tickets take into account per day" %} {% else %}{% trans "Tickets opned per day" %}{% endif %}</h4>
               </div>
             </div>
-          </div>
+          </div> -->
         </div>
       </div>
     </div>
