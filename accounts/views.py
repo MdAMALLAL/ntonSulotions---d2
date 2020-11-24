@@ -95,7 +95,7 @@ class UserListView(IsStaffTestMixin, ListView):
     model = User
 
     def get_queryset(self):
-        self.paginate_by =  int(self.request.GET.get('paginate_by', 4))
+        #self.paginate_by =  int(self.request.GET.get('paginate_by', 4))
 
         if self.request.user.is_staff:
             userlist =  User.objects.all()
@@ -112,8 +112,8 @@ class UserListView(IsStaffTestMixin, ListView):
 
         context['activePage']= 'accounts'
         context['form'] = forms.UserCreateForm
-        page = int(self.request.GET.get('page', 1))
-        context['pages'] = [val for val in range(page - 5 , page + 5) if val > 0]
+        # page = int(self.request.GET.get('page', 1))
+        # context['pages'] = [val for val in range(page - 5 , page + 5) if val > 0]
         context['clients']=Client.objects.all()
         return context
 
@@ -128,7 +128,7 @@ class ProfileUpdateView(LoginRequiredMixin, UpdateView):
 
         if obj.username != self.request.user.username and not self.request.user.is_staff:
             raise PermissionDenied() #or Http404
-        if not self.request.user.is_staff or obj.username == self.request.user.username :
+        if not self.request.user.is_staff and obj.username == self.request.user.username and not obj.supervisor.username == self.request.user.username:
             self.fields=['username','first_name','last_name','tel','email']
             self.template_name='accounts/user_edit_form.html'
         return obj
