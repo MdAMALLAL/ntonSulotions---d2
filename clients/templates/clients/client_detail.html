@@ -73,7 +73,8 @@
                                           <i class="fa"><img height='16' src='{% static "img/net.svg" %}'  alt="..."></i>
                                         </span>
                                         </div>
-                                        <input type="text" name="url" placeholder="http://" maxlength="200" class="form-control" title="" id="id_url">
+                                        <a id="clientUrlAnchor" class="collapse show" href="{{ form.instance.url }}">{{ form.instance.url }}</a>
+                                        <input id="clientUrlInput" value="{{ form.instance.url }}" class="form-control collapse hide" type="text" name="url" placeholder="http://" maxlength="200"  title="" id="id_url">
                                       </div>
                                     </div>
                                   </div>
@@ -258,12 +259,10 @@
       </div>
     </form>
   </div>
-  <script src="https://code.highcharts.com/highcharts.src.js"></script>
+  <!-- <script src="https://code.highcharts.com/highcharts.src.js"></script> -->
   <script>
-  chartloader('client_chart_status');
-  chartloader('client_chart_day');
-
-
+  // chartloader('client_chart_status');
+  // chartloader('client_chart_day');
 
     $("#stertedit").click(function () {
         $(".form-control-plaintext").addClass('form-control');
@@ -271,6 +270,8 @@
         $('.form-control').prop('readonly', false);
         $('.form-control').prop('disabled', false);
         $("#stertedit").collapse('hide');
+        $("#clientUrlInput").collapse('show');
+        $("#clientUrlAnchor").collapse('hide');
         $("#send").collapse('show');
       });
 
@@ -318,10 +319,7 @@
       };
       $('#user-table').DataTable(config);
       $('#ticket_table').DataTable(config);
-
-
       var table = $('.datatable').DataTable();
-
     });
   </script>
 

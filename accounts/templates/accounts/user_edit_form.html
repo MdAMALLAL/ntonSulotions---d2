@@ -152,23 +152,23 @@
       </div>
     </div>
   </div>
-  <script src="https://code.highcharts.com/highcharts.src.js"></script>
+  <!-- <script src="https://code.highcharts.com/highcharts.src.js"></script>
   <script>
-    $.ajax({
-      url: $("#container").attr("data-url"),
-      dataType: 'json',
-      success: function (data) {
-        Highcharts.chart("container", data);
-      }
-    });
-    $.ajax({
-      url: $("#container2").attr("data-url"),
-      dataType: 'json',
-      success: function (data) {
-        Highcharts.chart("container2", data);
-      }
-    });
-    </script>
+    // $.ajax({
+    //   url: $("#container").attr("data-url"),
+    //   dataType: 'json',
+    //   success: function (data) {
+    //     Highcharts.chart("container", data);
+    //   }
+    // });
+    // $.ajax({
+    //   url: $("#container2").attr("data-url"),
+    //   dataType: 'json',
+    //   success: function (data) {
+    //     Highcharts.chart("container2", data);
+    //   }
+    // });
+    </script> -->
   <script>
   function show_consutat() {
     var clientId = $("#id_client").children("option:selected").text();
@@ -184,9 +184,6 @@
       show_consutat();
     });
 
-    $("#id_client").change(function () {
-        show_consutat();
-      });
 
     $("#stertedit").click(function () {
         $(".tobeedited").removeClass('form-control-plaintext');

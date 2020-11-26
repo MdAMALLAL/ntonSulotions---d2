@@ -49,30 +49,30 @@ try {
       return;
 }
 });
-$(function () {
-  try {
-    if ($("#id_url").val() == '') {
-      $("#id_url").val('http://');
-    }
-  }
-
-  catch(err) {
-        console.log(err);
-        return;
-      }
-});
-
-function chartloader(e) {
-  div = document.getElementById(e);
-  $.ajax({
-    url: div.getAttribute('data-url'),
-    dataType: 'json',
-    success: function (data) {
-      var chart = Highcharts.chart(e, data);
-      // chart.setSize(null);
-    }
-  });
-};
+// $(function () {
+//   try {
+//     if ($("#id_url").val() == '') {
+//       $("#id_url").val('http://');
+//     }
+//   }
+//
+//   catch(err) {
+//         console.log(err);
+//         return;
+//       }
+// });
+//
+// function chartloader(e) {
+//   div = document.getElementById(e);
+//   $.ajax({
+//     url: div.getAttribute('data-url'),
+//     dataType: 'json',
+//     success: function (data) {
+//       var chart = Highcharts.chart(e, data);
+//       // chart.setSize(null);
+//     }
+//   });
+// };
 
   $("#id_categorie").change(function () {
     loader = true;

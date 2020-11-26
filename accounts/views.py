@@ -119,7 +119,9 @@ class UserListView(IsStaffTestMixin, ListView):
 
 class ProfileUpdateView(LoginRequiredMixin, UpdateView):
     model=User
-    fields=['username','first_name','last_name','tel','email','client','is_staff','avatar','supervisor']
+    form_class = forms.UserUpdateForm
+    # fields=['username','first_name','last_name','tel','email','client','is_staff','avatar','supervisor']
+    # # fields['supervisor'].queryset = User.objects.filter(is_staff = True)
     slug_field='username'
     slug_url_kwarg='username'
     user = "user"

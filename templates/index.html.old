@@ -336,51 +336,51 @@
 
 
 
-  <script src="https://code.highcharts.com/highcharts.src.js"></script>
+  <!--<script src="https://code.highcharts.com/highcharts.src.js"></script>-->
   <!-- Chartist JS -->
-  <script src="{% static 'js/plugins/chartist.min.js'%}"></script>
+  <!--<script src="{% static 'js/plugins/chartist.min.js'%}"></script>-->
 
   <script>
-      $.ajax({
-        url: $("#container-chart").attr("data-url"),
-        success: function (data) {
-          console.log(data);
-              var dataPreferences = {
-                  labels: data.labels,
-                  series: data.data
-              };
-
-              var optionsPreferences = {
-                  height: '230px'
-              };
-
-              Chartist.Pie('#container-chart', dataPreferences, optionsPreferences);
-
-          }
-
-    });
-
-    $.ajax({
-      url: $("#container").attr("data-url"),
-      dataType: 'json',
-      success: function (data) {
-        Highcharts.chart("container", data);
-      }
-    });
-    $.ajax({
-      url: $("#container2").attr("data-url"),
-      dataType: 'json',
-      success: function (data) {
-        Highcharts.chart("container2", data);
-      }
-    });
-    $.ajax({
-      url: $("#containerClient").attr("data-url"),
-      dataType: 'json',
-      success: function (data) {
-        Highcharts.chart("containerClient", data);
-      }
-    });
+    //   $.ajax({
+    //     url: $("#container-chart").attr("data-url"),
+    //     success: function (data) {
+    //       console.log(data);
+    //           var dataPreferences = {
+    //               labels: data.labels,
+    //               series: data.data
+    //           };
+    //
+    //           var optionsPreferences = {
+    //               height: '230px'
+    //           };
+    //
+    //           Chartist.Pie('#container-chart', dataPreferences, optionsPreferences);
+    //
+    //       }
+    //
+    // });
+    //
+    // $.ajax({
+    //   url: $("#container").attr("data-url"),
+    //   dataType: 'json',
+    //   success: function (data) {
+    //     Highcharts.chart("container", data);
+    //   }
+    // });
+    // $.ajax({
+    //   url: $("#container2").attr("data-url"),
+    //   dataType: 'json',
+    //   success: function (data) {
+    //     Highcharts.chart("container2", data);
+    //   }
+    // });
+    // $.ajax({
+    //   url: $("#containerClient").attr("data-url"),
+    //   dataType: 'json',
+    //   success: function (data) {
+    //     Highcharts.chart("containerClient", data);
+    //   }
+    // });
   </script>
 
 
